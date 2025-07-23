@@ -18,10 +18,10 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "migrate:up": "npx typeorm migration:run",
-    "migrate:down": "npx typeorm migration:revert",
-    "migrate:generate": "npx typeorm migration:create src/migrations/CreateUsersTable",
-    "migrate:show": "npx typeorm migration:show"
+    "migrate:generate": "npx ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js migration:generate src/migrations/CreateUsersTable --dataSource src/data-source.ts",
+    "migrate:run": "npx ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js migration:run --dataSource src/data-source.ts",
+    "migrate:revert": "npx ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js migration:revert --dataSource src/data-source.ts",
+    "migrate:show": "npx ts-node migration:show --dataSource src/data-source.ts"
   },
   "dependencies": {
     "@nestjs/common": "^11.0.1",
@@ -31,6 +31,7 @@
     "@nestjs/platform-express": "^11.0.1",
     "@nestjs/typeorm": "^11.0.0",
     "class-validator": "^0.14.2",
+    "dotenv": "^17.2.0",
     "pg": "^8.16.3",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1",

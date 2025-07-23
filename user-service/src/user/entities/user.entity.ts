@@ -14,7 +14,7 @@ export class User {
   @Column({ unique: true })
   email: string;
 
-  @Column()
+  @Column({ name: 'full_name' })
   fullName: string;
 
   @Column()
@@ -23,12 +23,15 @@ export class User {
   @Column()
   role: string;
 
-  @Column()
+  @Column({ nullable: true })
   avatar: string;
 
-  @CreateDateColumn()
+  @Column({ nullable: true })
+  isDeleted: boolean;
+
+  @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
 
-  @UpdateDateColumn()
+  @UpdateDateColumn({ name: 'updated_at' })
   updatedAt: Date;
 }
