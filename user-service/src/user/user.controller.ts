@@ -10,7 +10,7 @@ import {
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
+import { UpdateUserDto, UpdateUserTokenDto } from './dto/update-user.dto';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 
 @Controller('user')
@@ -20,6 +20,24 @@ export class UserController {
   @MessagePattern('get-user-by-email')
   async getUserByEmail(@Payload() email: string) {
     return this.userService.findByEmail(email);
+  }
+
+  @MessagePattern('update-user-token')
+  async updateUserToken(@Payload() payload: UpdateUserTokenDto) {
+    return this.userService.updateRefreshToken(
+      payload.refreshToken,
+      payload.userId,
+    );
+  }
+
+  @MessagePattern('remove-token')
+  async removeRefreshToken(@Payload() id: number) {
+    return this.userService.removeToken(id);
+  }
+
+  @MessagePattern('get-user-by-token')
+  async getUserByToken(@Payload() refreshToken: string) {
+    return this.userService.getUserByToken(refreshToken);
   }
 
   @Post()

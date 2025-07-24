@@ -10,6 +10,7 @@ import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
 import aqp from 'api-query-params';
 import { compareSync, genSaltSync, hashSync } from 'bcryptjs';
+import { RpcException } from '@nestjs/microservices';
 
 @Injectable()
 export class UserService {
@@ -27,12 +28,33 @@ export class UserService {
     return compareSync(password, hashPassword);
   }
 
+  async updateRefreshToken(refreshToken: string, userId: number) {
+    console.log('>>> updating user refresh token.....');
+    const user = await this.userRepository.findOneBy({ id: userId });
+    if (!user) {
+      throw new RpcException('User not found !');
+    }
+    return await this.userRepository.update(
+      { id: userId },
+      { refreshToken: refreshToken },
+    );
+  }
+
   async findByEmail(email: string) {
+    console.log('find by email');
     const user = await this.userRepository.findOneBy({ email });
     if (!user) {
-      throw new BadGatewayException('User not found !');
+      throw new RpcException('User not found !');
     }
     return user;
+  }
+
+  async removeToken(id: number) {
+    return this.userRepository.update({ id: id }, { refreshToken: '' });
+  }
+
+  async getUserByToken(refreshToken: string) {
+    return this.userRepository.findOneBy({ refreshToken });
   }
 
   async create(createUserDto: CreateUserDto) {
