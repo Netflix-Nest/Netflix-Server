@@ -1,11 +1,26 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  Query,
+} from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { MessagePattern, Payload } from '@nestjs/microservices';
 
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
+
+  @MessagePattern('get-user-by-email')
+  async getUserByEmail(@Payload() email: string) {
+    return this.userService.findByEmail(email);
+  }
 
   @Post()
   create(@Body() createUserDto: CreateUserDto) {
@@ -13,8 +28,12 @@ export class UserController {
   }
 
   @Get()
-  findAll() {
-    return this.userService.findAll();
+  findAll(
+    @Query('current') currentPage: number,
+    @Query('pageSize') limit: number,
+    @Query() qs: string,
+  ) {
+    return this.userService.findAll(+currentPage, +limit, qs);
   }
 
   @Get(':id')

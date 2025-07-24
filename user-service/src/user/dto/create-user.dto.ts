@@ -6,6 +6,7 @@ import {
   IsEnum,
   IsString,
 } from 'class-validator';
+import { UserRole } from '../entities/user.entity';
 
 export class CreateUserDto {
   @IsEmail()
@@ -20,8 +21,9 @@ export class CreateUserDto {
   @IsString()
   password: string;
 
-  @IsEnum(['ADMIN', 'USER'])
-  role: string;
+  @IsOptional()
+  @IsEnum(UserRole)
+  role?: UserRole;
 
   @IsOptional()
   avatar?: string;
