@@ -7,6 +7,7 @@ import { IUser, IUserDecorator } from './auth.interfaces';
 import { ConfigService } from '@nestjs/config';
 import ms, { StringValue } from 'ms';
 import { Response } from 'express';
+import { RegisterDto } from './dto/register.dto';
 @Injectable()
 export class AuthService {
   constructor(
@@ -32,6 +33,14 @@ export class AuthService {
     );
     return userDb;
   }
+
+  createRefreshToken = (payload) => {
+    const refreshToken = this.jwtService.sign(payload, {
+      secret: this.configService.get<string>('JWT_REFRESH_TOKEN_SECRET'),
+      expiresIn: this.configService.get<StringValue>('JWT_REFRESH_EXPIRE'),
+    });
+    return refreshToken;
+  };
 
   async login(user: IUser, response: Response) {
     const { id, email, fullName, role, avatar } = user;
@@ -67,13 +76,6 @@ export class AuthService {
       },
     };
   }
-  createRefreshToken = (payload) => {
-    const refreshToken = this.jwtService.sign(payload, {
-      secret: this.configService.get<string>('JWT_REFRESH_TOKEN_SECRET'),
-      expiresIn: this.configService.get<StringValue>('JWT_REFRESH_EXPIRE'),
-    });
-    return refreshToken;
-  };
 
   processNewToken = async (refreshToken: string, response: Response) => {
     try {
@@ -128,6 +130,10 @@ export class AuthService {
       throw new BadRequestException('Refresh token is invalid. Please login');
     }
   };
+
+  async register(registerDto: RegisterDto) {
+    return lastValueFrom(this.userClient.send('register-user', registerDto));
+  }
 
   async logout(user: IUserDecorator, response: Response) {
     await lastValueFrom(this.userClient.send('remove-token', user.userId));

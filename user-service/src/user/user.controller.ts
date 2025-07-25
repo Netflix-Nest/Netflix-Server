@@ -12,6 +12,7 @@ import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto, UpdateUserTokenDto } from './dto/update-user.dto';
 import { MessagePattern, Payload } from '@nestjs/microservices';
+import { RegisterUser } from './user.interfaces';
 
 @Controller('user')
 export class UserController {
@@ -22,16 +23,21 @@ export class UserController {
     return this.userService.findByEmail(email);
   }
 
+  @MessagePattern('register-user')
+  async registerUser(@Payload() registerDto: RegisterUser) {
+    return this.userService.registerUser(registerDto);
+  }
+
   @MessagePattern('update-user-token')
   async updateUserToken(@Payload() payload: UpdateUserTokenDto) {
-    return this.userService.updateRefreshToken(
+    return this.userService.updateUserToken(
       payload.refreshToken,
       payload.userId,
     );
   }
 
   @MessagePattern('remove-token')
-  async removeRefreshToken(@Payload() id: number) {
+  async removeToken(@Payload() id: number) {
     return this.userService.removeToken(id);
   }
 

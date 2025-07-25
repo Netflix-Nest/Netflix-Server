@@ -40,8 +40,8 @@ export class AuthController {
 
   @Public()
   @Post('register')
-  async handleRegister(@Body() dto: RegisterDto) {
-    // Call user service
+  async handleRegister(@Body() registerDto: RegisterDto) {
+    return this.authService.register(registerDto);
   }
 
   @Public()

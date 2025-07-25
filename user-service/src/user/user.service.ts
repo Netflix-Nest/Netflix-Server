@@ -6,11 +6,12 @@ import {
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { User } from './entities/user.entity';
+import { User, UserRole } from './entities/user.entity';
 import { Repository } from 'typeorm';
 import aqp from 'api-query-params';
 import { compareSync, genSaltSync, hashSync } from 'bcryptjs';
 import { RpcException } from '@nestjs/microservices';
+import { RegisterUser } from './user.interfaces';
 
 @Injectable()
 export class UserService {
@@ -28,7 +29,7 @@ export class UserService {
     return compareSync(password, hashPassword);
   }
 
-  async updateRefreshToken(refreshToken: string, userId: number) {
+  async updateUserToken(refreshToken: string, userId: number) {
     console.log('>>> updating user refresh token.....');
     const user = await this.userRepository.findOneBy({ id: userId });
     if (!user) {
@@ -55,6 +56,30 @@ export class UserService {
 
   async getUserByToken(refreshToken: string) {
     return this.userRepository.findOneBy({ refreshToken });
+  }
+
+  async registerUser(registerDto: RegisterUser) {
+    const { email, fullName, role } = registerDto;
+    const existUser = await this.userRepository.findOne({ where: { email } });
+    if (existUser) {
+      throw new RpcException('User already exist !');
+    }
+    const password = this.getHashPassword(registerDto.password);
+    let userRole: UserRole;
+    if (role === UserRole.ADMIN) {
+      userRole = UserRole.ADMIN;
+    } else if (role === UserRole.USER) {
+      userRole = UserRole.USER;
+    } else {
+      userRole = UserRole.USER;
+    }
+    const user = this.userRepository.create({
+      email,
+      fullName,
+      role: userRole,
+      password,
+    });
+    return this.userRepository.save(user);
   }
 
   async create(createUserDto: CreateUserDto) {
