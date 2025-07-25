@@ -1,13 +1,4 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-  Query,
-} from '@nestjs/common';
+import { Controller } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto, UpdateUserTokenDto } from './dto/update-user.dto';
@@ -24,7 +15,7 @@ export class UserController {
   }
 
   @MessagePattern('register-user')
-  async registerUser(@Payload() registerDto: RegisterUser) {
+  async registerUser(@Payload() registerDto: CreateUserDto) {
     return this.userService.registerUser(registerDto);
   }
 
@@ -46,32 +37,37 @@ export class UserController {
     return this.userService.getUserByToken(refreshToken);
   }
 
-  @Post()
-  create(@Body() createUserDto: CreateUserDto) {
-    return this.userService.create(createUserDto);
-  }
-
-  @Get()
-  findAll(
-    @Query('current') currentPage: number,
-    @Query('pageSize') limit: number,
-    @Query() qs: string,
+  @MessagePattern('find-users')
+  async findAll(
+    @Payload()
+    {
+      currentPage,
+      limit,
+      qs,
+    }: {
+      currentPage: number;
+      limit: number;
+      qs: string;
+    },
   ) {
-    return this.userService.findAll(+currentPage, +limit, qs);
+    return this.userService.findAll(currentPage, limit, qs);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.userService.findOne(+id);
+  @MessagePattern('find-user')
+  async findOne(@Payload() id: number) {
+    return this.userService.findOne(id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.userService.update(+id, updateUserDto);
+  @MessagePattern('update-user')
+  async update(
+    @Payload()
+    { id, updateUserDto }: { id: number; updateUserDto: UpdateUserDto },
+  ) {
+    return this.userService.update(id, updateUserDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.userService.remove(+id);
+  @MessagePattern('delete-user')
+  async delete(@Payload() id: number) {
+    return this.userService.remove(id);
   }
 }

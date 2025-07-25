@@ -1,28 +1,21 @@
 import { NestFactory, Reflector } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
-import { AllExceptionsFilter } from './core/exception-filters';
-import { LoggingInterceptor, TransformInterceptor } from './core/interceptors';
-import { ConfigService } from '@nestjs/config';
+import { Logger } from '@nestjs/common';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
-  app.connectMicroservice<MicroserviceOptions>({
-    transport: Transport.REDIS,
-    options: {
-      host: 'localhost',
-      port: 6379,
+  const app = await NestFactory.createMicroservice<MicroserviceOptions>(
+    AppModule,
+    {
+      transport: Transport.REDIS,
+      options: {
+        host: process.env.REDIS_HOST || 'localhost',
+        port: parseInt(process.env.REDIS_PORT!) || 6379,
+      },
     },
-  });
-  await app.startAllMicroservices();
-  const configService = app.get(ConfigService);
-  const reflector = app.get(Reflector);
-  // app.useGlobalGuards(new JwtAuthGuard(reflector));
-  app.useGlobalFilters(new AllExceptionsFilter());
-  app.useGlobalInterceptors(
-    new LoggingInterceptor(),
-    new TransformInterceptor(),
   );
-  await app.listen(configService.get<number>('PORT') ?? 4002);
+
+  await app.listen();
+  Logger.log(`Microservice listening on Redis`);
 }
 bootstrap();

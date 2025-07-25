@@ -30,7 +30,6 @@ export class UserService {
   }
 
   async updateUserToken(refreshToken: string, userId: number) {
-    console.log('>>> updating user refresh token.....');
     const user = await this.userRepository.findOneBy({ id: userId });
     if (!user) {
       throw new RpcException('User not found !');
@@ -58,7 +57,7 @@ export class UserService {
     return this.userRepository.findOneBy({ refreshToken });
   }
 
-  async registerUser(registerDto: RegisterUser) {
+  async registerUser(registerDto: CreateUserDto) {
     const { email, fullName, role } = registerDto;
     const existUser = await this.userRepository.findOne({ where: { email } });
     if (existUser) {
@@ -79,18 +78,6 @@ export class UserService {
       role: userRole,
       password,
     });
-    return this.userRepository.save(user);
-  }
-
-  async create(createUserDto: CreateUserDto) {
-    const isExist = await this.userRepository.findOne({
-      where: { email: createUserDto.email },
-    });
-    if (isExist) {
-      throw new BadRequestException('User already exist!');
-    }
-    createUserDto.password = this.getHashPassword(createUserDto.password);
-    const user = this.userRepository.create(createUserDto);
     return this.userRepository.save(user);
   }
 
@@ -129,16 +116,39 @@ export class UserService {
     };
   }
 
-  findOne(id: number) {
-    return this.userRepository.findOneBy({ id });
+  async findOne(id: number) {
+    const existUser = await this.userRepository.findOneBy({ id });
+    if (!existUser) {
+      throw new RpcException('User Not Found !');
+    }
+    return existUser;
   }
 
   async update(id: number, updateUserDto: UpdateUserDto) {
+    const existUser = await this.userRepository.findOneBy({ id });
+    if (!existUser) {
+      throw new RpcException('User Not Found !');
+    }
+    if (updateUserDto.email && updateUserDto.email !== existUser.email) {
+      const emailUsed = await this.userRepository.findOneBy({
+        email: updateUserDto.email,
+      });
+      if (emailUsed && emailUsed.id !== id) {
+        throw new RpcException('Email already in use!');
+      }
+    }
+    if (updateUserDto.password) {
+      updateUserDto.password = this.getHashPassword(updateUserDto.password);
+    }
     await this.userRepository.update(id, updateUserDto);
     return this.findOne(id);
   }
 
   async remove(id: number) {
-    return this.userRepository.delete(id);
+    const existUser = await this.userRepository.findOneBy({ id });
+    if (!existUser) {
+      throw new RpcException('User Not Found !');
+    }
+    return this.userRepository.update({ id }, { isDeleted: true });
   }
 }

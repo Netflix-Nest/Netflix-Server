@@ -7,9 +7,10 @@ export const UserClientProvider = {
     return ClientProxyFactory.create({
       transport: Transport.REDIS,
       options: {
-        host: configService.get("USER_SERVICE_HOST") || "localhost",
-        port: configService.get<number>("USER_SERVICE_PORT") || 4002,
+        host: configService.get<string>("USER_SERVICE_HOST") || "localhost",
+        port: configService.get<number>("USER_SERVICE_PORT") || 6379,
       },
     });
   },
+  inject: [ConfigService],
 };
