@@ -6,8 +6,6 @@ import { lastValueFrom } from 'rxjs';
 import { IUser, IUserDecorator } from './auth.interfaces';
 import { ConfigService } from '@nestjs/config';
 import ms, { StringValue } from 'ms';
-import { Response } from 'express';
-import { RegisterDto } from './dto/register.dto';
 @Injectable()
 export class AuthService {
   constructor(
@@ -42,7 +40,7 @@ export class AuthService {
     return refreshToken;
   };
 
-  async login(user: IUser, response: Response) {
+  async login(user: IUser) {
     const { id, email, fullName, role, avatar } = user;
     const payload = {
       sub: id,
@@ -52,21 +50,15 @@ export class AuthService {
       role,
     };
     const refreshToken = this.createRefreshToken(payload);
-    console.log(refreshToken);
     await lastValueFrom(
       this.userClient.send('update-user-token', {
         refreshToken,
         userId: id,
       }),
     );
-    response.cookie('refresh_token', refreshToken, {
-      httpOnly: true,
-      maxAge: ms(
-        this.configService.get<StringValue>('JWT_REFRESH_EXPIRE') ?? '1d',
-      ),
-    });
     return {
       accessToken: this.jwtService.sign(payload),
+      refreshToken,
       user: {
         id,
         fullName,
@@ -77,7 +69,7 @@ export class AuthService {
     };
   }
 
-  processNewToken = async (refreshToken: string, response: Response) => {
+  processNewToken = async (refreshToken: string) => {
     try {
       //decoded token
       this.jwtService.verify(refreshToken, {
@@ -106,16 +98,9 @@ export class AuthService {
           }),
         );
 
-        response.clearCookie('refresh_token');
-        response.cookie('refresh_token', newRefreshToken, {
-          httpOnly: true,
-          maxAge: ms(
-            this.configService.get<StringValue>('JWT_REFRESH_EXPIRE') ?? '1d',
-          ),
-        });
-
         return {
-          access_token: this.jwtService.sign(payload),
+          accessToken: this.jwtService.sign(payload),
+          refreshToken: newRefreshToken,
           user: {
             id,
             fullName,
@@ -131,13 +116,7 @@ export class AuthService {
     }
   };
 
-  async register(registerDto: RegisterDto) {
-    return lastValueFrom(this.userClient.send('register-user', registerDto));
-  }
-
-  async logout(user: IUserDecorator, response: Response) {
-    await lastValueFrom(this.userClient.send('remove-token', user.userId));
-    response.clearCookie('refresh_token');
-    return 'ok';
+  async logout(user: IUserDecorator) {
+    this.userClient.emit('remove-token', user.userId);
   }
 }

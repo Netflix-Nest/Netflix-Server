@@ -10,12 +10,10 @@ import {
   Transport,
 } from '@nestjs/microservices';
 import ms, { StringValue } from 'ms';
-import { LocalStrategy } from './passport/local.strategy';
-import { JwtStrategy } from './passport/jwt.strategy';
 
 @Module({
   imports: [
-    PassportModule,
+    // PassportModule,
     JwtModule.registerAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
@@ -26,18 +24,22 @@ import { JwtStrategy } from './passport/jwt.strategy';
       }),
       inject: [ConfigService],
     }),
-    ClientsModule.register([
+    ClientsModule.registerAsync([
       {
         name: 'USER_SERVICE',
-        transport: Transport.REDIS,
-        options: {
-          host: 'localhost',
-          port: 6379,
-        },
+        imports: [ConfigModule],
+        inject: [ConfigService],
+        useFactory: async (config: ConfigService) => ({
+          transport: Transport.REDIS,
+          options: {
+            host: config.get<string>('REDIS_HOST'),
+            port: config.get<number>('REDIS_PORT'),
+          },
+        }),
       },
     ]),
   ],
   controllers: [AuthController],
-  providers: [AuthService, LocalStrategy, JwtStrategy],
+  providers: [AuthService],
 })
 export class AuthModule {}

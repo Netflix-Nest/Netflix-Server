@@ -3,14 +3,14 @@ import {
   ForbiddenException,
   Injectable,
   UnauthorizedException,
-} from '@nestjs/common';
-import { Reflector } from '@nestjs/core';
-import { AuthGuard } from '@nestjs/passport';
-import { Request } from 'express';
-import { IS_PUBLIC_KEY } from 'src/decorators/customize';
+} from "@nestjs/common";
+import { Reflector } from "@nestjs/core";
+import { AuthGuard } from "@nestjs/passport";
+import { Request } from "express";
+import { IS_PUBLIC_KEY } from "src/common/decorators/customize";
 
 @Injectable()
-export class JwtAuthGuard extends AuthGuard('jwt') {
+export class JwtAuthGuard extends AuthGuard("jwt") {
   constructor(private reflector: Reflector) {
     super();
   }
@@ -30,7 +30,7 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
 
     // You can throw an exception based on either "info" or "err" arguments
     if (err || !user) {
-      throw err || new UnauthorizedException('Token is absent or invalid');
+      throw err || new UnauthorizedException("Token is absent or invalid");
     }
 
     // //check permissions

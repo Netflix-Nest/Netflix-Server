@@ -11,7 +11,7 @@ import {
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto, UpdateUserTokenDto } from './dto/update-user.dto';
-import { MessagePattern, Payload } from '@nestjs/microservices';
+import { EventPattern, MessagePattern, Payload } from '@nestjs/microservices';
 import { RegisterUser } from './user.interfaces';
 
 @Controller('user')
@@ -36,7 +36,7 @@ export class UserController {
     );
   }
 
-  @MessagePattern('remove-token')
+  @EventPattern('remove-token')
   async removeToken(@Payload() id: number) {
     return this.userService.removeToken(id);
   }

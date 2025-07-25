@@ -3,6 +3,7 @@ import { AppModule } from './app.module';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { AllExceptionsFilter } from './core/exception-filters';
 import { LoggingInterceptor, TransformInterceptor } from './core/interceptors';
+import { ConfigService } from '@nestjs/config';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -14,6 +15,7 @@ async function bootstrap() {
     },
   });
   await app.startAllMicroservices();
+  const configService = app.get(ConfigService);
   const reflector = app.get(Reflector);
   // app.useGlobalGuards(new JwtAuthGuard(reflector));
   app.useGlobalFilters(new AllExceptionsFilter());
@@ -21,6 +23,6 @@ async function bootstrap() {
     new LoggingInterceptor(),
     new TransformInterceptor(),
   );
-  await app.listen(process.env.PORT ?? 3001);
+  await app.listen(configService.get<number>('PORT') ?? 4002);
 }
 bootstrap();
