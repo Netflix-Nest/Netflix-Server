@@ -8,6 +8,8 @@ import {
   Delete,
   Query,
   Inject,
+  UseInterceptors,
+  UploadedFile,
 } from "@nestjs/common";
 import { CreateVideoDto } from "./dto/create-video.dto";
 import { UpdateVideoDto } from "./dto/update-video.dto";
@@ -15,11 +17,13 @@ import { ClientProxy } from "@nestjs/microservices";
 import { User } from "src/common/decorators/customize";
 import { IUserDecorator } from "src/interfaces/auth.interfaces";
 import { lastValueFrom } from "rxjs";
+import { FileInterceptor } from "@nestjs/platform-express";
 
 @Controller("video")
 export class VideoController {
   constructor(
-    @Inject("VIDEO_SERVICE") private readonly videoClient: ClientProxy
+    @Inject("VIDEO_SERVICE") private readonly videoClient: ClientProxy,
+    @Inject("STORAGE_SERVICE") private readonly storageClient: ClientProxy
   ) {}
 
   @Post()
@@ -30,8 +34,25 @@ export class VideoController {
     return lastValueFrom(this.videoClient.send("create-video", createVideoDto));
   }
 
+  @Post("upload")
+  @UseInterceptors(FileInterceptor("file"))
+  upload(@UploadedFile() file: Express.Multer.File) {
+    // File: { buffer, mimetype, originalname, ... }
+    // RMQ can't stay Buffer type, it turn buffer into object -> storage service receive a pain object
+    // We have to transform it to string before
+    const base64 = file.buffer.toString("base64");
+    console.log("req has arrived api gateway, forward to storage service.....");
+    return lastValueFrom(
+      this.storageClient.send("upload-video", {
+        originalname: file.originalname,
+        base64,
+        mimetype: file.mimetype,
+      })
+    );
+  }
+
   @Get()
-  async findAll(
+  findAll(
     @Query("current") currentPage: number,
     @Query("pageSize") limit: number,
     @Query() qs: string
@@ -44,19 +65,19 @@ export class VideoController {
   }
 
   @Get(":id")
-  findOne(@Param("id") id: string) {
+  findOne(@Param("id") id: number) {
     return lastValueFrom(this.videoClient.send("find-video", id));
   }
 
   @Patch(":id")
-  update(@Param("id") id: string, @Body() updateVideoDto: UpdateVideoDto) {
+  update(@Param("id") id: number, @Body() updateVideoDto: UpdateVideoDto) {
     return lastValueFrom(
       this.videoClient.send("update-video", { id, updateVideoDto })
     );
   }
 
   @Delete(":id")
-  remove(@Param("id") id: string) {
+  remove(@Param("id") id: number) {
     return lastValueFrom(this.videoClient.send("delete-video", id));
   }
 }
