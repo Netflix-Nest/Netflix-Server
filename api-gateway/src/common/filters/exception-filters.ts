@@ -12,7 +12,6 @@ import { RpcException } from "@nestjs/microservices";
 export class AllExceptionsFilter implements ExceptionFilter {
   catch(exception: unknown, host: ArgumentsHost) {
     const ctxType = host.getType();
-
     if (ctxType === "http") {
       const ctx = host.switchToHttp();
       const response = ctx.getResponse<Response>();
@@ -27,7 +26,6 @@ export class AllExceptionsFilter implements ExceptionFilter {
         exception instanceof HttpException
           ? exception.getResponse()
           : (exception as any)?.message || "Internal server error";
-
       response.status(status).json({
         statusCode: status,
         timestamp: new Date().toISOString(),
