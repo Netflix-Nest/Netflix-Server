@@ -24,11 +24,11 @@ async function bootstrap() {
     new TransformInterceptor()
   );
 
-  // app.enableCors({
-  //   origin: configService.get<string>("ORIGIN"),
-  //   methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
-  //   credentials: true,
-  // });
+  app.enableCors({
+    origin: configService.get<string>("ORIGIN"),
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
+    credentials: true,
+  });
 
   app.useGlobalPipes(
     new ValidationPipe({
