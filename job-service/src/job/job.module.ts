@@ -13,7 +13,7 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
           urls: [process.env.RABBITMQ_URL || 'amqp://netflix-rabbitmq:5672'],
           queue: 'video_queue',
           queueOptions: {
-            durable: false,
+            durable: true,
           },
         },
       },

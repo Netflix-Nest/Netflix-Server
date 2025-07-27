@@ -10,21 +10,23 @@ export class JobController {
   ) {}
   @MessagePattern('video-transcode')
   async handleTranscode(
-    @Payload() payload: { videoPath: string; videoId: number },
+    @Payload() payload: { bucket: string; fileName: string; url: string },
   ) {
-    const { videoPath, videoId } = payload;
-
+    const { bucket, fileName, url } = payload;
+    // const inputPath = `/data/${bucket}/${fileName}`;
     try {
-      const outputDir = `/app/outputs/${videoId}`;
-      await this.jobService.transcodeToHLS(videoPath, outputDir);
+      console.log('receive message 2....');
+      console.log('start transcode.....');
+      const outputDir = `/app/outputs/${fileName}`;
+      const duration = await this.jobService.transcodeToHLS(url, outputDir);
 
       this.videoClient.emit('video-transcode-success', {
-        videoId,
+        fileName,
         outputDir,
       });
     } catch (err) {
       this.videoClient.emit('video-transcode-failed', {
-        videoId,
+        fileName,
         error: err.message,
       });
     }

@@ -131,6 +131,7 @@ services:
     volumes:
       - ./storage-service:/app
       - /app/node_modules
+      - minio_data:/data
     command: ["npm", "run", "dev"]
     environment:
       # - NODE_ENV=development
@@ -159,6 +160,7 @@ services:
     volumes:
       - ./job-service:/app
       - /app/node_modules
+      - minio_data:/data
     command: ["npm", "run", "dev"]
     environment:
       # - NODE_ENV=development

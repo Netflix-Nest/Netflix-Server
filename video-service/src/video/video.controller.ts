@@ -10,20 +10,20 @@ export class VideoController {
 
   @EventPattern('video-transcode-success')
   async transcodeSuccess(
-    @Payload() { videoId, outputDir }: { videoId: number; outputDir: string },
+    @Payload() { fileName, outputDir }: { fileName: number; outputDir: string },
   ) {
     console.log(
       'Transcode successfully with video id: ',
-      videoId,
+      fileName,
       ' and dir: ',
       outputDir,
     );
-    await this.videoService.update(videoId, { originalUrl: outputDir });
+    await this.videoService.update(fileName, { originalUrl: outputDir });
   }
 
   @EventPattern('video-transcode-failed')
   async transcodeFailed(
-    @Payload() { videoId, error }: { videoId: number; error: string },
+    @Payload() { fileName, error }: { fileName: string; error: string },
   ) {
     //notification, todo....
     console.log('transcode failed', error);

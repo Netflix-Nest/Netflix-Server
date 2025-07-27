@@ -2,3 +2,8 @@ haven't find base on "isDeleted" yet.
 config DLQ
 haven't try catch important job
 send minIO -> storage service image, ffmpeg -> job service image
+upload thumbnail after transcode/allow user update thumbnail/handle logic upload thumbnail
+
+refactor logic:
+upload video -> transcode
+after that, upload video metadata
