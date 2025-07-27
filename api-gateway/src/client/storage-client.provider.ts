@@ -9,7 +9,7 @@ export const StorageClientProvider = {
       options: {
         urls: [
           configService.get<string>("STORAGE_SERVICE_URL") ||
-            "amqp://localhost:5672",
+            "amqp://netflix-rabbitmq:5672",
         ],
         queue:
           configService.get<string>("STORAGE_SERVICE_QUEUE") || "storage_queue",

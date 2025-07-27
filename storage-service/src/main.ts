@@ -9,7 +9,7 @@ async function bootstrap() {
     {
       transport: Transport.RMQ,
       options: {
-        urls: ['amqp://localhost:5672'],
+        urls: [process.env.RABBITMQ_URL || 'amqp://netflix-rabbitmq:5672'],
         queue: 'storage_queue',
         queueOptions: {
           durable: true,

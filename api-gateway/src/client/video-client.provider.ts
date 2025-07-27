@@ -9,7 +9,7 @@ export const VideoClientProvider = {
       options: {
         urls: [
           configService.get<string>("VIDEO_SERVICE_URL") ||
-            "amqp://localhost:5672",
+            "amqp://netflix-rabbitmq:5672",
         ],
         queue:
           configService.get<string>("VIDEO_SERVICE_QUEUE") || "video_queue",

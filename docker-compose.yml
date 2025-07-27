@@ -6,6 +6,8 @@ services:
     container_name: netflix-redis
     ports:
       - "6379:6379"
+    networks:
+      - netflix-network
 
   rabbitmq:
     image: rabbitmq:3-management
@@ -16,6 +18,14 @@ services:
     environment:
       RABBITMQ_DEFAULT_USER: guest
       RABBITMQ_DEFAULT_PASS: guest
+    healthcheck:
+      test: rabbitmq-diagnostics -q ping
+      interval: 30s
+      timeout: 30s
+      retries: 3
+      start_period: 60s
+    networks:
+      - netflix-network
 
   minio:
     image: quay.io/minio/minio
@@ -29,6 +39,170 @@ services:
       MINIO_ROOT_USER: minioadmin
       MINIO_ROOT_PASSWORD: minioadmin
     command: server /data --console-address ":9001"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+    networks:
+      - netflix-network
+
+  ffmpeg:
+    image: jrottenberg/ffmpeg:4.4-alpine
+    container_name: netflix-ffmpeg
+    entrypoint: ["tail", "-f", "/dev/null"]
+    healthcheck:
+      test: ["CMD", "ffmpeg", "-version"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 5s
+
+  auth-service:
+    build:
+      context: ./auth-service
+      dockerfile: Dockerfile
+    ports:
+      - "3001:3000"
+    volumes:
+      - ./auth-service:/app
+      - /app/node_modules
+    command: ["npm", "run", "dev"]
+    environment:
+      # - NODE_ENV=development
+      - REDIS_HOST=netflix-redis
+      - REDIS_PORT=6379
+    depends_on:
+      - redis
+    tty: true
+    stdin_open: true
+    networks:
+      - netflix-network
+
+  user-service:
+    build:
+      context: ./user-service
+      dockerfile: Dockerfile
+    ports:
+      - "3002:3000"
+    volumes:
+      - ./user-service:/app
+      - /app/node_modules
+    command: ["npm", "run", "dev"]
+    environment:
+      # - NODE_ENV=development
+      - REDIS_HOST=netflix-redis
+      - REDIS_PORT=6379
+    depends_on:
+      - redis
+    tty: true
+    stdin_open: true
+    networks:
+      - netflix-network
+
+  api-gateway:
+    build:
+      context: ./api-gateway
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./api-gateway:/app
+      - /app/node_modules
+    command: ["npm", "run", "dev"]
+    environment:
+      # - NODE_ENV=development
+      - RABBITMQ_URL=amqp://guest:guest@netflix-rabbitmq:5672
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    tty: true
+    stdin_open: true
+    networks:
+      - netflix-network
+
+  storage-service:
+    build:
+      context: ./storage-service
+      dockerfile: Dockerfile
+    ports:
+      - "3003:3000"
+    volumes:
+      - ./storage-service:/app
+      - /app/node_modules
+    command: ["npm", "run", "dev"]
+    environment:
+      # - NODE_ENV=development
+      - MINIO_ENDPOINT=netflix-minio
+      - MINIO_PORT=9000
+      - MINIO_ACCESS_KEY=minioadmin
+      - MINIO_SECRET_KEY=minioadmin
+      - MINIO_USE_SSL=false
+      - RABBITMQ_URL=amqp://guest:guest@netflix-rabbitmq:5672
+    depends_on:
+      minio:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    tty: true
+    stdin_open: true
+    networks:
+      - netflix-network
+
+  job-service:
+    build:
+      context: ./job-service
+      dockerfile: Dockerfile
+    ports:
+      - "3004:3000"
+    volumes:
+      - ./job-service:/app
+      - /app/node_modules
+    command: ["npm", "run", "dev"]
+    environment:
+      # - NODE_ENV=development
+      - RABBITMQ_URL=amqp://guest:guest@netflix-rabbitmq:5672
+    depends_on:
+      ffmpeg:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    tty: true
+    stdin_open: true
+    networks:
+      - netflix-network
+
+  video-service:
+    build:
+      context: ./video-service
+      dockerfile: Dockerfile
+    ports:
+      - "3005:3000"
+    volumes:
+      - ./video-service:/app
+      - /app/node_modules
+    command: ["npm", "run", "dev"]
+    environment:
+      # - NODE_ENV=development
+      # - MINIO_ENDPOINT=netflix-minio
+      # - MINIO_PORT=9000
+      # - MINIO_ACCESS_KEY=minioadmin
+      # - MINIO_SECRET_KEY=minioadmin
+      # - MINIO_USE_SSL=false
+      - RABBITMQ_URL=amqp://guest:guest@netflix-rabbitmq:5672
+    depends_on:
+      # - minio
+      rabbitmq:
+        condition: service_healthy
+    tty: true
+    stdin_open: true
+    networks:
+      - netflix-network
 
 volumes:
   minio_data:
+
+networks:
+  netflix-network:
+    driver: bridge

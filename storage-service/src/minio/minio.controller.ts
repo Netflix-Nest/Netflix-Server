@@ -12,9 +12,9 @@ export class MinioController {
     const filename = Date.now() + '-' + originalname;
     const buffer = Buffer.from(base64, 'base64');
     await this.minioService.upload('video-bucket', filename, buffer, mimetype);
-    //upload video metadata
     return {
       url: await this.minioService.getPresignedUrl('video-bucket', filename),
+      filename,
     };
   }
 }

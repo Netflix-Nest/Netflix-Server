@@ -1,2 +1,4 @@
 haven't find base on "isDeleted" yet.
 config DLQ
+haven't try catch important job
+send minIO -> storage service image, ffmpeg -> job service image

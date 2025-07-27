@@ -8,7 +8,7 @@ export class MinioService implements OnModuleInit {
 
   constructor(private readonly configService: ConfigService) {
     this.minioClient = new Client({
-      endPoint: 'localhost',
+      endPoint: 'netflix-minio',
       port: 9000,
       useSSL: false,
       accessKey: this.configService.get<string>('MINIO_ACCESS_KEY'),
