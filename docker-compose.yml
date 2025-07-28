@@ -132,6 +132,7 @@ services:
       - ./storage-service:/app
       - /app/node_modules
       - minio_data:/data
+      - video_outputs:/app/outputs
     command: ["npm", "run", "dev"]
     environment:
       # - NODE_ENV=development
@@ -161,6 +162,7 @@ services:
       - ./job-service:/app
       - /app/node_modules
       - minio_data:/data
+      - video_outputs:/app/outputs
     command: ["npm", "run", "dev"]
     environment:
       # - NODE_ENV=development
@@ -204,6 +206,7 @@ services:
 
 volumes:
   minio_data:
+  video_outputs:
 
 networks:
   netflix-network:

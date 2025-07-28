@@ -1,4 +1,10 @@
-import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
+import {
+  IsEmpty,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 import { VideoStatus } from '../entities/video.entity';
 
 export class CreateVideoDto {
@@ -24,6 +30,9 @@ export class CreateVideoDto {
 
   @IsOptional()
   hlsUrl: string;
+
+  @IsEmpty()
+  fileName: string;
 
   @IsOptional()
   thumbnailUrl: string;

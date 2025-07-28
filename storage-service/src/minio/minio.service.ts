@@ -1,6 +1,8 @@
 import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Client } from 'minio';
+import * as fs from 'fs';
+import { join } from 'path';
 
 @Injectable()
 export class MinioService implements OnModuleInit {
@@ -8,7 +10,7 @@ export class MinioService implements OnModuleInit {
 
   constructor(private readonly configService: ConfigService) {
     this.minioClient = new Client({
-      endPoint: 'netflix-minio',
+      endPoint: this.configService.get<string>('SERVER_IP') ?? 'localhost',
       port: 9000,
       useSSL: false,
       accessKey: this.configService.get<string>('MINIO_ACCESS_KEY'),
@@ -18,6 +20,7 @@ export class MinioService implements OnModuleInit {
 
   async onModuleInit() {
     await this.ensureBucketExists('video-bucket');
+    await this.ensureBucketExists('hls-bucket');
   }
 
   async ensureBucketExists(bucketName: string) {
@@ -37,22 +40,35 @@ export class MinioService implements OnModuleInit {
     await this.minioClient.putObject(bucket, fileName, buffer, buffer.length, {
       'Content-Type': mimeType,
     });
-    // Get URL for others container in docker containers
-    return this.minioClient.presignedGetObject(bucket, fileName, 60 * 120); // 120 minutes
+    return this.minioClient.presignedGetObject(bucket, fileName, 24 * 60 * 60); // 1 day
   }
 
-  // Get video URL for client
   async getVideoUrl(bucket: string, fileName: string): Promise<string> {
-    // console.log('returning url.....');
-    return this.minioClient.presignedGetObject(bucket, fileName, 60 * 120, {
-      host: 'localhost:9000',
-    });
-    // return this.minioClient.presignedUrl('GET', bucket, fileName, 60 * 120, {
-    //   host: 'localhost:9000',
-    // });
+    return this.minioClient.presignedGetObject(bucket, fileName, 24 * 60 * 60);
   }
 
-  async getObject(bucket: string, fileName: string) {
-    return this.minioClient.getObject(bucket, fileName);
+  // async getObject(bucket: string, fileName: string) {
+  //   return this.minioClient.getObject(bucket, fileName);
+  // }
+
+  async uploadHls(outputDir: string, fileName: string) {
+    const bucket = 'hls-bucket';
+    const files = fs.readdirSync(outputDir);
+    for (const file of files) {
+      const filePath = join(outputDir, file);
+      const objectName = `${fileName}/${file}`;
+      await this.minioClient.fPutObject(bucket, objectName, filePath, {});
+    }
+    const hlsUrl = await this.getHlsUrl(fileName);
+    console.log('upload success !', hlsUrl);
+  }
+
+  async getHlsUrl(fileName: string) {
+    return this.minioClient.presignedUrl(
+      'GET',
+      'hls-bucket',
+      `${fileName}/master.m3u8`,
+      24 * 60 * 60,
+    );
   }
 }

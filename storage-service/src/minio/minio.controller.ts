@@ -1,6 +1,11 @@
 import { Controller, Inject } from '@nestjs/common';
 import { MinioService } from './minio.service';
-import { ClientProxy, MessagePattern, Payload } from '@nestjs/microservices';
+import {
+  ClientProxy,
+  EventPattern,
+  MessagePattern,
+  Payload,
+} from '@nestjs/microservices';
 
 @Controller()
 export class MinioController {
@@ -32,5 +37,12 @@ export class MinioController {
     @Payload() { bucket, fileName }: { bucket: string; fileName: string },
   ) {
     return this.minioService.getVideoUrl(bucket, fileName);
+  }
+
+  @EventPattern('upload-hls-video')
+  async handleUploadHlsVideo(
+    @Payload() { outputDir, fileName }: { outputDir: string; fileName: string },
+  ) {
+    return this.minioService.uploadHls(outputDir, fileName);
   }
 }

@@ -4,6 +4,7 @@ import {
   Column,
   CreateDateColumn,
   UpdateDateColumn,
+  DeleteDateColumn,
 } from 'typeorm';
 
 export enum VideoStatus {
@@ -45,12 +46,15 @@ export class Video {
   hlsUrl?: string;
 
   @Column({ nullable: true })
+  fileName?: string;
+
+  @Column({ nullable: true })
   thumbnailUrl?: string;
 
   @Column({ type: 'bigint', nullable: true })
   duration?: number;
 
-  @Column({ nullable: true })
+  @Column({ default: false })
   isDeleted: boolean;
 
   @CreateDateColumn({ name: 'created_at' })
@@ -58,4 +62,7 @@ export class Video {
 
   @UpdateDateColumn({ name: 'updated_at' })
   updatedAt: Date;
+
+  @DeleteDateColumn({ name: 'deleted_at' })
+  deletedAt?: Date;
 }

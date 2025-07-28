@@ -1,4 +1,10 @@
-import { IsNotEmpty, IsNumber, IsOptional, IsString } from "class-validator";
+import {
+  IsEmpty,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+} from "class-validator";
 
 export enum VideoStatus {
   PENDING = "PENDING",
@@ -25,6 +31,9 @@ export class CreateVideoDto {
 
   @IsOptional()
   status: VideoStatus;
+
+  @IsEmpty()
+  fileName: string;
 
   @IsOptional()
   originalUrl: string;

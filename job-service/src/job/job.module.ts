@@ -7,11 +7,11 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
   imports: [
     ClientsModule.register([
       {
-        name: 'VIDEO_SERVICE',
+        name: 'STORAGE_SERVICE',
         transport: Transport.RMQ,
         options: {
           urls: [process.env.RABBITMQ_URL || 'amqp://netflix-rabbitmq:5672'],
-          queue: 'video_queue',
+          queue: 'storage_queue',
           queueOptions: {
             durable: true,
           },
