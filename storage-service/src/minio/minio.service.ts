@@ -34,13 +34,22 @@ export class MinioService implements OnModuleInit {
     buffer: Buffer,
     mimeType: string,
   ) {
-    return this.minioClient.putObject(bucket, fileName, buffer, buffer.length, {
+    await this.minioClient.putObject(bucket, fileName, buffer, buffer.length, {
       'Content-Type': mimeType,
     });
+    // Get URL for others container in docker containers
+    return this.minioClient.presignedGetObject(bucket, fileName, 60 * 120); // 120 minutes
   }
 
-  async getPresignedUrl(bucket: string, fileName: string): Promise<string> {
-    return this.minioClient.presignedGetObject(bucket, fileName, 60 * 120); // 120 minutes
+  // Get video URL for client
+  async getVideoUrl(bucket: string, fileName: string): Promise<string> {
+    // console.log('returning url.....');
+    return this.minioClient.presignedGetObject(bucket, fileName, 60 * 120, {
+      host: 'localhost:9000',
+    });
+    // return this.minioClient.presignedUrl('GET', bucket, fileName, 60 * 120, {
+    //   host: 'localhost:9000',
+    // });
   }
 
   async getObject(bucket: string, fileName: string) {

@@ -8,27 +8,6 @@ import { UpdateVideoDto } from './dto/update-video.dto';
 export class VideoController {
   constructor(private readonly videoService: VideoService) {}
 
-  @EventPattern('video-transcode-success')
-  async transcodeSuccess(
-    @Payload() { fileName, outputDir }: { fileName: number; outputDir: string },
-  ) {
-    console.log(
-      'Transcode successfully with video id: ',
-      fileName,
-      ' and dir: ',
-      outputDir,
-    );
-    await this.videoService.update(fileName, { originalUrl: outputDir });
-  }
-
-  @EventPattern('video-transcode-failed')
-  async transcodeFailed(
-    @Payload() { fileName, error }: { fileName: string; error: string },
-  ) {
-    //notification, todo....
-    console.log('transcode failed', error);
-  }
-
   @MessagePattern('create-video')
   async create(@Payload() createVideoDto: CreateVideoDto) {
     return this.videoService.create(createVideoDto);

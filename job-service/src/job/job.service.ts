@@ -98,8 +98,10 @@ export class JobService {
     // console.log(`Running FFmpeg: ${command}`);
     // await execAsync(command);
     await execFileAsync('ffmpeg', ffmpegArgs);
+  }
 
-    const probeCommand = `ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 ${inputPath}`;
+  async getDuration(inputPath: string) {
+    const probeCommand = `ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 "${inputPath}"`;
     const { stdout } = await execAsync(probeCommand);
     return parseFloat(stdout);
   }

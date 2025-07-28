@@ -12,22 +12,25 @@ export class MinioController {
   @MessagePattern('upload-video')
   async handleUpload(@Payload() data) {
     const { originalname, base64, mimetype } = data;
-    const filename = Date.now() + '-' + originalname;
+    const fileName = Date.now() + '-' + originalname;
     const buffer = Buffer.from(base64, 'base64');
-    await this.minioService.upload('video-bucket', filename, buffer, mimetype);
-    const url = await this.minioService.getPresignedUrl(
+    const url = await this.minioService.upload(
       'video-bucket',
-      filename,
+      fileName,
+      buffer,
+      mimetype,
     );
-    this.jobClient.emit('video-transcode', {
-      bucket: 'video-bucket',
-      fileName: filename,
-      url,
-    });
 
     return {
       url,
-      filename,
+      fileName,
     };
+  }
+
+  @MessagePattern('get-video-url')
+  async handleGetUrlVideo(
+    @Payload() { bucket, fileName }: { bucket: string; fileName: string },
+  ) {
+    return this.minioService.getVideoUrl(bucket, fileName);
   }
 }
