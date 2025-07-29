@@ -39,6 +39,11 @@ export class MinioController {
     return this.minioService.getVideoUrl(bucket, fileName);
   }
 
+  @MessagePattern('get-hls-url')
+  async handleGetHlsUrl(@Payload() fileName: string) {
+    return this.minioService.getHlsUrl(fileName);
+  }
+
   @EventPattern('upload-hls-video')
   async handleUploadHlsVideo(
     @Payload() { outputDir, fileName }: { outputDir: string; fileName: string },

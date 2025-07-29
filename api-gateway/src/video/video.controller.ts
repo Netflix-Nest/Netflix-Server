@@ -28,10 +28,28 @@ export class VideoController {
   ) {}
 
   @Post()
-  create(@Body() createVideoDto: CreateVideoDto, @User() user: IUserDecorator) {
+  async create(
+    @Body() createVideoDto: CreateVideoDto,
+    @User() user: IUserDecorator
+  ) {
     if (!createVideoDto.uploader) {
       createVideoDto.uploader = user.userId;
     }
+    if (createVideoDto.fileName) {
+      const originalUrl = await lastValueFrom(
+        this.storageClient.send("get-video-url", {
+          fileName: createVideoDto.fileName,
+          bucket: "video-bucket",
+        })
+      );
+
+      const hlsUrl = await lastValueFrom(
+        this.storageClient.send("get-hls-url", createVideoDto.fileName)
+      );
+      createVideoDto.originalUrl = originalUrl;
+      createVideoDto.hlsUrl = hlsUrl;
+    }
+
     return lastValueFrom(this.videoClient.send("create-video", createVideoDto));
   }
 

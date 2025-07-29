@@ -31,7 +31,7 @@ export class CreateVideoDto {
   @IsOptional()
   hlsUrl: string;
 
-  @IsEmpty()
+  @IsNotEmpty()
   fileName: string;
 
   @IsOptional()

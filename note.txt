@@ -7,3 +7,8 @@ upload thumbnail after transcode/allow user update thumbnail/handle logic upload
 refactor logic:
 upload video -> transcode
 after that, upload video metadata
+upload thumbnail or automatic generation 
+
+prod: 
+    - strict dto video
+    - private bucket and GET /video/:videoId/stream return master.m3u8 instead or use nginx

@@ -1,3 +1,4 @@
+import { Optional } from "@nestjs/common";
 import {
   IsEmpty,
   IsNotEmpty,
@@ -32,7 +33,7 @@ export class CreateVideoDto {
   @IsOptional()
   status: VideoStatus;
 
-  @IsEmpty()
+  @IsOptional()
   fileName: string;
 
   @IsOptional()

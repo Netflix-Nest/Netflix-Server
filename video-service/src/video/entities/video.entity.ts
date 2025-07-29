@@ -51,7 +51,7 @@ export class Video {
   @Column({ nullable: true })
   thumbnailUrl?: string;
 
-  @Column({ type: 'bigint', nullable: true })
+  @Column({ type: 'float', nullable: true })
   duration?: number;
 
   @Column({ default: false })

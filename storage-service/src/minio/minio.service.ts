@@ -21,6 +21,24 @@ export class MinioService implements OnModuleInit {
   async onModuleInit() {
     await this.ensureBucketExists('video-bucket');
     await this.ensureBucketExists('hls-bucket');
+    await this.setPublicPolicy('hls-bucket');
+  }
+
+  async setPublicPolicy(bucketName: string) {
+    const policy = {
+      Version: '2012-10-17',
+      Statement: [
+        {
+          Effect: 'Allow',
+          Principal: { AWS: ['*'] },
+          Action: ['s3:GetObject'],
+          Resource: [`arn:aws:s3:::${bucketName}/*`],
+        },
+      ],
+    };
+    await this.minioClient.setBucketPolicy(bucketName, JSON.stringify(policy));
+
+    Logger.log(`Public read policy set for bucket: ${bucketName}`);
   }
 
   async ensureBucketExists(bucketName: string) {
@@ -59,8 +77,6 @@ export class MinioService implements OnModuleInit {
       const objectName = `${fileName}/${file}`;
       await this.minioClient.fPutObject(bucket, objectName, filePath, {});
     }
-    const hlsUrl = await this.getHlsUrl(fileName);
-    console.log('upload success !', hlsUrl);
   }
 
   async getHlsUrl(fileName: string) {
@@ -68,7 +84,6 @@ export class MinioService implements OnModuleInit {
       'GET',
       'hls-bucket',
       `${fileName}/master.m3u8`,
-      24 * 60 * 60,
     );
   }
 }
