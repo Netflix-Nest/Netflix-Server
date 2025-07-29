@@ -1,3 +1,5 @@
+import { Content } from 'src/content/entities/content.entity';
+import { Series } from 'src/series/entities/series.entity';
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -5,6 +7,9 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   DeleteDateColumn,
+  ManyToOne,
+  JoinColumn,
+  OneToOne,
 } from 'typeorm';
 
 export enum VideoStatus {
@@ -20,17 +25,18 @@ export class Video {
   @PrimaryGeneratedColumn()
   id: number;
 
+  @OneToOne(() => Content)
+  @JoinColumn()
+  content: Content;
+
   @Column({ type: 'bigint' })
   uploader: number;
 
-  @Column()
-  title: string;
+  @Column({ nullable: true })
+  episodeNumber?: number;
 
   @Column({ nullable: true })
-  description?: string;
-
-  @Column({ type: 'bigint', nullable: true, name: 'genre_id' })
-  genreId?: number;
+  seasonNumber?: number;
 
   @Column({
     type: 'enum',
@@ -47,9 +53,6 @@ export class Video {
 
   @Column({ nullable: true })
   fileName?: string;
-
-  @Column({ nullable: true })
-  thumbnailUrl?: string;
 
   @Column({ type: 'float', nullable: true })
   duration?: number;

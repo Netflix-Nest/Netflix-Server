@@ -5,6 +5,10 @@ import { VideoModule } from './video/video.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { Video } from './video/entities/video.entity';
+import { SeriesModule } from './series/series.module';
+import { ContentModule } from './content/content.module';
+import { GenreModule } from './genre/genre.module';
+import { TagModule } from './tag/tag.module';
 
 @Module({
   imports: [
@@ -27,6 +31,10 @@ import { Video } from './video/entities/video.entity';
         ssl: true,
       }),
     }),
+    SeriesModule,
+    ContentModule,
+    GenreModule,
+    TagModule,
   ],
   controllers: [AppController],
   providers: [AppService],
