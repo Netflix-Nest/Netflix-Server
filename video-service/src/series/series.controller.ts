@@ -8,27 +8,28 @@ import { UpdateSeriesDto } from './dto/update-series.dto';
 export class SeriesController {
   constructor(private readonly seriesService: SeriesService) {}
 
-  @MessagePattern('createSeries')
+  @MessagePattern('create-series')
   create(@Payload() createSeriesDto: CreateSeriesDto) {
     return this.seriesService.create(createSeriesDto);
   }
 
-  @MessagePattern('findAllSeries')
-  findAll() {
-    return this.seriesService.findAll();
+  @MessagePattern('find-all-series')
+  findAll(@Payload() data: { currentPage: number; limit: number; qs: string }) {
+    const { currentPage, limit, qs } = data;
+    return this.seriesService.findAll(currentPage, limit, qs);
   }
 
-  @MessagePattern('findOneSeries')
+  @MessagePattern('find-one-series')
   findOne(@Payload() id: number) {
     return this.seriesService.findOne(id);
   }
 
-  @MessagePattern('updateSeries')
+  @MessagePattern('update-series')
   update(@Payload() updateSeriesDto: UpdateSeriesDto) {
     return this.seriesService.update(updateSeriesDto.id, updateSeriesDto);
   }
 
-  @MessagePattern('removeSeries')
+  @MessagePattern('remove-series')
   remove(@Payload() id: number) {
     return this.seriesService.remove(id);
   }

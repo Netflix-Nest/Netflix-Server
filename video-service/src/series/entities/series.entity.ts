@@ -15,7 +15,7 @@ import {
 @Entity('series')
 export class Series {
   @PrimaryGeneratedColumn()
-  id: string;
+  id: number;
 
   @Column({ default: 1 })
   seasonNumber: number;

@@ -8,27 +8,28 @@ import { UpdateContentDto } from './dto/update-content.dto';
 export class ContentController {
   constructor(private readonly contentService: ContentService) {}
 
-  @MessagePattern('createContent')
+  @MessagePattern('create-content')
   create(@Payload() createContentDto: CreateContentDto) {
     return this.contentService.create(createContentDto);
   }
 
-  @MessagePattern('findAllContent')
-  findAll() {
-    return this.contentService.findAll();
+  @MessagePattern('find-all-content')
+  findAll(@Payload() data: { currentPage: number; limit: number; qs: string }) {
+    const { currentPage, limit, qs } = data;
+    return this.contentService.findAll(currentPage, limit, qs);
   }
 
-  @MessagePattern('findOneContent')
+  @MessagePattern('find-one-content')
   findOne(@Payload() id: number) {
     return this.contentService.findOne(id);
   }
 
-  @MessagePattern('updateContent')
+  @MessagePattern('update-content')
   update(@Payload() updateContentDto: UpdateContentDto) {
     return this.contentService.update(updateContentDto.id, updateContentDto);
   }
 
-  @MessagePattern('removeContent')
+  @MessagePattern('remove-content')
   remove(@Payload() id: number) {
     return this.contentService.remove(id);
   }

@@ -16,6 +16,10 @@ export class CreateVideoDto {
   @IsString()
   title: string;
 
+  @IsNotEmpty()
+  @IsNumber()
+  contentId: number;
+
   @IsOptional()
   description: string;
 

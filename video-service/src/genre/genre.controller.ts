@@ -8,27 +8,28 @@ import { UpdateGenreDto } from './dto/update-genre.dto';
 export class GenreController {
   constructor(private readonly genreService: GenreService) {}
 
-  @MessagePattern('createGenre')
+  @MessagePattern('create-genre')
   create(@Payload() createGenreDto: CreateGenreDto) {
     return this.genreService.create(createGenreDto);
   }
 
-  @MessagePattern('findAllGenre')
-  findAll() {
-    return this.genreService.findAll();
+  @MessagePattern('find-all-genre')
+  findAll(@Payload() data: { currentPage: number; limit: number; qs: string }) {
+    const { currentPage, limit, qs } = data;
+    return this.genreService.findAll(currentPage, limit, qs);
   }
 
-  @MessagePattern('findOneGenre')
+  @MessagePattern('find-one-genre')
   findOne(@Payload() id: number) {
     return this.genreService.findOne(id);
   }
 
-  @MessagePattern('updateGenre')
+  @MessagePattern('update-genre')
   update(@Payload() updateGenreDto: UpdateGenreDto) {
     return this.genreService.update(updateGenreDto.id, updateGenreDto);
   }
 
-  @MessagePattern('removeGenre')
+  @MessagePattern('remove-genre')
   remove(@Payload() id: number) {
     return this.genreService.remove(id);
   }

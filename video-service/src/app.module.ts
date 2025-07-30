@@ -9,6 +9,7 @@ import { SeriesModule } from './series/series.module';
 import { ContentModule } from './content/content.module';
 import { GenreModule } from './genre/genre.module';
 import { TagModule } from './tag/tag.module';
+import { ActorModule } from './actor/actor.module';
 
 @Module({
   imports: [
@@ -35,6 +36,7 @@ import { TagModule } from './tag/tag.module';
     ContentModule,
     GenreModule,
     TagModule,
+    ActorModule,
   ],
   controllers: [AppController],
   providers: [AppService],

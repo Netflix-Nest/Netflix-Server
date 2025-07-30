@@ -1,23 +1,27 @@
+import { Actor } from 'src/actor/entities/actor.entity';
 import { Genre } from 'src/genre/entities/genre.entity';
 import { Series } from 'src/series/entities/series.entity';
 import { Tag } from 'src/tag/entities/tag.entity';
 import { Video } from 'src/video/entities/video.entity';
 import {
   Column,
+  CreateDateColumn,
+  DeleteDateColumn,
   Entity,
   JoinColumn,
   JoinTable,
   ManyToMany,
   OneToOne,
   PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 
 @Entity('content')
 export class Content {
   @PrimaryGeneratedColumn()
-  id: string;
+  id: number;
 
-  @Column()
+  @Column({ unique: true })
   title: string;
 
   @Column({ nullable: true })
@@ -49,6 +53,9 @@ export class Content {
   @OneToOne(() => Series, (series) => series.content, { nullable: true })
   series?: Series;
 
+  @ManyToMany(() => Actor, (actor) => actor.contents, { nullable: true })
+  actors?: Actor[];
+
   @Column({ type: 'int' })
   year: number;
 
@@ -79,4 +86,16 @@ export class Content {
 
   @Column()
   ageRating: number; // 16+, 17+,...
+
+  @Column({ default: false })
+  isDeleted: boolean;
+
+  @CreateDateColumn({ name: 'created_at' })
+  createdAt: Date;
+
+  @UpdateDateColumn({ name: 'updated_at' })
+  updatedAt: Date;
+
+  @DeleteDateColumn({ name: 'deleted_at' })
+  deletedAt?: Date;
 }

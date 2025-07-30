@@ -9,15 +9,27 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-@Entity('tags')
-export class Tag {
+@Entity('actors')
+export class Actor {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ unique: true })
-  name: string;
+  @Column()
+  fullName: string;
 
-  @ManyToMany(() => Content, (content) => content.tags)
+  @Column({ nullable: true })
+  avatarUrl?: string;
+
+  @Column({ nullable: true })
+  birthDate?: Date;
+
+  @Column({ nullable: true })
+  nationality?: string;
+
+  @Column({ nullable: true, type: 'text' })
+  biography?: string;
+
+  @ManyToMany(() => Content, (content) => content.actors, { nullable: true })
   contents: Content[];
 
   @Column({ default: false })

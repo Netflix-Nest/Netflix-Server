@@ -1,26 +1,83 @@
 import { Injectable } from '@nestjs/common';
 import { CreateGenreDto } from './dto/create-genre.dto';
 import { UpdateGenreDto } from './dto/update-genre.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Genre } from './entities/genre.entity';
+import { Repository } from 'typeorm';
+import { RpcException } from '@nestjs/microservices';
+import aqp from 'api-query-params';
 
 @Injectable()
 export class GenreService {
-  create(createGenreDto: CreateGenreDto) {
-    return 'This action adds a new genre';
+  constructor(
+    @InjectRepository(Genre)
+    private readonly genreRepository: Repository<Genre>,
+  ) {}
+  async create(createGenreDto: CreateGenreDto) {
+    const existGenre = await this.genreRepository.findOne({
+      where: { name: createGenreDto.name },
+    });
+    if (existGenre) {
+      throw new RpcException('Genre already exist !');
+    }
+    return existGenre;
   }
 
-  findAll() {
-    return `This action returns all genre`;
+  async findAll(currentPage: number, limit: number, qs: string) {
+    const { filter, sort, projection } = aqp(qs);
+    delete filter.current;
+    delete filter.pageSize;
+
+    const offset = (+currentPage - 1) * +limit;
+    const defaultLimit = +limit ? +limit : 10;
+
+    const totalItems = await this.genreRepository.count({
+      where: filter,
+    });
+    const totalPages = Math.ceil(totalItems / defaultLimit);
+
+    const videos = await this.genreRepository.find({
+      where: filter,
+      skip: offset,
+      take: defaultLimit,
+      order: sort || { createdAt: 'DESC' },
+      select:
+        projection && Object.keys(projection).length > 0
+          ? (Object.keys(projection) as (keyof Genre)[])
+          : undefined,
+    });
+
+    return {
+      meta: {
+        currentPage: +currentPage,
+        pageSize: defaultLimit,
+        totalItems,
+        totalPages,
+      },
+      data: videos,
+    };
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} genre`;
+  async findOne(id: number) {
+    return this.genreRepository.findOne({ where: { id } });
   }
 
-  update(id: number, updateGenreDto: UpdateGenreDto) {
-    return `This action updates a #${id} genre`;
+  async update(id: number, updateGenreDto: UpdateGenreDto) {
+    const existGenre = await this.genreRepository.findOne({ where: { id } });
+    if (!existGenre) {
+      throw new RpcException('Genre not found !');
+    }
+    await this.genreRepository.update({ id }, { ...updateGenreDto });
+    return this.genreRepository.findOne({ where: { id } });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} genre`;
+  async remove(id: number) {
+    const existGenre = await this.genreRepository.findOne({
+      where: { id },
+    });
+    if (!existGenre) {
+      throw new RpcException('Genre not found !');
+    }
+    return this.genreRepository.softDelete(id);
   }
 }
