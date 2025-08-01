@@ -6,6 +6,7 @@ import { Repository } from 'typeorm';
 import { Actor } from './entities/actor.entity';
 import { RpcException } from '@nestjs/microservices';
 import aqp from 'api-query-params';
+import { Content } from 'src/content/entities/content.entity';
 
 @Injectable()
 export class ActorService {
@@ -23,15 +24,31 @@ export class ActorService {
     if (existActor) {
       throw new RpcException('Actor already exist !');
     }
+
+    const existContents = await Promise.all(
+      createActorDto.contentIds?.map(async (ctnId) => {
+        const content = await this.actorRepository.findOne({
+          where: { id: ctnId },
+        });
+        return content ? ctnId : null;
+      }) ?? [],
+    );
+    const validContents = existContents.filter(
+      (id): id is number => id !== null,
+    );
+
+    const contentEntities = validContents.map((id) => ({ id })) as Content[];
+
     const actor = this.actorRepository.create({
       ...createActorDto,
+      contents: contentEntities,
     });
 
     await this.actorRepository.save(actor);
     return actor;
   }
 
-  async findAll(currentPage: number, limit: number, qs: string) {
+  async findAll(currentPage: number = 1, limit: number = 10, qs: string) {
     const { filter, sort, projection } = aqp(qs);
     delete filter.current;
     delete filter.pageSize;
@@ -54,7 +71,7 @@ export class ActorService {
           ? (Object.keys(projection) as (keyof Actor)[])
           : undefined,
 
-      relations: ['content'],
+      relations: ['contents'],
     });
 
     return {
@@ -70,7 +87,7 @@ export class ActorService {
   async findOne(id: number) {
     return this.actorRepository.findOne({
       where: { id },
-      relations: ['content'],
+      relations: ['contents'],
     });
   }
 
@@ -79,7 +96,8 @@ export class ActorService {
     if (!actor) {
       throw new RpcException('Actor not found !');
     }
-    return this.actorRepository.update({ id }, { ...updateActorDto });
+    await this.actorRepository.update({ id }, { ...updateActorDto });
+    return this.actorRepository.findOneBy({ id });
   }
 
   async remove(id: number) {

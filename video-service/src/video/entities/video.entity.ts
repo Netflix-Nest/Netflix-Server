@@ -25,18 +25,18 @@ export class Video {
   @PrimaryGeneratedColumn()
   id: number;
 
+  @Column({ nullable: true })
+  episodeNumber?: number;
+
+  @Column({ nullable: true })
+  seasonNumber?: number;
+
   @OneToOne(() => Content)
   @JoinColumn()
   content: Content;
 
   @Column({ type: 'bigint' })
   uploader: number;
-
-  @Column({ nullable: true })
-  episodeNumber?: number;
-
-  @Column({ nullable: true })
-  seasonNumber?: number;
 
   @Column({
     type: 'enum',
@@ -56,9 +56,6 @@ export class Video {
 
   @Column({ type: 'float', nullable: true })
   duration?: number;
-
-  @Column({ default: false })
-  isDeleted: boolean;
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;

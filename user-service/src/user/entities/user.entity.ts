@@ -38,9 +38,6 @@ export class User {
   @Column({ nullable: true })
   avatar: string;
 
-  @Column({ default: false })
-  isDeleted: boolean;
-
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
 

@@ -25,8 +25,9 @@ export class ActorController {
   }
 
   @MessagePattern('update-actor')
-  update(@Payload() updateActorDto: UpdateActorDto) {
-    return this.actorService.update(updateActorDto.id, updateActorDto);
+  update(@Payload() data: { id: number; updateActorDto: UpdateActorDto }) {
+    const { id, updateActorDto } = data;
+    return this.actorService.update(id, updateActorDto);
   }
 
   @MessagePattern('remove-actor')

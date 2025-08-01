@@ -8,6 +8,7 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  Index,
   JoinColumn,
   JoinTable,
   ManyToMany,
@@ -16,6 +17,9 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
+@Index(['title'])
+@Index(['type'])
+@Index(['year'])
 @Entity('content')
 export class Content {
   @PrimaryGeneratedColumn()
@@ -78,7 +82,7 @@ export class Content {
   studio: string;
 
   @Column()
-  season: string;
+  season: string; // spring / summer / autumn / winter
 
   @OneToOne(() => Video)
   @JoinColumn()
@@ -86,9 +90,6 @@ export class Content {
 
   @Column()
   ageRating: number; // 16+, 17+,...
-
-  @Column({ default: false })
-  isDeleted: boolean;
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;

@@ -4,12 +4,10 @@ haven't try catch important tasks
 
 handle logic upload thumbnail
 upload thumbnail or automatic generation 
-modified logic findAll
-dto video, content, series, genre, tags
-logic CRUD 5 above 
-
 relation: - single video: video 1-1 content
           - series:       video 1-1 content, series 1-1 content, series of video: video.content.series
+logic increase view
+
 
 prod: 
     - strict dto video

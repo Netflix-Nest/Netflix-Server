@@ -4,11 +4,13 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  Index,
   ManyToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 
+@Index(['name'])
 @Entity('tags')
 export class Tag {
   @PrimaryGeneratedColumn()
@@ -17,11 +19,8 @@ export class Tag {
   @Column({ unique: true })
   name: string;
 
-  @ManyToMany(() => Content, (content) => content.tags)
+  @ManyToMany(() => Content, (content) => content.tags, { nullable: true })
   contents: Content[];
-
-  @Column({ default: false })
-  isDeleted: boolean;
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;

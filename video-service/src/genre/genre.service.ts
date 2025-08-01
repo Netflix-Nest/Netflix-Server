@@ -23,7 +23,7 @@ export class GenreService {
     return existGenre;
   }
 
-  async findAll(currentPage: number, limit: number, qs: string) {
+  async findAll(currentPage: number = 1, limit: number = 10, qs: string) {
     const { filter, sort, projection } = aqp(qs);
     delete filter.current;
     delete filter.pageSize;

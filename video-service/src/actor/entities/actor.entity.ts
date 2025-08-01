@@ -4,11 +4,14 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  Index,
+  JoinTable,
   ManyToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 
+@Index(['fullName'])
 @Entity('actors')
 export class Actor {
   @PrimaryGeneratedColumn()
@@ -30,10 +33,8 @@ export class Actor {
   biography?: string;
 
   @ManyToMany(() => Content, (content) => content.actors, { nullable: true })
+  @JoinTable()
   contents: Content[];
-
-  @Column({ default: false })
-  isDeleted: boolean;
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;

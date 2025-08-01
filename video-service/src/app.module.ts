@@ -10,6 +10,11 @@ import { ContentModule } from './content/content.module';
 import { GenreModule } from './genre/genre.module';
 import { TagModule } from './tag/tag.module';
 import { ActorModule } from './actor/actor.module';
+import { Content } from './content/entities/content.entity';
+import { Actor } from './actor/entities/actor.entity';
+import { Genre } from './genre/entities/genre.entity';
+import { Series } from './series/entities/series.entity';
+import { Tag } from './tag/entities/tag.entity';
 
 @Module({
   imports: [
@@ -27,7 +32,7 @@ import { ActorModule } from './actor/actor.module';
         username: config.get<string>('DATABASE_USERNAME'),
         password: config.get<string>('DATABASE_PASSWORD'),
         database: config.get<string>('DATABASE_NAME'),
-        entities: [Video],
+        entities: [Video, Content, Actor, Genre, Series, Tag],
         synchronize: true,
         ssl: true,
       }),

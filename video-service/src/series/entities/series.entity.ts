@@ -17,15 +17,18 @@ export class Series {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ default: 1 })
+  @Column()
+  totalEpisodes: number;
+
+  @Column()
   seasonNumber: number;
+
+  @Column({ default: 1 })
+  totalSeasonNumber: number; // All season published
 
   @OneToOne(() => Content, (content) => content.series)
   @JoinColumn()
   content: Content;
-
-  @Column({ default: false })
-  isDeleted: boolean;
 
   @CreateDateColumn()
   createdAt: Date;
