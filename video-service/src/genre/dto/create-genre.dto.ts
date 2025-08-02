@@ -1,4 +1,11 @@
-import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { Type } from 'class-transformer';
+import {
+  IsArray,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 
 export class CreateGenreDto {
   @IsNotEmpty()
@@ -12,4 +19,10 @@ export class CreateGenreDto {
   @IsOptional()
   @IsString()
   thumbnailUrl: string;
+
+  @IsOptional()
+  @IsArray()
+  @IsNumber({}, { each: true })
+  @Type(() => Number)
+  contentIds?: number[];
 }

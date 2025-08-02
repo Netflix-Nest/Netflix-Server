@@ -149,6 +149,6 @@ export class UserService {
     if (!existUser) {
       throw new RpcException('User Not Found !');
     }
-    return this.userRepository.update({ id }, { isDeleted: true });
+    return this.userRepository.softDelete(id);
   }
 }

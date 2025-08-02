@@ -28,7 +28,7 @@ export class Series {
 
   @OneToOne(() => Content, (content) => content.series)
   @JoinColumn()
-  content: Content;
+  contents: Content;
 
   @CreateDateColumn()
   createdAt: Date;

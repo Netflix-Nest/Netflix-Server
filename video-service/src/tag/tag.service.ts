@@ -20,7 +20,8 @@ export class TagService {
     if (existTag) {
       throw new RpcException('Tag already exist !');
     }
-    return existTag;
+    const tag = this.TagRepository.create({ ...createTagDto });
+    return this.TagRepository.save(tag);
   }
 
   async findAll(currentPage: number = 1, limit: number = 10, qs: string) {

@@ -25,8 +25,9 @@ export class TagController {
   }
 
   @MessagePattern('update-tag')
-  update(@Payload() updateTagDto: UpdateTagDto) {
-    return this.tagService.update(updateTagDto.id, updateTagDto);
+  update(@Payload() data: { id: number; updateTagDto: UpdateTagDto }) {
+    const { id, updateTagDto } = data;
+    return this.tagService.update(id, updateTagDto);
   }
 
   @MessagePattern('remove-tag')

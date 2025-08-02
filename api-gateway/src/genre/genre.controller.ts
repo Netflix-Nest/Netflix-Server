@@ -45,9 +45,11 @@ export class GenreController {
 
 	@Patch(":id")
 	update(@Param("id") id: string, @Body() updateGenreDto: UpdateGenreDto) {
-		const newId = +id;
 		return lastValueFrom(
-			this.videoClient.send("update-genre", { ...updateGenreDto, newId })
+			this.videoClient.send("update-genre", {
+				updateGenreDto,
+				id: +id,
+			})
 		);
 	}
 

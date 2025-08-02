@@ -31,9 +31,9 @@ export class Video {
   @Column({ nullable: true })
   seasonNumber?: number;
 
-  @OneToOne(() => Content)
+  @OneToOne(() => Content, { nullable: true })
   @JoinColumn()
-  content: Content;
+  contents: Content;
 
   @Column({ type: 'bigint' })
   uploader: number;

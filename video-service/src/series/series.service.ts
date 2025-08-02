@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { CreateSeriesDto } from './dto/create-series.dto';
 import { UpdateSeriesDto } from './dto/update-series.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -7,20 +7,21 @@ import { Repository } from 'typeorm';
 import { RpcException } from '@nestjs/microservices';
 import aqp from 'api-query-params';
 import { Content } from 'src/content/entities/content.entity';
+import { ContentService } from 'src/content/content.service';
 
 @Injectable()
 export class SeriesService {
   constructor(
     @InjectRepository(Series)
     private readonly seriesRepository: Repository<Series>,
-    @InjectRepository(Content)
-    private readonly contentRepository: Repository<Content>,
+    @Inject(forwardRef(() => ContentService))
+    private readonly contentService: ContentService,
   ) {}
   async create(createSeriesDto: CreateSeriesDto) {
     const { contentId, seasonNumber } = createSeriesDto;
     const existSeries = await this.seriesRepository.findOne({
       where: {
-        content: { id: createSeriesDto.contentId },
+        contents: { id: createSeriesDto.contentId },
         seasonNumber: seasonNumber,
       },
     });
@@ -29,14 +30,17 @@ export class SeriesService {
       throw new RpcException('Series already exist !');
     }
 
-    const content = await this.contentRepository.findOneBy({ id: contentId });
+    const content = await this.contentService.findOne(
+      createSeriesDto.contentId,
+    );
     if (!content) {
       throw new RpcException('Content not found');
     }
-
+    if (!createSeriesDto.totalEpisodes) {
+      createSeriesDto.totalEpisodes = createSeriesDto.seasonNumber;
+    }
     const newSeries = this.seriesRepository.create({
-      seasonNumber,
-      content,
+      ...createSeriesDto,
     });
 
     await this.seriesRepository.save(newSeries);
@@ -65,7 +69,7 @@ export class SeriesService {
         projection && Object.keys(projection).length > 0
           ? (Object.keys(projection) as (keyof Series)[])
           : undefined,
-      relations: ['content'],
+      relations: ['contents'],
     });
 
     return {
@@ -82,7 +86,7 @@ export class SeriesService {
   async findOne(id: number) {
     return this.seriesRepository.findOne({
       where: { id },
-      relations: ['content'],
+      relations: ['contents'],
     });
   }
 
@@ -90,6 +94,14 @@ export class SeriesService {
     const existSeries = await this.seriesRepository.findOne({ where: { id } });
     if (!existSeries) {
       throw new RpcException('Series not found !');
+    }
+    if (updateSeriesDto.contentId) {
+      const content = await this.contentService.findOne(
+        updateSeriesDto.contentId,
+      );
+      if (!content) {
+        throw new RpcException('Content not found !');
+      }
     }
     await this.seriesRepository.update({ id }, { ...updateSeriesDto });
     return this.seriesRepository.findOne({ where: { id } });

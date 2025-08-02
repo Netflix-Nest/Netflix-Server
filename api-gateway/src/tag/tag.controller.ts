@@ -43,9 +43,8 @@ export class TagController {
 
 	@Patch(":id")
 	update(@Param("id") id: string, @Body() updateTagDto: UpdateTagDto) {
-		const newId = +id;
 		return lastValueFrom(
-			this.videoClient.send("update-tag", { ...updateTagDto, newId })
+			this.videoClient.send("update-tag", { updateTagDto, id: +id })
 		);
 	}
 

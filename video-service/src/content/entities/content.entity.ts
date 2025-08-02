@@ -20,7 +20,7 @@ import {
 @Index(['title'])
 @Index(['type'])
 @Index(['year'])
-@Entity('content')
+@Entity('contents')
 export class Content {
   @PrimaryGeneratedColumn()
   id: number;
@@ -51,10 +51,10 @@ export class Content {
   @Column({ default: 'single' })
   type: 'single' | 'series';
 
-  @OneToOne(() => Video, (video) => video.content, { nullable: true })
+  @OneToOne(() => Video, (video) => video.contents, { nullable: true })
   video?: Video;
 
-  @OneToOne(() => Series, (series) => series.content, { nullable: true })
+  @OneToOne(() => Series, (series) => series.contents, { nullable: true })
   series?: Series;
 
   @ManyToMany(() => Actor, (actor) => actor.contents, { nullable: true })

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Video } from './entities/video.entity';
 import { Repository } from 'typeorm';
@@ -7,31 +7,35 @@ import { UpdateVideoDto } from './dto/update-video.dto';
 import aqp from 'api-query-params';
 import { RpcException } from '@nestjs/microservices';
 import { Content } from 'src/content/entities/content.entity';
+import { ContentModule } from 'src/content/content.module';
+import { ContentService } from 'src/content/content.service';
 
 @Injectable()
 export class VideoService {
   constructor(
     @InjectRepository(Video)
     private readonly videoRepository: Repository<Video>,
-    @InjectRepository(Content)
-    private readonly contentRepository: Repository<Content>,
+    @Inject(forwardRef(() => ContentService))
+    private readonly contentService: ContentService,
   ) {}
 
   async create(createVideoDto: CreateVideoDto) {
     const existVideo = await this.videoRepository.findOne({
-      where: { content: { id: createVideoDto.contentId } },
+      where: {
+        seasonNumber: createVideoDto.seasonNumber,
+        episodeNumber: createVideoDto.episodeNumber,
+      },
     });
     if (existVideo) {
       throw new RpcException('Video already exist !');
     }
 
-    const content = await this.contentRepository.findOneBy({
-      id: createVideoDto.contentId,
-    });
+    const content = await this.contentService.findOne(createVideoDto.contentId);
     if (!content) {
       throw new RpcException('Content not found');
     }
-    const video = await this.videoRepository.create({
+
+    const video = this.videoRepository.create({
       ...createVideoDto,
     });
     await this.videoRepository.save(video);
@@ -60,7 +64,7 @@ export class VideoService {
         projection && Object.keys(projection).length > 0
           ? (Object.keys(projection) as (keyof Video)[])
           : undefined,
-      relations: ['content'],
+      relations: ['contents'],
     });
 
     return {
@@ -77,7 +81,7 @@ export class VideoService {
   async findOne(id: number) {
     return this.videoRepository.findOne({
       where: { id },
-      relations: ['content'],
+      relations: ['contents'],
     });
   }
 
@@ -86,6 +90,34 @@ export class VideoService {
     if (!video) {
       throw new RpcException('Video Not Found !');
     }
+
+    if (updateVideoDto.contentId) {
+      const content = await this.contentService.findOne(
+        updateVideoDto.contentId,
+      );
+      if (!content) {
+        throw new RpcException('Content not found');
+      }
+    }
+
+    if (!updateVideoDto.seasonNumber) {
+      updateVideoDto.seasonNumber = video.seasonNumber;
+    }
+    if (!updateVideoDto.episodeNumber) {
+      updateVideoDto.episodeNumber = video.episodeNumber;
+    }
+    const existVideo = await this.videoRepository.findOne({
+      where: {
+        seasonNumber: updateVideoDto.seasonNumber,
+        episodeNumber: updateVideoDto.episodeNumber,
+      },
+    });
+    if (existVideo) {
+      throw new RpcException(
+        'Video with this episode and season already exist !',
+      );
+    }
+
     await this.videoRepository.update(id, updateVideoDto);
     return this.findOne(id);
   }

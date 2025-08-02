@@ -20,6 +20,12 @@ export class CreateVideoDto {
   @IsNumber()
   contentId: number;
 
+  @IsNotEmpty()
+  episodeNumber: number;
+
+  @IsNotEmpty()
+  seasonNumber: number;
+
   @IsOptional()
   description: string;
 

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { CreateActorDto } from './dto/create-actor.dto';
 import { UpdateActorDto } from './dto/update-actor.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -7,12 +7,15 @@ import { Actor } from './entities/actor.entity';
 import { RpcException } from '@nestjs/microservices';
 import aqp from 'api-query-params';
 import { Content } from 'src/content/entities/content.entity';
+import { ContentService } from 'src/content/content.service';
 
 @Injectable()
 export class ActorService {
   constructor(
     @InjectRepository(Actor)
     private readonly actorRepository: Repository<Actor>,
+    @Inject(forwardRef(() => ContentService))
+    private readonly contentService: ContentService,
   ) {}
   async create(createActorDto: CreateActorDto) {
     const existActor = await this.actorRepository.findOne({
@@ -27,9 +30,7 @@ export class ActorService {
 
     const existContents = await Promise.all(
       createActorDto.contentIds?.map(async (ctnId) => {
-        const content = await this.actorRepository.findOne({
-          where: { id: ctnId },
-        });
+        const content = await this.contentService.findOne(ctnId);
         return content ? ctnId : null;
       }) ?? [],
     );

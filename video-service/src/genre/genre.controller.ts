@@ -25,8 +25,9 @@ export class GenreController {
   }
 
   @MessagePattern('update-genre')
-  update(@Payload() updateGenreDto: UpdateGenreDto) {
-    return this.genreService.update(updateGenreDto.id, updateGenreDto);
+  update(@Payload() data: { id: number; updateGenreDto: UpdateGenreDto }) {
+    const { id, updateGenreDto } = data;
+    return this.genreService.update(id, updateGenreDto);
   }
 
   @MessagePattern('remove-genre')

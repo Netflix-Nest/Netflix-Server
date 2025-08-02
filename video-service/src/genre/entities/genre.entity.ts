@@ -22,7 +22,7 @@ export class Genre {
   @Column()
   description: string;
 
-  @Column()
+  @Column({ nullable: true })
   thumbnailUrl: string;
 
   @ManyToMany(() => Content, (content) => content.genres, { nullable: true })

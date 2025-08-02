@@ -31,11 +31,11 @@ export class CreateContentDto {
   @IsInt({ each: true })
   tagIds: number[];
 
-  @IsOptional()
+  @IsNotEmpty()
   @IsString()
   country?: string;
 
-  @IsOptional()
+  @IsNotEmpty()
   @IsString()
   director?: string;
 
@@ -55,6 +55,7 @@ export class CreateContentDto {
   @IsInt({ each: true })
   actorIds?: number[];
 
+  @IsNotEmpty()
   @IsInt()
   year: number;
 
@@ -66,6 +67,7 @@ export class CreateContentDto {
   @IsInt()
   followers: number = 0;
 
+  @IsNotEmpty()
   @IsString()
   quality: string;
 
@@ -77,9 +79,11 @@ export class CreateContentDto {
   @IsInt()
   ratingCount: number = 0;
 
+  @IsNotEmpty()
   @IsString()
   studio: string;
 
+  @IsNotEmpty()
   @IsString()
   season: string;
 
@@ -87,6 +91,7 @@ export class CreateContentDto {
   @IsInt()
   trailerId?: number;
 
+  @IsNotEmpty()
   @IsInt()
   ageRating: number;
 }

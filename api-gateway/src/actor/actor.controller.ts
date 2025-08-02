@@ -45,11 +45,10 @@ export class ActorController {
 
 	@Patch(":id")
 	update(@Param("id") id: string, @Body() updateActorDto: UpdateActorDto) {
-		const newId = +id;
 		return lastValueFrom(
 			this.videoClient.send("update-actor", {
 				updateActorDto,
-				id: newId,
+				id: +id,
 			})
 		);
 	}
