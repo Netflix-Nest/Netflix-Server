@@ -55,9 +55,11 @@ export class Content {
   video?: Video;
 
   @OneToOne(() => Series, (series) => series.contents, { nullable: true })
+  @JoinColumn()
   series?: Series;
 
-  @ManyToMany(() => Actor, (actor) => actor.contents, { nullable: true })
+  @ManyToMany(() => Actor, (actor) => actor.contents)
+  @JoinTable()
   actors?: Actor[];
 
   @Column({ type: 'int' })

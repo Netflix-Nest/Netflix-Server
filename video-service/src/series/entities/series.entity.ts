@@ -27,7 +27,6 @@ export class Series {
   totalSeasonNumber: number; // All season published
 
   @OneToOne(() => Content, (content) => content.series)
-  @JoinColumn()
   contents: Content;
 
   @CreateDateColumn()

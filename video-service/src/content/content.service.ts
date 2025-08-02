@@ -6,45 +6,45 @@ import { Content } from './entities/content.entity';
 import { Repository } from 'typeorm';
 import { RpcException } from '@nestjs/microservices';
 import aqp from 'api-query-params';
-import { ActorService } from 'src/actor/actor.service';
-import { GenreService } from 'src/genre/genre.service';
-import { TagService } from 'src/tag/tag.service';
-import { SeriesService } from 'src/series/series.service';
-import { VideoService } from 'src/video/video.service';
-import { filterExistingIds } from 'src/utils/filter.exist';
+import { Actor } from 'src/actor/entities/actor.entity';
+import { Genre } from 'src/genre/entities/genre.entity';
+import { Tag } from 'src/tag/entities/tag.entity';
+import { Series } from 'src/series/entities/series.entity';
+import { Video } from 'src/video/entities/video.entity';
+import { validateEntitiesOrThrow } from 'src/utils/validate.factory';
 
 @Injectable()
 export class ContentService {
   constructor(
     @InjectRepository(Content)
     private readonly contentRepository: Repository<Content>,
-    @Inject(forwardRef(() => ActorService))
-    private readonly actorService: ActorService,
-    @Inject(forwardRef(() => GenreService))
-    private readonly genreService: GenreService,
-    @Inject(forwardRef(() => TagService))
-    private readonly tagService: TagService,
-    @Inject(forwardRef(() => SeriesService))
-    private readonly seriesService: SeriesService,
-    @Inject(forwardRef(() => VideoService))
-    private readonly videoService: VideoService,
+    @InjectRepository(Actor)
+    private readonly actorRepository: Repository<Actor>,
+    @InjectRepository(Genre)
+    private readonly genreRepository: Repository<Genre>,
+    @InjectRepository(Tag)
+    private readonly tagRepository: Repository<Tag>,
+    @InjectRepository(Series)
+    private readonly seriesRepository: Repository<Series>,
+    @InjectRepository(Video)
+    private readonly videoRepository: Repository<Video>,
   ) {}
-  async validIds(createContentDto: CreateContentDto | UpdateContentDto) {
+  async validate(createContentDto: CreateContentDto | UpdateContentDto) {
     const {
       ageRating,
       averageRating,
       followers,
-      genreIds,
+      genreIds = [],
       quality,
       ratingCount,
       season,
       studio,
-      tagIds,
+      tagIds = [],
       title,
       type,
       view,
       year,
-      actorIds,
+      actorIds = [],
       country,
       description,
       director,
@@ -53,73 +53,64 @@ export class ContentService {
       trailerId,
       videoId,
     } = createContentDto;
-    let obj: { actors?: number[]; genres?: number[]; tags?: number[] } = {};
-    //actor
-    if (actorIds) {
-      const actors = await filterExistingIds(actorIds, (id) =>
-        this.actorService.findOne(id),
-      );
-      obj.actors = actors;
+    const actors = await validateEntitiesOrThrow(
+      actorIds,
+      this.actorRepository,
+      'Actor',
+    );
+    const genres = await validateEntitiesOrThrow(
+      genreIds,
+      this.genreRepository,
+      'Genre',
+    );
+    const tags = await validateEntitiesOrThrow(
+      tagIds,
+      this.tagRepository,
+      'Tag',
+    );
+    const series = seriesId
+      ? ((await this.seriesRepository.findOne({ where: { id: seriesId } })) ??
+        undefined)
+      : undefined;
+
+    if (seriesId && !series) {
+      throw new RpcException('Invalid seriesId');
     }
 
-    //genre
-    if (genreIds) {
-      const genres = await filterExistingIds(genreIds, (id) =>
-        this.genreService.findOne(id),
-      );
-      obj.genres = genres;
-    }
+    const video = videoId
+      ? ((await this.videoRepository.findOne({ where: { id: videoId } })) ??
+        undefined)
+      : undefined;
 
-    //tag
-    if (tagIds) {
-      const tags = await filterExistingIds(tagIds, (id) =>
-        this.tagService.findOne(id),
-      );
-      obj.tags = tags;
+    if (videoId && !video) {
+      throw new RpcException('Invalid videoId');
     }
+    const trailer = trailerId
+      ? ((await this.videoRepository.findOne({ where: { id: trailerId } })) ??
+        undefined)
+      : undefined;
 
-    //series
-    if (seriesId) {
-      const existSeries = await this.seriesService.findOne(seriesId);
-      if (!existSeries || type !== 'series') {
-        throw new RpcException(
-          'Series does not exist or type of content must be series',
-        );
-      }
+    if (trailerId && !trailer) {
+      throw new RpcException('Invalid trailerId');
     }
-    //video
-    if (videoId) {
-      const existVideo = await this.videoService.findOne(videoId);
-      if (!existVideo || type !== 'single') {
-        throw new RpcException(
-          'Video does not exist or type of content must be video',
-        );
-      }
-    }
-    if (trailerId) {
-      const existTrailer = await this.videoService.findOne(trailerId);
-      if (!existTrailer) {
-        throw new RpcException('Trailer does not exist !');
-      }
-    }
-    return obj;
+    return { actors, genres, tags, series, video, trailer };
   }
   async create(createContentDto: CreateContentDto) {
     const {
       ageRating,
       averageRating,
       followers,
-      genreIds,
+      genreIds = [],
       quality,
       ratingCount,
       season,
       studio,
-      tagIds,
+      tagIds = [],
       title,
       type,
       view,
       year,
-      actorIds,
+      actorIds = [],
       country,
       description,
       director,
@@ -134,11 +125,8 @@ export class ContentService {
     if (existContent) {
       throw new RpcException('Content already exist !');
     }
-    const {
-      actors = [],
-      genres = [],
-      tags = [],
-    } = await this.validIds(createContentDto);
+    const { actors, genres, tags, series, video, trailer } =
+      await this.validate(createContentDto);
     const content = this.contentRepository.create();
     Object.assign(content, {
       ageRating,
@@ -158,10 +146,10 @@ export class ContentService {
       country,
       description,
       director,
-      series: seriesId ? { id: seriesId } : undefined,
+      series,
       thumbnail,
-      trailer: trailerId ? { id: trailerId } : undefined,
-      video: videoId ? { id: videoId } : undefined,
+      trailer,
+      video,
     });
     await this.contentRepository.save(content);
     return content;
@@ -189,6 +177,7 @@ export class ContentService {
         projection && Object.keys(projection).length > 0
           ? (Object.keys(projection) as (keyof Content)[])
           : undefined,
+      relations: ['genres', 'tags', 'series', 'actors'],
     });
 
     return {
@@ -203,7 +192,22 @@ export class ContentService {
   }
 
   async findOne(id: number) {
-    return this.contentRepository.findOne({ where: { id } });
+    const content = await this.contentRepository.findOne({
+      where: { id },
+      relations: {
+        genres: true,
+        tags: true,
+        actors: true,
+        series: true,
+        video: true,
+        trailer: true,
+      },
+    });
+    console.log(content);
+    return this.contentRepository.findOne({
+      where: { id },
+      relations: ['genres', 'tags', 'series', 'actors'],
+    });
   }
 
   async update(id: number, updateContentDto: UpdateContentDto) {
@@ -211,19 +215,61 @@ export class ContentService {
     if (!content) {
       throw new RpcException('Content not found !');
     }
-    const { actors, genres, tags } = await this.validIds(updateContentDto);
-    if (actors) {
-      updateContentDto.actorIds = actors;
+    if (!updateContentDto.actorIds && content.actors) {
+      updateContentDto.actorIds = content.actors?.map(
+        (id) => id as unknown as number,
+      );
     }
-    if (genres) {
-      updateContentDto.genreIds = genres;
+    if (!updateContentDto.genreIds && content.genres) {
+      updateContentDto.genreIds = content.genres.map(
+        (id) => id as unknown as number,
+      );
     }
-
-    if (tags) {
-      updateContentDto.tagIds = tags;
+    if (!updateContentDto.tagIds && content.tags) {
+      updateContentDto.tagIds = content.tags.map(
+        (id) => id as unknown as number,
+      );
     }
-    await this.contentRepository.update({ id }, { ...updateContentDto });
-    return this.contentRepository.findOne({ where: { id } });
+    if (!updateContentDto.videoId) {
+      updateContentDto.videoId = content.video as unknown as number;
+    }
+    if (!updateContentDto.seriesId) {
+      updateContentDto.seriesId = content.series as unknown as number;
+    }
+    if (!updateContentDto.trailerId) {
+      updateContentDto.trailerId = content.trailer as unknown as number;
+    }
+    const { actors, genres, tags, series, video, trailer } =
+      await this.validate(updateContentDto);
+    // use .save instead .update() to let typeORM resolve relation.
+    await this.contentRepository.save({
+      id: content.id,
+      title: updateContentDto.title ?? content.title,
+      description: updateContentDto.description ?? content.description,
+      thumbnail: updateContentDto.thumbnail ?? content.thumbnail,
+      country: updateContentDto.country ?? content.country,
+      director: updateContentDto.director ?? content.director,
+      type: updateContentDto.type ?? content.type,
+      year: updateContentDto.year ?? content.year,
+      view: updateContentDto.view ?? content.view,
+      followers: updateContentDto.followers ?? content.followers,
+      quality: updateContentDto.quality ?? content.quality,
+      averageRating: updateContentDto.averageRating ?? content.averageRating,
+      ratingCount: updateContentDto.ratingCount ?? content.ratingCount,
+      studio: updateContentDto.studio ?? content.studio,
+      season: updateContentDto.season ?? content.season,
+      ageRating: updateContentDto.ageRating ?? content.ageRating,
+      actors,
+      genres,
+      tags,
+      series,
+      video,
+      trailer,
+    });
+    return this.contentRepository.findOne({
+      where: { id },
+      relations: ['genres', 'tags', 'series', 'actors'],
+    });
   }
 
   async remove(id: number) {

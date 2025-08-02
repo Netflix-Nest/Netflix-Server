@@ -19,7 +19,7 @@ export class Tag {
   @Column({ unique: true })
   name: string;
 
-  @ManyToMany(() => Content, (content) => content.tags, { nullable: true })
+  @ManyToMany(() => Content, (content) => content.tags)
   contents: Content[];
 
   @CreateDateColumn({ name: 'created_at' })

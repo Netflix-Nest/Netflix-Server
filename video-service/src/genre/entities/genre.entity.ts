@@ -5,6 +5,7 @@ import {
   DeleteDateColumn,
   Entity,
   Index,
+  JoinTable,
   ManyToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -25,7 +26,7 @@ export class Genre {
   @Column({ nullable: true })
   thumbnailUrl: string;
 
-  @ManyToMany(() => Content, (content) => content.genres, { nullable: true })
+  @ManyToMany(() => Content, (content) => content.genres)
   contents: Content[];
 
   @CreateDateColumn({ name: 'created_at' })

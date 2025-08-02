@@ -7,15 +7,16 @@ import { Repository } from 'typeorm';
 import { RpcException } from '@nestjs/microservices';
 import aqp from 'api-query-params';
 import { ContentService } from 'src/content/content.service';
-import { filterExistingIds } from 'src/utils/filter.exist';
+import { Content } from 'src/content/entities/content.entity';
+import { validateEntitiesOrThrow } from 'src/utils/validate.factory';
 
 @Injectable()
 export class GenreService {
   constructor(
     @InjectRepository(Genre)
     private readonly genreRepository: Repository<Genre>,
-    @Inject(forwardRef(() => ContentService))
-    private readonly contentService: ContentService,
+    @InjectRepository(Content)
+    private readonly contentRepository: Repository<Content>,
   ) {}
   async create(createGenreDto: CreateGenreDto) {
     const existGenre = await this.genreRepository.findOne({
@@ -24,12 +25,14 @@ export class GenreService {
     if (existGenre) {
       throw new RpcException('Genre already exist !');
     }
-    const contents = await filterExistingIds(createGenreDto.contentIds, (id) =>
-      this.contentService.findOne(id),
+    const contents = await validateEntitiesOrThrow(
+      createGenreDto.contentIds ?? [],
+      this.contentRepository,
+      'Content',
     );
-    createGenreDto.contentIds = contents;
     const genre = this.genreRepository.create({
       ...createGenreDto,
+      contents,
     });
     await this.genreRepository.save(genre);
     return genre;
@@ -82,14 +85,13 @@ export class GenreService {
     if (!existGenre) {
       throw new RpcException('Genre not found !');
     }
-    if (updateGenreDto.contentIds) {
-      const contents = await filterExistingIds(
-        updateGenreDto.contentIds,
-        (id) => this.contentService.findOne(id),
-      );
-      updateGenreDto.contentIds = contents;
-    }
-    await this.genreRepository.update({ id }, { ...updateGenreDto });
+    const contents = await validateEntitiesOrThrow(
+      updateGenreDto.contentIds ??
+        (existGenre.contents as unknown[] as number[]),
+      this.contentRepository,
+      'Content',
+    );
+    await this.genreRepository.update({ id }, { ...updateGenreDto, contents });
     return this.genreRepository.findOne({ where: { id } });
   }
 

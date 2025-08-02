@@ -32,8 +32,7 @@ export class Actor {
   @Column({ nullable: true, type: 'text' })
   biography?: string;
 
-  @ManyToMany(() => Content, (content) => content.actors, { nullable: true })
-  @JoinTable()
+  @ManyToMany(() => Content, (content) => content.actors)
   contents: Content[];
 
   @CreateDateColumn({ name: 'created_at' })
