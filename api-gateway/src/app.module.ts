@@ -8,6 +8,7 @@ import { ContentModule } from "./content/content.module";
 import { GenreModule } from "./genre/genre.module";
 import { SeriesModule } from "./serries/series.module";
 import { TagModule } from "./tag/tag.module";
+import { InteractionModule } from './interaction/interaction.module';
 
 @Module({
 	imports: [
@@ -22,6 +23,7 @@ import { TagModule } from "./tag/tag.module";
 		GenreModule,
 		SeriesModule,
 		TagModule,
+		InteractionModule,
 	],
 })
 export class AppModule {}
