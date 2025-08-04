@@ -45,9 +45,10 @@ export class SeriesController {
 
 	@Patch(":id")
 	update(@Param("id") id: string, @Body() updateSeriesDto: UpdateSeriesDto) {
+		console.log(updateSeriesDto);
 		return lastValueFrom(
 			this.videoClient.send("update-series", {
-				...updateSeriesDto,
+				updateSeriesDto,
 				id: +id,
 			})
 		);

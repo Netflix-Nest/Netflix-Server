@@ -25,8 +25,10 @@ export class SeriesController {
   }
 
   @MessagePattern('update-series')
-  update(@Payload() updateSeriesDto: UpdateSeriesDto) {
-    return this.seriesService.update(updateSeriesDto.id, updateSeriesDto);
+  update(@Payload() data: { id: number; updateSeriesDto: UpdateSeriesDto }) {
+    const { id, updateSeriesDto } = data;
+    console.log(data);
+    return this.seriesService.update(id, updateSeriesDto);
   }
 
   @MessagePattern('remove-series')

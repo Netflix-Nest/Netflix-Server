@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsNumber } from "class-validator";
+import { IsNotEmpty, IsNumber, IsOptional } from "class-validator";
 
 export class CreateSeriesDto {
 	@IsNotEmpty()
@@ -8,4 +8,10 @@ export class CreateSeriesDto {
 	@IsNotEmpty()
 	@IsNumber()
 	contentId: number;
+
+	@IsOptional()
+	totalEpisodes: number;
+
+	@IsOptional()
+	totalSeasonNumber: number;
 }

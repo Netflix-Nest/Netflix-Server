@@ -37,6 +37,7 @@ export class VideoService {
 
     const video = this.videoRepository.create({
       ...createVideoDto,
+      contents: content,
     });
     await this.videoRepository.save(video);
     return video;
@@ -98,24 +99,7 @@ export class VideoService {
       if (!content) {
         throw new RpcException('Content not found');
       }
-    }
-
-    if (!updateVideoDto.seasonNumber) {
-      updateVideoDto.seasonNumber = video.seasonNumber;
-    }
-    if (!updateVideoDto.episodeNumber) {
-      updateVideoDto.episodeNumber = video.episodeNumber;
-    }
-    const existVideo = await this.videoRepository.findOne({
-      where: {
-        seasonNumber: updateVideoDto.seasonNumber,
-        episodeNumber: updateVideoDto.episodeNumber,
-      },
-    });
-    if (existVideo) {
-      throw new RpcException(
-        'Video with this episode and season already exist !',
-      );
+      updateVideoDto.content = content;
     }
 
     await this.videoRepository.update(id, updateVideoDto);

@@ -85,13 +85,20 @@ export class GenreService {
     if (!existGenre) {
       throw new RpcException('Genre not found !');
     }
-    const contents = await validateEntitiesOrThrow(
-      updateGenreDto.contentIds ??
-        (existGenre.contents as unknown[] as number[]),
-      this.contentRepository,
-      'Content',
-    );
-    await this.genreRepository.update({ id }, { ...updateGenreDto, contents });
+
+    const updateData: Partial<Genre> = { ...updateGenreDto };
+    if (updateGenreDto.contentIds !== undefined) {
+      const contents = await validateEntitiesOrThrow(
+        updateGenreDto.contentIds,
+        this.contentRepository,
+        'Content',
+      );
+      updateData.contents = contents;
+    } else {
+      delete updateData.contents;
+    }
+
+    await this.genreRepository.update({ id }, updateData);
     return this.genreRepository.findOne({ where: { id } });
   }
 

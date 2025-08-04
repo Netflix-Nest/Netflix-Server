@@ -12,4 +12,7 @@ export class CreateSeriesDto {
 
   @IsOptional()
   totalEpisodes: number;
+
+  @IsOptional()
+  totalSeasonNumber: number;
 }

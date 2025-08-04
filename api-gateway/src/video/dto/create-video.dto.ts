@@ -1,50 +1,42 @@
-import { Optional } from "@nestjs/common";
 import {
-  IsEmpty,
-  IsNotEmpty,
-  IsNumber,
-  IsOptional,
-  IsString,
+	IsEmpty,
+	IsNotEmpty,
+	IsNumber,
+	IsOptional,
+	IsString,
 } from "class-validator";
 
-export enum VideoStatus {
-  PENDING = "PENDING",
-  PROCESSING = "PROCESSING",
-  ACTIVE = "ACTIVE",
-  BLOCKED = "BLOCKED",
-  DELETED = "DELETED",
-}
-
 export class CreateVideoDto {
-  @IsOptional()
-  @IsNumber()
-  uploader: number;
+	@IsNotEmpty()
+	@IsNumber()
+	uploader: number;
 
-  @IsNotEmpty()
-  @IsString()
-  title: string;
+	@IsNotEmpty()
+	@IsString()
+	title: string;
 
-  @IsOptional()
-  description: string;
+	@IsNotEmpty()
+	@IsNumber()
+	contentId: number;
 
-  @IsOptional()
-  genreId: number;
+	@IsNotEmpty()
+	episodeNumber: number;
 
-  @IsOptional()
-  status: VideoStatus;
+	@IsNotEmpty()
+	seasonNumber: number;
 
-  @IsOptional()
-  fileName: string;
+	@IsOptional()
+	status: string;
 
-  @IsOptional()
-  originalUrl: string;
+	@IsOptional()
+	originalUrl: string;
 
-  @IsOptional()
-  hlsUrl: string;
+	@IsOptional()
+	hlsUrl: string;
 
-  @IsOptional()
-  thumbnailUrl: string;
+	@IsNotEmpty()
+	fileName: string;
 
-  @IsOptional()
-  duration: number;
+	@IsOptional()
+	duration: number;
 }

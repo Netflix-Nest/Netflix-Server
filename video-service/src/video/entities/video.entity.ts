@@ -38,12 +38,8 @@ export class Video {
   @Column({ type: 'bigint' })
   uploader: number;
 
-  @Column({
-    type: 'enum',
-    enum: VideoStatus,
-    default: VideoStatus.PENDING,
-  })
-  status: VideoStatus;
+  @Column()
+  status: string;
 
   @Column({ nullable: true })
   originalUrl?: string;

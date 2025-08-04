@@ -21,7 +21,7 @@ export class SeriesService {
     const { contentId, seasonNumber } = createSeriesDto;
     const existSeries = await this.seriesRepository.findOne({
       where: {
-        contents: { id: createSeriesDto.contentId },
+        contents: { id: contentId },
         seasonNumber: seasonNumber,
       },
     });
@@ -36,11 +36,12 @@ export class SeriesService {
     if (!content) {
       throw new RpcException('Content not found');
     }
-    if (!createSeriesDto.totalEpisodes) {
-      createSeriesDto.totalEpisodes = createSeriesDto.seasonNumber;
+    if (!createSeriesDto.totalSeasonNumber) {
+      createSeriesDto.totalSeasonNumber = createSeriesDto.seasonNumber;
     }
     const newSeries = this.seriesRepository.create({
       ...createSeriesDto,
+      contents: content,
     });
 
     await this.seriesRepository.save(newSeries);

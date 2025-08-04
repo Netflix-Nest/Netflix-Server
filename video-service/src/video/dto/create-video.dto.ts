@@ -27,12 +27,6 @@ export class CreateVideoDto {
   seasonNumber: number;
 
   @IsOptional()
-  description: string;
-
-  @IsOptional()
-  genreId: number;
-
-  @IsOptional()
   status: VideoStatus;
 
   @IsOptional()
@@ -43,9 +37,6 @@ export class CreateVideoDto {
 
   @IsNotEmpty()
   fileName: string;
-
-  @IsOptional()
-  thumbnailUrl: string;
 
   @IsOptional()
   duration: number;

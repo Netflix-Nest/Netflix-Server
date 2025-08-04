@@ -17,7 +17,7 @@ export class Series {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({ nullable: true })
   totalEpisodes: number;
 
   @Column()
