@@ -80,6 +80,9 @@ export class Content {
   @Column({ type: 'int', default: 0 })
   ratingCount: number;
 
+  @Column({ default: 0 })
+  likeCount: number;
+
   @Column()
   studio: string;
 
