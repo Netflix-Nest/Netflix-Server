@@ -10,9 +10,15 @@ logic increase view
 
 từ đoạn nhị phân làm sao tạo ra được video ? 
 vps thường public, làm sao làm được ? 
+
+create user -> create default list (like video.)
+engagement: watchlist (saved, favorite,...), history, progress
+recommendation: ML
 prod: 
     - strict dto video
     - private bucket and GET /video/:videoId/stream return master.m3u8 instead or use nginx
 
 Season: 'Spring' | 'Summer' | 'Autumn' | 'Winter
 quantity: '360p', '720p', 'HD', 'HD+', 'fullHD', 'fullHD+', '2K', '4K', '8K'
+
+viết API design 

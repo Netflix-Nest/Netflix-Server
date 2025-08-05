@@ -27,4 +27,10 @@ export class CreateUserDto {
 
   @IsOptional()
   avatar?: string;
+
+  @IsOptional()
+  phoneNumber: string;
+
+  @IsOptional()
+  viewingTime: number;
 }

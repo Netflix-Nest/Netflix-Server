@@ -25,6 +25,12 @@ export class User {
   @Column()
   password: string;
 
+  @Column({ type: 'int', default: 0, name: 'viewing_time' })
+  viewingTime: number; // minutes, record forever
+
+  @Column({ nullable: true, name: 'phone_number' })
+  phoneNumber: string;
+
   @Column({ nullable: true })
   refreshToken: string;
 

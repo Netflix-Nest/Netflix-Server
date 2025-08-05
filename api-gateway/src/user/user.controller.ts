@@ -47,6 +47,7 @@ export class UserController {
 
   @Patch(":id")
   async update(@Param("id") id: number, @Body() updateUserDto: UpdateUserDto) {
+    console.log(updateUserDto);
     return lastValueFrom(
       this.userClient.send("update-user", { id, updateUserDto })
     );

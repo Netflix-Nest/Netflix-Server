@@ -140,7 +140,11 @@ export class UserService {
     if (updateUserDto.password) {
       updateUserDto.password = this.getHashPassword(updateUserDto.password);
     }
-    await this.userRepository.update(id, updateUserDto);
+    console.log(updateUserDto);
+    if (updateUserDto.viewingTime) {
+      updateUserDto.viewingTime += existUser.viewingTime;
+    }
+    await this.userRepository.update({ id }, { ...updateUserDto });
     return this.findOne(id);
   }
 

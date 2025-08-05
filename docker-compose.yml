@@ -223,6 +223,26 @@ services:
     networks:
       - netflix-network
 
+  engagement-service:
+    build:
+      context: ./engagement-service
+      dockerfile: Dockerfile
+    ports:
+      - "3007:3000"
+    volumes:
+      - ./engagement-service:/app
+      - /app/node_modules
+    command: ["npm", "run", "dev"]
+    environment:
+      - RABBITMQ_URL=amqp://guest:guest@netflix-rabbitmq:5672
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    tty: true
+    stdin_open: true
+    networks:
+      - netflix-network
+
 volumes:
   minio_data:
   video_outputs:
