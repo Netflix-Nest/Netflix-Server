@@ -75,7 +75,7 @@ export class Content {
   quality: string;
 
   @Column({ type: 'float', default: 0 })
-  averageRating: number;
+  totalScoreRating: number;
 
   @Column({ type: 'int', default: 0 })
   ratingCount: number;

@@ -203,6 +203,25 @@ services:
     stdin_open: true
     networks:
       - netflix-network
+  interaction-service:
+    build:
+      context: ./interaction-service
+      dockerfile: Dockerfile
+    ports:
+      - "3006:3000"
+    volumes:
+      - ./interaction-service:/app
+      - /app/node_modules
+    command: ["npm", "run", "dev"]
+    environment:
+      - RABBITMQ_URL=amqp://guest:guest@netflix-rabbitmq:5672
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    tty: true
+    stdin_open: true
+    networks:
+      - netflix-network
 
 volumes:
   minio_data:

@@ -32,7 +32,7 @@ export class ContentService {
   async validate(createContentDto: CreateContentDto | UpdateContentDto) {
     const {
       ageRating,
-      averageRating,
+      totalScoreRating,
       followers,
       genreIds = [],
       quality,
@@ -98,7 +98,7 @@ export class ContentService {
   async create(createContentDto: CreateContentDto) {
     const {
       ageRating,
-      averageRating,
+      totalScoreRating,
       followers,
       genreIds = [],
       quality,
@@ -130,7 +130,7 @@ export class ContentService {
     const content = this.contentRepository.create();
     Object.assign(content, {
       ageRating,
-      averageRating,
+      totalScoreRating,
       followers,
       genres,
       quality,
@@ -254,7 +254,8 @@ export class ContentService {
       view: updateContentDto.view ?? content.view,
       followers: updateContentDto.followers ?? content.followers,
       quality: updateContentDto.quality ?? content.quality,
-      averageRating: updateContentDto.averageRating ?? content.averageRating,
+      totalScoreRating:
+        updateContentDto.totalScoreRating ?? content.totalScoreRating,
       ratingCount: updateContentDto.ratingCount ?? content.ratingCount,
       studio: updateContentDto.studio ?? content.studio,
       season: updateContentDto.season ?? content.season,

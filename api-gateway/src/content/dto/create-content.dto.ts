@@ -8,7 +8,7 @@ import {
   IsNumber,
   IsBoolean,
   IsDateString,
-} from 'class-validator';
+} from "class-validator";
 
 export class CreateContentDto {
   @IsString()
@@ -39,8 +39,8 @@ export class CreateContentDto {
   @IsString()
   director?: string;
 
-  @IsEnum(['single', 'series'])
-  type: 'single' | 'series';
+  @IsEnum(["single", "series"])
+  type: "single" | "series";
 
   @IsOptional()
   @IsInt()
@@ -71,7 +71,7 @@ export class CreateContentDto {
 
   @IsOptional()
   @IsNumber()
-  averageRating: number = 0;
+  totalScoreRating: number = 0;
 
   @IsOptional()
   @IsInt()

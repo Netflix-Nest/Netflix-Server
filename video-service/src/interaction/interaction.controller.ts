@@ -5,16 +5,15 @@ import { MessagePattern, Payload } from '@nestjs/microservices';
 @Controller()
 export class InteractionController {
   constructor(private readonly interactionService: InteractionService) {}
-  @MessagePattern('like')
+  @MessagePattern('like-video')
   async like(@Payload() contentId: number) {
     return this.interactionService.like(contentId);
   }
 
-  @MessagePattern('rate')
+  @MessagePattern('rate-video')
   async rate(
-    @Payload() data: { contentId: number; rateDto: { rate: number } },
+    @Payload() { contentId, rate }: { contentId: number; rate: number },
   ) {
-    const { contentId, rateDto } = data;
-    return this.interactionService.rate(contentId, rateDto.rate);
+    return this.interactionService.rate(contentId, rate);
   }
 }

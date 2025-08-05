@@ -8,7 +8,8 @@ relation: - single video: video 1-1 content
           - series:       video 1-1 content, series 1-1 content, series of video: video.content.series
 logic increase view
 
-
+từ đoạn nhị phân làm sao tạo ra được video ? 
+vps thường public, làm sao làm được ? 
 prod: 
     - strict dto video
     - private bucket and GET /video/:videoId/stream return master.m3u8 instead or use nginx

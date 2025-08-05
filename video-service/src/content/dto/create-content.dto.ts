@@ -73,7 +73,7 @@ export class CreateContentDto {
 
   @IsOptional()
   @IsNumber()
-  averageRating: number = 0;
+  totalScoreRating: number = 0;
 
   @IsOptional()
   @IsInt()

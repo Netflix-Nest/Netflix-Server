@@ -15,6 +15,7 @@ import { Actor } from './actor/entities/actor.entity';
 import { Genre } from './genre/entities/genre.entity';
 import { Series } from './series/entities/series.entity';
 import { Tag } from './tag/entities/tag.entity';
+import { InteractionModule } from './interaction/interaction.module';
 
 @Module({
   imports: [
@@ -42,6 +43,7 @@ import { Tag } from './tag/entities/tag.entity';
     GenreModule,
     TagModule,
     ActorModule,
+    InteractionModule,
   ],
   controllers: [AppController],
   providers: [AppService],

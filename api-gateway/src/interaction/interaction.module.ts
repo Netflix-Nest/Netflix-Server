@@ -1,9 +1,9 @@
-import { Module } from '@nestjs/common';
-import { InteractionService } from './interaction.service';
-import { InteractionController } from './interaction.controller';
+import { Module } from "@nestjs/common";
+import { InteractionController } from "./interaction.controller";
+import { InteractionProvider } from "src/client/interaction-client.provider";
 
 @Module({
   controllers: [InteractionController],
-  providers: [InteractionService],
+  providers: [InteractionProvider],
 })
 export class InteractionModule {}
