@@ -1,10 +1,12 @@
 import {
   Column,
   Entity,
+  Index,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 
+@Index(['userId'])
 @Entity('histories')
 export class History {
   @PrimaryGeneratedColumn()

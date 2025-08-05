@@ -1,42 +1,46 @@
 import {
-	IsEmpty,
-	IsNotEmpty,
-	IsNumber,
-	IsOptional,
-	IsString,
+  IsEmpty,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
 } from "class-validator";
 
 export class CreateVideoDto {
-	@IsNotEmpty()
-	@IsNumber()
-	uploader: number;
+  @IsNotEmpty()
+  @IsNumber()
+  uploader: number;
 
-	@IsNotEmpty()
-	@IsString()
-	title: string;
+  @IsNotEmpty()
+  @IsString()
+  name: string;
 
-	@IsNotEmpty()
-	@IsNumber()
-	contentId: number;
+  @IsNotEmpty()
+  @IsString()
+  title: string;
 
-	@IsNotEmpty()
-	episodeNumber: number;
+  @IsNotEmpty()
+  @IsNumber()
+  contentId: number;
 
-	@IsNotEmpty()
-	seasonNumber: number;
+  @IsNotEmpty()
+  episodeNumber: number;
 
-	@IsOptional()
-	status: string;
+  @IsNotEmpty()
+  seasonNumber: number;
 
-	@IsOptional()
-	originalUrl: string;
+  @IsOptional()
+  status: string;
 
-	@IsOptional()
-	hlsUrl: string;
+  @IsOptional()
+  originalUrl: string;
 
-	@IsNotEmpty()
-	fileName: string;
+  @IsOptional()
+  hlsUrl: string;
 
-	@IsOptional()
-	duration: number;
+  @IsNotEmpty()
+  fileName: string;
+
+  @IsOptional()
+  duration: number;
 }

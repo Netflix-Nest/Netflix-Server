@@ -3,10 +3,13 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  Index,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 
+@Index(['userId'])
+@Index(['userId', 'contentIds'])
 @Entity('watchlists')
 export class Watchlist {
   @PrimaryGeneratedColumn()
@@ -15,11 +18,14 @@ export class Watchlist {
   @Column()
   userId: number;
 
-  @Column()
-  contentId: number;
+  @Column('int', { array: true, default: [], name: 'content_ids' })
+  contentIds: number[];
 
   @Column()
-  list: string;
+  name: string;
+
+  @Column({ name: 'thumbnail_url' })
+  thumbnailUrl: string;
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;

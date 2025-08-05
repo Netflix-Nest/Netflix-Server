@@ -3,10 +3,12 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  Index,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 
+@Index(['userId'])
 @Entity('bookmarks')
 export class Bookmark {
   @PrimaryGeneratedColumn()

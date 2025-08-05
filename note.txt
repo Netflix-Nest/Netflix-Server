@@ -13,7 +13,10 @@ vps thường public, làm sao làm được ?
 
 create user -> create default list (like video.)
 engagement: watchlist (saved, favorite,...), history, progress
+API engagement: get watchlist, save watchlist, delete watchlist
 recommendation: ML
+
+tachs engagement thanh 3 module rieng
 prod: 
     - strict dto video
     - private bucket and GET /video/:videoId/stream return master.m3u8 instead or use nginx
