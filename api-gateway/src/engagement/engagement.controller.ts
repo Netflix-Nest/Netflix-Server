@@ -76,12 +76,17 @@ export class EngagementController {
   }
 
   @Get("watchlist")
-  getAllWatchlist(@Body() userId: number) {
+  getAllWatchlist(@User() user: IUserDecorator) {
+    const userId = user.userId;
     return lastValueFrom(this.engagementClient.send("get-watchlists", userId));
   }
 
   @Get("watchlist/:id")
-  getOneWatchlist(@Param("id") watchlistId: number, @Body() userId: number) {
+  getOneWatchlist(
+    @Param("id") watchlistId: number,
+    @User() user: IUserDecorator
+  ) {
+    const userId = user.userId;
     return lastValueFrom(
       this.engagementClient.send("get-watchlist", { userId, watchlistId })
     );
@@ -119,8 +124,9 @@ export class EngagementController {
   }
 
   // bookmark
-  @Get("history/:userId")
-  getHistory(@Param("userId") userId: number) {
+  @Get("history/")
+  getHistory(@User() user: IUserDecorator) {
+    const userId = user.userId;
     return lastValueFrom(this.engagementClient.send("get-history", userId));
   }
 

@@ -24,7 +24,7 @@ export class Watchlist {
   @Column()
   name: string;
 
-  @Column({ name: 'thumbnail_url' })
+  @Column({ name: 'thumbnail_url', nullable: true })
   thumbnailUrl: string;
 
   @CreateDateColumn({ name: 'created_at' })

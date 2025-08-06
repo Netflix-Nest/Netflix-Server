@@ -42,7 +42,7 @@ export class WatchlistService {
   }
 
   async getAllWatchlist(userId: number) {
-    return this.watchlistRepository.findOne({ where: { userId: userId } });
+    return this.watchlistRepository.find({ where: { userId: userId } });
   }
 
   async getOneWatchlist(userId: number, watchlistId: number) {
