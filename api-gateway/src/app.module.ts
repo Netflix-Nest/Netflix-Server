@@ -9,6 +9,7 @@ import { GenreModule } from "./genre/genre.module";
 import { SeriesModule } from "./serries/series.module";
 import { TagModule } from "./tag/tag.module";
 import { InteractionModule } from './interaction/interaction.module';
+import { EngagementModule } from './engagement/engagement.module';
 
 @Module({
 	imports: [
@@ -24,6 +25,7 @@ import { InteractionModule } from './interaction/interaction.module';
 		SeriesModule,
 		TagModule,
 		InteractionModule,
+		EngagementModule,
 	],
 })
 export class AppModule {}

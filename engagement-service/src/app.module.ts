@@ -4,9 +4,12 @@ import { AppService } from './app.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { EngagementModule } from './engagement/engagement.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Watchlist } from './engagement/entities/watchlist.entity';
-import { History } from './engagement/entities/history.entity';
-import { Bookmark } from './engagement/entities/bookmark.entity';
+import { Watchlist } from './watchlist/entities/watchlist.entity';
+import { History } from './history/entities/history.entity';
+import { Bookmark } from './bookmark/entities/bookmark.entity';
+import { HistoryModule } from './history/history.module';
+import { WatchlistModule } from './watchlist/watchlist.module';
+import { BookmarkModule } from './bookmark/bookmark.module';
 
 @Module({
   imports: [
@@ -27,6 +30,9 @@ import { Bookmark } from './engagement/entities/bookmark.entity';
       }),
     }),
     EngagementModule,
+    HistoryModule,
+    WatchlistModule,
+    BookmarkModule,
   ],
   controllers: [AppController],
   providers: [AppService],
