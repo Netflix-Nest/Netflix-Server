@@ -15,6 +15,7 @@ create user -> create default list (like video.)
 engagement: watchlist (saved, favorite,...), history, progress
 API engagement: get watchlist, save watchlist, delete watchlist
 recommendation: ML
+viết lib dto, interface
 
 tachs engagement thanh 3 module rieng
 prod: 
