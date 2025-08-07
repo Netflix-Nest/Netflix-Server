@@ -1,4 +1,3 @@
-haven't find base on "isDeleted" yet.
 config DLQ
 haven't try catch important tasks
 
@@ -6,16 +5,11 @@ handle logic upload thumbnail
 upload thumbnail or automatic generation 
 relation: - single video: video 1-1 content
           - series:       video 1-1 content, series 1-1 content, series of video: video.content.series
-logic increase view
-
-từ đoạn nhị phân làm sao tạo ra được video ? 
-vps thường public, làm sao làm được ? 
+logic increase view 
 
 create user -> create default list (like video.)
-engagement: watchlist (saved, favorite,...), history, progress
-API engagement: get watchlist, save watchlist, delete watchlist
-recommendation: ML
-viết lib dto, interface
+write lib dto, interface
+comment: allow mention, mention -> notification.
 
 tachs engagement thanh 3 module rieng
 prod: 
@@ -25,4 +19,4 @@ prod:
 Season: 'Spring' | 'Summer' | 'Autumn' | 'Winter
 quantity: '360p', '720p', 'HD', 'HD+', 'fullHD', 'fullHD+', '2K', '4K', '8K'
 
-viết API design 
+write API design 
