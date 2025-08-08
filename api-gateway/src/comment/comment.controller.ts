@@ -1,0 +1,61 @@
+import {
+	Body,
+	Controller,
+	Delete,
+	Get,
+	Inject,
+	Param,
+	Patch,
+	Post,
+	Query,
+} from "@nestjs/common";
+import { ClientProxy } from "@nestjs/microservices";
+import { UpdateCommentDto } from "./dto/update-comment.dto";
+import { CreateCommentDto } from "./dto/create-comment.dto";
+import { lastValueFrom } from "rxjs";
+import { User } from "src/common/decorators/customize";
+import { IUserDecorator } from "src/interfaces/auth.interfaces";
+
+@Controller("comment")
+export class CommentController {
+	constructor(
+		@Inject("COMMENT_SERVICE") private readonly commentClient: ClientProxy
+	) {}
+	@Post()
+	create(
+		@Body() createCommentDto: CreateCommentDto,
+		@User() user: IUserDecorator
+	) {
+		if (!createCommentDto.userId) createCommentDto.userId = user.userId;
+		return lastValueFrom(
+			this.commentClient.send("create-comment", createCommentDto)
+		);
+	}
+
+	@Get()
+	findAll(
+		@Query("currentPage") currentPage: number,
+		@Query("limit") limit: number
+	) {
+		return lastValueFrom(
+			this.commentClient.send("get-comments", { currentPage, limit })
+		);
+	}
+
+	@Patch(":id")
+	update(
+		@Param("id") id: string,
+		@Body() updateCommentDto: UpdateCommentDto,
+		@User() user: IUserDecorator
+	) {
+		if (!updateCommentDto.userId) updateCommentDto.userId = user.userId;
+		return lastValueFrom(
+			this.commentClient.send("update-comment", { id, updateCommentDto })
+		);
+	}
+
+	@Delete(":id")
+	remove(@Param("id") id: string) {
+		return lastValueFrom(this.commentClient.send("delete-comment", id));
+	}
+}

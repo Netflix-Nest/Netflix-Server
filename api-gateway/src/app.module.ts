@@ -10,6 +10,7 @@ import { SeriesModule } from "./serries/series.module";
 import { TagModule } from "./tag/tag.module";
 import { InteractionModule } from './interaction/interaction.module';
 import { EngagementModule } from './engagement/engagement.module';
+import { CommentModule } from './comment/comment.module';
 
 @Module({
 	imports: [
@@ -26,6 +27,7 @@ import { EngagementModule } from './engagement/engagement.module';
 		TagModule,
 		InteractionModule,
 		EngagementModule,
+		CommentModule,
 	],
 })
 export class AppModule {}
