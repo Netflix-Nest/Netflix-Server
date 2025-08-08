@@ -3,6 +3,7 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  Index,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -11,6 +12,8 @@ export enum UserRole {
   ADMIN = 'ADMIN',
   USER = 'USER',
 }
+@Index(['email'])
+@Index(['username'])
 @Entity('users')
 export class User {
   @PrimaryGeneratedColumn()
@@ -18,6 +21,9 @@ export class User {
 
   @Column({ unique: true })
   email: string;
+
+  @Column({ unique: true })
+  username: string;
 
   @Column({ name: 'full_name' })
   fullName: string;

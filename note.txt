@@ -10,8 +10,9 @@ logic increase view
 create user -> create default list (like video.)
 write lib dto, interface
 comment: allow mention, mention -> notification.
-
+search service: api search user theo tên -> mention
 tachs engagement thanh 3 module rieng
+refresh token : how can identity ?
 prod: 
     - strict dto video
     - private bucket and GET /video/:videoId/stream return master.m3u8 instead or use nginx
@@ -20,3 +21,4 @@ Season: 'Spring' | 'Summer' | 'Autumn' | 'Winter
 quantity: '360p', '720p', 'HD', 'HD+', 'fullHD', 'fullHD+', '2K', '4K', '8K'
 
 write API design 
+frontend: handle 3 replies level
