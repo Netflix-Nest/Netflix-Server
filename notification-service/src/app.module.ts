@@ -1,15 +1,14 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { MailerModule } from './mailer/mailer.module';
 import { FcmModule } from './fcm/fcm.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Notification } from './entities/notification.entity';
+import { MailModule } from './mail/mail.module';
 
 @Module({
   imports: [
-    MailerModule,
     FcmModule,
     ConfigModule.forRoot({
       isGlobal: true,
@@ -29,6 +28,7 @@ import { Notification } from './entities/notification.entity';
         ssl: true,
       }),
     }),
+    MailModule,
   ],
   controllers: [AppController],
   providers: [AppService],

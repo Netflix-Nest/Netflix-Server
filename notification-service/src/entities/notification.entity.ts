@@ -45,7 +45,7 @@ export class Notification {
   @Column({ nullable: true })
   status?: Status | StatusInApp;
 
-  @Column({ nullable: true })
+  @Column({ nullable: true, type: 'jsonb' })
   metadata?: {
     movieId?: string;
     link?: string;

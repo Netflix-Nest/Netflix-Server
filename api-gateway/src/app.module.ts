@@ -11,6 +11,7 @@ import { TagModule } from "./tag/tag.module";
 import { InteractionModule } from './interaction/interaction.module';
 import { EngagementModule } from './engagement/engagement.module';
 import { CommentModule } from './comment/comment.module';
+import { NotificationModule } from './notification/notification.module';
 
 @Module({
 	imports: [
@@ -28,6 +29,7 @@ import { CommentModule } from './comment/comment.module';
 		InteractionModule,
 		EngagementModule,
 		CommentModule,
+		NotificationModule,
 	],
 })
 export class AppModule {}
