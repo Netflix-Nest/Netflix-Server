@@ -1,11 +1,288 @@
-<html>
+<html lang='en'>
   <head>
-    <meta charset='utf-8' />
-    <title>Welcome to Netflix Clone</title>
+    <meta charset='UTF-8' />
+    <meta name='viewport' content='width=device-width, initial-scale=1.0' />
+    <title>Welcome to Netflix Lite</title>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family:
+          'Inter',
+          -apple-system,
+          BlinkMacSystemFont,
+          'Segoe UI',
+          Roboto,
+          sans-serif;
+        line-height: 1.6;
+        background: linear-gradient(
+          135deg,
+          #0f0f23 0%,
+          #1a1a2e 50%,
+          #16213e 100%
+        );
+        min-height: 100vh;
+        padding: 20px;
+      }
+
+      .container {
+        max-width: 600px;
+        margin: 0 auto;
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(20px);
+        border-radius: 24px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        overflow: hidden;
+        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4);
+      }
+
+      .header {
+        background: linear-gradient(
+          135deg,
+          #e50914 0%,
+          #ff1744 50%,
+          #d32f2f 100%
+        );
+        padding: 40px 30px;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .header::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(
+          circle,
+          rgba(255, 255, 255, 0.1) 0%,
+          transparent 70%
+        );
+        animation: shimmer 3s ease-in-out infinite;
+      }
+
+      @keyframes shimmer {
+        0%,
+        100% {
+          transform: rotate(0deg);
+          opacity: 0.3;
+        }
+        50% {
+          transform: rotate(180deg);
+          opacity: 0.6;
+        }
+      }
+
+      .logo {
+        font-size: 32px;
+        font-weight: 700;
+        color: white;
+        margin-bottom: 10px;
+        position: relative;
+        z-index: 2;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+      }
+
+      .subtitle {
+        color: rgba(255, 255, 255, 0.9);
+        font-size: 16px;
+        font-weight: 300;
+        position: relative;
+        z-index: 2;
+      }
+
+      .content {
+        padding: 40px 30px;
+        color: white;
+      }
+
+      .greeting {
+        font-size: 28px;
+        font-weight: 600;
+        margin-bottom: 20px;
+        background: linear-gradient(135deg, #fff 0%, #e0e0e0 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      .message {
+        font-size: 16px;
+        color: rgba(255, 255, 255, 0.8);
+        margin-bottom: 30px;
+        line-height: 1.7;
+      }
+
+      .code-section {
+        background: linear-gradient(
+          135deg,
+          rgba(229, 9, 20, 0.1) 0%,
+          rgba(255, 23, 68, 0.05) 100%
+        );
+        border: 2px solid rgba(229, 9, 20, 0.3);
+        border-radius: 16px;
+        padding: 30px;
+        text-align: center;
+        margin: 30px 0;
+        position: relative;
+      }
+
+      .code-section::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(
+          135deg,
+          rgba(229, 9, 20, 0.1) 0%,
+          transparent 50%
+        );
+        border-radius: 14px;
+        pointer-events: none;
+      }
+
+      .code-label {
+        font-size: 14px;
+        color: rgba(255, 255, 255, 0.6);
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        margin-bottom: 15px;
+        font-weight: 500;
+      }
+
+      .verification-code {
+        font-size: 36px;
+        font-weight: 700;
+        color: #e50914;
+        font-family: 'Monaco', 'Consolas', monospace;
+        letter-spacing: 8px;
+        margin: 10px 0;
+        text-shadow: 0 0 20px rgba(229, 9, 20, 0.5);
+        position: relative;
+        z-index: 2;
+      }
+
+      .code-info {
+        font-size: 13px;
+        color: rgba(255, 255, 255, 0.5);
+        margin-top: 15px;
+        font-style: italic;
+      }
+
+      .cta-section {
+        text-align: center;
+        margin: 30px 0;
+      }
+
+      .cta-button {
+        display: inline-block;
+        background: linear-gradient(135deg, #e50914 0%, #ff1744 100%);
+        color: white;
+        padding: 16px 40px;
+        border-radius: 50px;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 16px;
+        transition: all 0.3s ease;
+        box-shadow: 0 8px 25px rgba(229, 9, 20, 0.3);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .cta-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 35px rgba(229, 9, 20, 0.4);
+      }
+
+      .footer {
+        text-align: center;
+        padding: 20px 30px;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        background: rgba(0, 0, 0, 0.2);
+      }
+
+      .footer-text {
+        color: rgba(255, 255, 255, 0.4);
+        font-size: 14px;
+      }
+
+      .emoji {
+        font-size: 20px;
+        margin-left: 8px;
+      }
+
+      @media (max-width: 480px) {
+        .container {
+          margin: 10px;
+          border-radius: 16px;
+        }
+
+        .header,
+        .content,
+        .footer {
+          padding: 20px;
+        }
+
+        .greeting {
+          font-size: 24px;
+        }
+
+        .verification-code {
+          font-size: 28px;
+          letter-spacing: 4px;
+        }
+      }
+    </style>
   </head>
   <body>
-    <h1>Hi {{name}},</h1>
-    <p>Welcome to Netflix Clone! 🎬</p>
-    <p>Click <a href='{{url}}'>here</a> to get started.</p>
+    <div class='container'>
+      <div class='header'>
+        <div class='logo'>NETFLIX LITE</div>
+        <div class='subtitle'>Premium Streaming Experience</div>
+      </div>
+
+      <div class='content'>
+        <div class='greeting'>Hi {{name}},</div>
+
+        <div class='message'>
+          Welcome to Netflix Lite! We're excited to have you join our community
+          of movie and series enthusiasts. To complete your account setup,
+          please verify your email address using the code below.
+        </div>
+
+        <div class='code-section'>
+          <div class='code-label'>Verification Code</div>
+          <div class='verification-code'>{{code}}</div>
+          <div class='code-info'>This code expires in 10 minutes</div>
+        </div>
+
+        <div class='cta-section'>
+          <a href='#' class='cta-button'>Verify Account</a>
+        </div>
+
+        <div class='message'>
+          Once verified, you'll have access to thousands of movies, TV shows,
+          and exclusive content. Get ready for an amazing streaming experience!
+          <span class='emoji'>🎬</span>
+        </div>
+      </div>
+
+      <div class='footer'>
+        <div class='footer-text'>
+          Netflix Lite Team<br />
+          © 2025 Netflix Lite. All rights reserved.
+        </div>
+      </div>
+    </div>
   </body>
 </html>

@@ -1,0 +1,514 @@
+<html lang='en'>
+  <head>
+    <meta charset='UTF-8' />
+    <meta name='viewport' content='width=device-width, initial-scale=1.0' />
+    <title>New Movie Available - Netflix Lite</title>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family:
+          'Inter',
+          -apple-system,
+          BlinkMacSystemFont,
+          'Segoe UI',
+          Roboto,
+          sans-serif;
+        line-height: 1.6;
+        background: linear-gradient(
+          135deg,
+          #000000 0%,
+          #1a0033 30%,
+          #330066 70%,
+          #4d0099 100%
+        );
+        min-height: 100vh;
+        padding: 20px;
+      }
+
+      .container {
+        max-width: 650px;
+        margin: 0 auto;
+        background: rgba(15, 15, 25, 0.95);
+        backdrop-filter: blur(20px);
+        border-radius: 24px;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        overflow: hidden;
+        box-shadow: 0 30px 60px rgba(0, 0, 0, 0.7);
+      }
+
+      .header {
+        background: linear-gradient(
+          135deg,
+          #ff6b35 0%,
+          #f7931e 50%,
+          #ffc107 100%
+        );
+        padding: 30px;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .header::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: radial-gradient(
+          circle at 30% 30%,
+          rgba(255, 255, 255, 0.3) 0%,
+          transparent 50%
+        );
+        animation: spotlight 3s ease-in-out infinite alternate;
+      }
+
+      @keyframes spotlight {
+        0% {
+          transform: scale(1) rotate(0deg);
+          opacity: 0.3;
+        }
+        100% {
+          transform: scale(1.2) rotate(10deg);
+          opacity: 0.6;
+        }
+      }
+
+      .notification-badge {
+        display: inline-flex;
+        align-items: center;
+        background: rgba(0, 0, 0, 0.2);
+        backdrop-filter: blur(10px);
+        border-radius: 50px;
+        padding: 12px 24px;
+        margin-bottom: 20px;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        position: relative;
+        z-index: 2;
+      }
+
+      .notification-icon {
+        width: 24px;
+        height: 24px;
+        margin-right: 10px;
+        animation: star-twinkle 1.5s infinite;
+      }
+
+      @keyframes star-twinkle {
+        0%,
+        100% {
+          transform: scale(1) rotate(0deg);
+          opacity: 1;
+        }
+        50% {
+          transform: scale(1.2) rotate(180deg);
+          opacity: 0.7;
+        }
+      }
+
+      .notification-text {
+        color: rgba(0, 0, 0, 0.8);
+        font-weight: 700;
+        font-size: 14px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+
+      .logo {
+        font-size: 28px;
+        font-weight: 800;
+        color: rgba(0, 0, 0, 0.8);
+        position: relative;
+        z-index: 2;
+        text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.3);
+      }
+
+      .content {
+        padding: 40px 30px;
+        color: white;
+      }
+
+      .greeting {
+        font-size: 32px;
+        font-weight: 700;
+        margin-bottom: 30px;
+        background: linear-gradient(135deg, #ffd700 0%, #ffed4e 50%, #fff 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      .media-container {
+        position: relative;
+        border-radius: 20px;
+        overflow: hidden;
+        margin-bottom: 30px;
+        box-shadow: 0 25px 50px rgba(255, 107, 53, 0.3);
+        transform: perspective(1200px) rotateY(-2deg) rotateX(2deg);
+        transition: all 0.4s ease;
+      }
+
+      .media-container:hover {
+        transform: perspective(1200px) rotateY(0deg) rotateX(0deg) scale(1.03);
+        box-shadow: 0 30px 60px rgba(255, 107, 53, 0.5);
+      }
+
+      .thumbnail {
+        width: 100%;
+        height: 350px;
+        object-fit: cover;
+        display: block;
+      }
+
+      .movie-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(
+          45deg,
+          rgba(255, 107, 53, 0.1) 0%,
+          rgba(247, 147, 30, 0.2) 50%,
+          rgba(0, 0, 0, 0.3) 100%
+        );
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        transition: all 0.4s ease;
+      }
+
+      .media-container:hover .movie-overlay {
+        opacity: 1;
+      }
+
+      .play-button {
+        width: 90px;
+        height: 90px;
+        background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 35px;
+        color: white;
+        transform: scale(0.7);
+        transition: all 0.4s ease;
+        box-shadow: 0 10px 30px rgba(255, 107, 53, 0.5);
+      }
+
+      .media-container:hover .play-button {
+        transform: scale(1);
+      }
+
+      .movie-info {
+        background: linear-gradient(
+          135deg,
+          rgba(255, 107, 53, 0.15) 0%,
+          rgba(247, 147, 30, 0.1) 100%
+        );
+        border-radius: 20px;
+        padding: 30px;
+        margin-bottom: 30px;
+        border: 1px solid rgba(255, 107, 53, 0.3);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .movie-info::before {
+        content: '';
+        position: absolute;
+        top: -2px;
+        left: -2px;
+        right: -2px;
+        bottom: -2px;
+        background: linear-gradient(45deg, #ff6b35, #f7931e, #ffc107, #ff6b35);
+        border-radius: 20px;
+        z-index: -1;
+        animation: border-glow 3s linear infinite;
+      }
+
+      @keyframes border-glow {
+        0% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+        100% {
+          background-position: 0% 50%;
+        }
+      }
+
+      .movie-title {
+        font-size: 28px;
+        font-weight: 800;
+        background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 20px;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+      }
+
+      .premiere-badge {
+        display: inline-flex;
+        align-items: center;
+        background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+        color: white;
+        padding: 10px 20px;
+        border-radius: 25px;
+        font-size: 14px;
+        font-weight: 700;
+        margin-bottom: 20px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        box-shadow: 0 5px 15px rgba(231, 76, 60, 0.4);
+      }
+
+      .premiere-icon {
+        margin-right: 8px;
+        font-size: 16px;
+        animation: pulse 2s infinite;
+      }
+
+      @keyframes pulse {
+        0%,
+        100% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.1);
+        }
+      }
+
+      .movie-details {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 20px;
+        margin-top: 25px;
+      }
+
+      .detail-card {
+        text-align: center;
+        padding: 20px;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 16px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        transition: all 0.3s ease;
+      }
+
+      .detail-card:hover {
+        background: rgba(255, 107, 53, 0.1);
+        border-color: rgba(255, 107, 53, 0.3);
+        transform: translateY(-2px);
+      }
+
+      .detail-icon {
+        font-size: 24px;
+        margin-bottom: 10px;
+      }
+
+      .detail-label {
+        font-size: 12px;
+        color: rgba(255, 255, 255, 0.6);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 8px;
+      }
+
+      .detail-value {
+        font-size: 16px;
+        font-weight: 700;
+        color: #ffd700;
+      }
+
+      .message {
+        font-size: 18px;
+        color: rgba(255, 255, 255, 0.9);
+        line-height: 1.8;
+        margin-bottom: 35px;
+        text-align: center;
+        padding: 25px;
+        background: rgba(255, 255, 255, 0.03);
+        border-radius: 16px;
+        border-left: 4px solid #ff6b35;
+      }
+
+      .quality-highlight {
+        display: inline-block;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 6px 15px;
+        border-radius: 15px;
+        font-weight: 700;
+        font-size: 14px;
+        margin: 0 5px;
+        text-transform: uppercase;
+      }
+
+      .cta-section {
+        text-align: center;
+        margin: 35px 0;
+      }
+
+      .cta-button {
+        display: inline-flex;
+        align-items: center;
+        background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
+        color: white;
+        padding: 20px 50px;
+        border-radius: 50px;
+        text-decoration: none;
+        font-weight: 800;
+        font-size: 18px;
+        transition: all 0.4s ease;
+        box-shadow: 0 12px 35px rgba(255, 107, 53, 0.4);
+        border: 2px solid rgba(255, 255, 255, 0.1);
+        text-transform: uppercase;
+        letter-spacing: 2px;
+      }
+
+      .cta-button:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 20px 50px rgba(255, 107, 53, 0.6);
+        border-color: rgba(255, 255, 255, 0.2);
+      }
+
+      .cta-icon {
+        margin-left: 12px;
+        font-size: 20px;
+        animation: rocket 2s ease-in-out infinite;
+      }
+
+      @keyframes rocket {
+        0%,
+        100% {
+          transform: translateX(0);
+        }
+        50% {
+          transform: translateX(5px);
+        }
+      }
+
+      .footer {
+        text-align: center;
+        padding: 30px;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        background: rgba(0, 0, 0, 0.4);
+      }
+
+      .footer-text {
+        color: rgba(255, 255, 255, 0.5);
+        font-size: 14px;
+        line-height: 1.8;
+      }
+
+      @media (max-width: 480px) {
+        .container {
+          margin: 10px;
+          border-radius: 16px;
+        }
+
+        .header,
+        .content,
+        .footer {
+          padding: 20px;
+        }
+
+        .greeting {
+          font-size: 26px;
+        }
+
+        .thumbnail {
+          height: 220px;
+        }
+
+        .movie-details {
+          grid-template-columns: 1fr;
+        }
+
+        .movie-title {
+          font-size: 22px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class='container'>
+      <div class='header'>
+        <div class='notification-badge'>
+          <div class='notification-icon'>🌟</div>
+          <div class='notification-text'>Movie Premiere</div>
+        </div>
+        <div class='logo'>NETFLIX LITE</div>
+      </div>
+
+      <div class='content'>
+        <div class='greeting'>Hi {{name}},</div>
+
+        <div class='media-container'>
+          <img src='{{thumbnail}}' alt='{{title}} Poster' class='thumbnail' />
+          <div class='movie-overlay'>
+            <div class='play-button'>▶</div>
+          </div>
+        </div>
+
+        <div class='movie-info'>
+          <div class='movie-title'>{{title}}</div>
+
+          <div class='premiere-badge'>
+            <span class='premiere-icon'>🎬</span>
+            Now Streaming
+          </div>
+
+          <div class='movie-details'>
+            <div class='detail-card'>
+              <div class='detail-icon'>📅</div>
+              <div class='detail-label'>Released</div>
+              <div class='detail-value'>{{publishAt}}</div>
+            </div>
+            <div class='detail-card'>
+              <div class='detail-icon'>🎥</div>
+              <div class='detail-label'>Quality</div>
+              <div class='detail-value'>{{quality}}</div>
+            </div>
+          </div>
+        </div>
+
+        <div class='message'>
+          🍿 The movie you've been waiting for is finally here! Experience
+          cinema magic from the comfort of your home. Get your popcorn ready and
+          dive into this incredible story, now streaming in premium
+          <span class='quality-highlight'>{{quality}}</span>
+          quality exclusively on Netflix Lite.
+        </div>
+
+        <div class='cta-section'>
+          <a href='#' class='cta-button'>
+            Stream Now
+            <span class='cta-icon'>🚀</span>
+          </a>
+        </div>
+      </div>
+
+      <div class='footer'>
+        <div class='footer-text'>
+          Lights, Camera, Action! 🎭<br />
+          Your Netflix Lite Cinema Experience<br />
+          © 2025 Netflix Lite. All rights reserved.
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

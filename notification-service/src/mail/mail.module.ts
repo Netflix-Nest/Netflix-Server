@@ -20,7 +20,7 @@ import { ConfigService } from '@nestjs/config';
           },
         },
         defaults: {
-          from: '"Netflix Clone" <caonguyentringoc@protonmail.com>',
+          from: '"Netflix Lite" <caonguyentringoc@protonmail.com>',
         },
         template: {
           dir: __dirname + '/templates',

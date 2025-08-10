@@ -12,4 +12,16 @@ export class NotificationController {
   welcome(@Body() { email, name }: { email: string; name: string }) {
     return this.notificationClient.send("send-welcome", { email, name });
   }
+
+  @Post("new-movie")
+  newMovie(
+    @Body()
+    { email, name, content }: { email: string; name: string; content: any }
+  ) {
+    return this.notificationClient.send("mail-new-movie", {
+      email,
+      name,
+      content,
+    });
+  }
 }

@@ -67,6 +67,9 @@ export class CreateContentDto {
   @IsInt()
   followers: number = 0;
 
+  @IsOptional()
+  publishAt: Date;
+
   @IsNotEmpty()
   @IsString()
   quality: string;

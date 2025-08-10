@@ -71,6 +71,9 @@ export class Content {
   @Column({ type: 'bigint' })
   followers: number;
 
+  @Column({ nullable: true })
+  publishAt: Date;
+
   @Column()
   quality: string;
 
