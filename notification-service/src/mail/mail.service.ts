@@ -1,5 +1,6 @@
 import { MailerService } from '@nestjs-modules/mailer';
 import { Injectable } from '@nestjs/common';
+import { ContentEpisodeDto, ContentMovieDto } from 'src/dto/content.dto';
 
 @Injectable()
 export class MailService {
@@ -43,8 +44,13 @@ export class MailService {
     }
   }
 
-  async newFilm(email: string, name: string, content: any) {
+  async newFilm(email: string, name: string, content: ContentMovieDto) {
     const { title, thumbnail, publishAt, quality } = content;
+    publishAt.toLocaleString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    });
     await this.mailerService.sendMail({
       to: email,
       subject: 'New Movie',
@@ -59,9 +65,14 @@ export class MailService {
     });
   }
 
-  async newEpisode(email: string, name: string, content: any) {
+  async newEpisode(email: string, name: string, content: ContentEpisodeDto) {
     const { title, publishAt, quality, episodeNumber, series, thumbnail } =
       content;
+    publishAt.toLocaleString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    });
     await this.mailerService.sendMail({
       to: email,
       subject: 'New Episode',

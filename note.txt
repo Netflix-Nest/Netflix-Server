@@ -17,8 +17,10 @@ forgot password -> user gen code -> mailer
 update content ?: if publish (null -> !null) -> notification to user interested
 user click interested a movie or series -> update their interested list (list of contents). When update content -> find and notice
 verify account: send user a token and call api verify <-> similar with reset password (valid token ? -> reset pass)
+logic verify and reset password: use token
+after notification -> save db
 UI at '/' of server.
-send mail new film, episode: dto and check
+convert publishAt to time can see
 prod: 
     - private bucket and GET /video/:videoId/stream return master.m3u8 instead or use nginx
 
