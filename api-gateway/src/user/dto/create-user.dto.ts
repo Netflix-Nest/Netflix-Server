@@ -1,36 +1,40 @@
 import {
-  IsEmail,
-  IsNotEmpty,
-  Length,
-  IsOptional,
-  IsEnum,
-  IsString,
+	IsEmail,
+	IsNotEmpty,
+	Length,
+	IsOptional,
+	IsEnum,
+	IsString,
 } from "class-validator";
 import { UserRole } from "src/interfaces/user.enum";
 
 export class CreateUserDto {
-  @IsEmail()
-  @IsNotEmpty()
-  email: string;
+	@IsEmail()
+	@IsNotEmpty()
+	email: string;
 
-  @IsNotEmpty()
-  @IsString()
-  fullName: string;
+	@IsNotEmpty()
+	@IsString()
+	fullName: string;
 
-  @IsNotEmpty()
-  @IsString()
-  password: string;
+	@IsNotEmpty()
+	@IsString()
+	username: string;
 
-  @IsOptional()
-  @IsEnum(UserRole)
-  role?: UserRole;
+	@IsNotEmpty()
+	@IsString()
+	password: string;
 
-  @IsOptional()
-  avatar?: string;
+	@IsOptional()
+	@IsEnum(UserRole)
+	role?: UserRole;
 
-  @IsOptional()
-  phoneNumber: string;
+	@IsOptional()
+	avatar?: string;
 
-  @IsOptional()
-  viewingTime: number;
+	@IsOptional()
+	phoneNumber: string;
+
+	@IsOptional()
+	viewingTime: number;
 }

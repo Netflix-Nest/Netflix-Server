@@ -19,6 +19,10 @@ export class CreateUserDto {
 
   @IsNotEmpty()
   @IsString()
+  username: string;
+
+  @IsNotEmpty()
+  @IsString()
   password: string;
 
   @IsOptional()
@@ -33,7 +37,4 @@ export class CreateUserDto {
 
   @IsOptional()
   viewingTime: number;
-
-  @IsNotEmpty()
-  status: StatusUser;
 }

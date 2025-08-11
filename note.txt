@@ -2,12 +2,12 @@ config DLQ
 haven't try catch important tasks
 
 handle logic upload thumbnail
-notification at api gateway: just for dev
+api notification at api gateway: just for dev
+write lib dto, interface
 
 upload thumbnail or automatic generation
+create watchlist when user register: get a default picture or url.
 
-create user -> create default list (like video.)
-write lib dto, interface
 comment: mention -> notification.
 search service: api search user theo tên -> mention (in Zalo)
 update content: publish ? yes -> notification

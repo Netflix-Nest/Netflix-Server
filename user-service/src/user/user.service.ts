@@ -1,22 +1,26 @@
 import {
   BadGatewayException,
   BadRequestException,
+  Inject,
   Injectable,
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { User, UserRole } from './entities/user.entity';
+import { StatusUser, User, UserRole } from './entities/user.entity';
 import { Repository } from 'typeorm';
 import aqp from 'api-query-params';
 import { compareSync, genSaltSync, hashSync } from 'bcryptjs';
-import { RpcException } from '@nestjs/microservices';
+import { ClientProxy, RpcException } from '@nestjs/microservices';
 import { RegisterUser } from './user.interfaces';
+import { lastValueFrom } from 'rxjs';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(User) private readonly userRepository: Repository<User>,
+    @Inject('ENGAGEMENT_SERVICE')
+    private readonly engagementClient: ClientProxy,
   ) {}
 
   getHashPassword = (password: string) => {
@@ -58,8 +62,16 @@ export class UserService {
   }
 
   async registerUser(registerDto: CreateUserDto) {
-    const { email, fullName, role, avatar, phoneNumber, viewingTime, status } =
-      registerDto;
+    const {
+      email,
+      fullName,
+      role,
+      avatar,
+      phoneNumber,
+      viewingTime,
+      username,
+    } = registerDto;
+
     const existUser = await this.userRepository.findOne({ where: { email } });
     if (existUser) {
       throw new RpcException('User already exist !');
@@ -73,9 +85,11 @@ export class UserService {
     } else {
       userRole = UserRole.USER;
     }
+    const status = StatusUser.PENDING;
     const user = this.userRepository.create({
       email,
       fullName,
+      username,
       role: userRole,
       password,
       avatar,
@@ -83,7 +97,17 @@ export class UserService {
       viewingTime,
       status,
     });
-    return this.userRepository.save(user);
+    await this.userRepository.save(user);
+    const createWatchlistDto = {
+      userId: user.id,
+      contentIds: [],
+      name: 'My Favorite',
+      thumbnailUrl: '',
+    };
+    await lastValueFrom(
+      this.engagementClient.send('create-watchlist', createWatchlistDto),
+    );
+    return user;
   }
 
   async findAll(currentPage: number = 1, limit: number = 10, qs: string) {
