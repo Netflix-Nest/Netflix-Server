@@ -61,6 +61,12 @@ export class ContentController {
 		);
 	}
 
+	@Post("increase-view/:id")
+	increaseView(@Param("id") id: number) {
+		this.videoClient.emit("increase-view", id);
+		return "ok";
+	}
+
 	@Delete(":id")
 	remove(@Param("id") id: string) {
 		return lastValueFrom(this.videoClient.send("remove-content", +id));

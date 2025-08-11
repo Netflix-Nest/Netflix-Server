@@ -6,15 +6,12 @@ notification at api gateway: just for dev
 
 upload thumbnail or automatic generation
 
-logic increase view 
-
 create user -> create default list (like video.)
 write lib dto, interface
 comment: mention -> notification.
 search service: api search user theo tên -> mention (in Zalo)
 update content: publish ? yes -> notification
 create account -> mailer welcome, confirm account, status account in entity users
-forgot password -> user gen code -> mailer
 update content ?: if publish (null -> !null) -> notification to user interested
 user click interested a movie or series -> update their interested list (list of contents). When update content -> find and notice
 UI at '/' of server.

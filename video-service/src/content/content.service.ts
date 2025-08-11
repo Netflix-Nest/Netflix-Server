@@ -273,6 +273,19 @@ export class ContentService {
     });
   }
 
+  async increaseView(id: number) {
+    const content = await this.contentRepository.findOne({ where: { id } });
+    if (!content) {
+      throw new RpcException('Content not found !');
+    }
+    return this.contentRepository
+      .createQueryBuilder()
+      .update(Content)
+      .set({ view: () => 'view + 1' })
+      .where('id = :id', { id })
+      .execute();
+  }
+
   async remove(id: number) {
     const content = await this.contentRepository.findOne({ where: { id } });
     if (!content) {

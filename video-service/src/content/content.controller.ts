@@ -1,5 +1,5 @@
 import { Controller } from '@nestjs/common';
-import { MessagePattern, Payload } from '@nestjs/microservices';
+import { EventPattern, MessagePattern, Payload } from '@nestjs/microservices';
 import { ContentService } from './content.service';
 import { CreateContentDto } from './dto/create-content.dto';
 import { UpdateContentDto } from './dto/update-content.dto';
@@ -27,6 +27,11 @@ export class ContentController {
   @MessagePattern('update-content')
   update(@Payload() updateContentDto: UpdateContentDto) {
     return this.contentService.update(updateContentDto.id, updateContentDto);
+  }
+
+  @EventPattern('increase-view')
+  increaseView(@Payload() id: number) {
+    return this.contentService.increaseView(id);
   }
 
   @MessagePattern('remove-content')
