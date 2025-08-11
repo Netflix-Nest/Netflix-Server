@@ -12,6 +12,12 @@ export enum UserRole {
   ADMIN = 'ADMIN',
   USER = 'USER',
 }
+
+export enum StatusUser {
+  ACTIVE = 'ACTIVE',
+  PENDING = 'PENDING',
+  BANNED = 'BANNED',
+}
 @Index(['email'])
 @Index(['username'])
 @Entity('users')
@@ -49,6 +55,9 @@ export class User {
 
   @Column({ nullable: true })
   avatar: string;
+
+  @Column({ default: 'PENDING' })
+  status: StatusUser;
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;

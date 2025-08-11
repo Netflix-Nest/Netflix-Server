@@ -12,3 +12,15 @@ export interface IUserDecorator {
   role: string;
   fullName: string;
 }
+
+export enum TokenType {
+  VERIFY_ACCOUNT = 'VERIFY_ACCOUNT',
+  RESET_PASSWORD = 'RESET_PASSWORD',
+  OTHER = 'OTHER',
+}
+
+export enum StatusUser {
+  ACTIVE = 'ACTIVE',
+  PENDING = 'PENDING',
+  BANNED = 'BANNED',
+}

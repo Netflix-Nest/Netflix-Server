@@ -1,12 +1,13 @@
 import { MailerService } from '@nestjs-modules/mailer';
 import { Injectable } from '@nestjs/common';
+import dayjs from 'dayjs';
 import { ContentEpisodeDto, ContentMovieDto } from 'src/dto/content.dto';
 
 @Injectable()
 export class MailService {
   constructor(private mailerService: MailerService) {}
 
-  async sendUserWelcome(email: string, name: string, code: string) {
+  async sendUserWelcome(email: string, name: string, token: string) {
     try {
       await this.mailerService.sendMail({
         to: email,
@@ -14,7 +15,7 @@ export class MailService {
         template: './welcome',
         context: {
           name,
-          code,
+          token,
         },
       });
       console.log(`Email sent ${email}`);
@@ -25,7 +26,7 @@ export class MailService {
     }
   }
 
-  async resetPassword(email: string, name: string, code: string) {
+  async resetPassword(email: string, name: string, token: string) {
     try {
       await this.mailerService.sendMail({
         to: email,
@@ -33,7 +34,7 @@ export class MailService {
         template: './reset-password',
         context: {
           name,
-          code,
+          token,
         },
       });
       console.log(`Email sent ${email}`);
@@ -46,11 +47,7 @@ export class MailService {
 
   async newFilm(email: string, name: string, content: ContentMovieDto) {
     const { title, thumbnail, publishAt, quality } = content;
-    publishAt.toLocaleString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-    });
+    const publishAtConvert = publishAt.toString().slice(0, 16);
     await this.mailerService.sendMail({
       to: email,
       subject: 'New Movie',
@@ -59,7 +56,7 @@ export class MailService {
         name,
         title,
         thumbnail,
-        publishAt,
+        publishAt: publishAtConvert,
         quality,
       },
     });
@@ -68,11 +65,8 @@ export class MailService {
   async newEpisode(email: string, name: string, content: ContentEpisodeDto) {
     const { title, publishAt, quality, episodeNumber, series, thumbnail } =
       content;
-    publishAt.toLocaleString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-    });
+    const publishAtConvert = publishAt.toString().slice(0, 16);
+
     await this.mailerService.sendMail({
       to: email,
       subject: 'New Episode',
@@ -81,7 +75,7 @@ export class MailService {
         name,
         thumbnail,
         title,
-        publishAt,
+        publishAt: publishAtConvert,
         quality,
         episodeNumber,
         series,

@@ -1,6 +1,6 @@
 import { Controller } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { IUser, IUserDecorator } from './auth.interfaces';
+import { IUser, IUserDecorator, TokenType } from './auth.interfaces';
 import { EventPattern, MessagePattern, Payload } from '@nestjs/microservices';
 
 @Controller('auth')
@@ -8,27 +8,50 @@ export class AuthController {
   constructor(private authService: AuthService) {}
 
   @MessagePattern('validate-user')
-  async validateUser(@Payload() { email, password }) {
+  validateUser(@Payload() { email, password }) {
     return this.authService.validateUser(email, password);
   }
 
   @MessagePattern('auth-login')
-  async handleLogin(@Payload() user: IUser) {
+  handleLogin(@Payload() user: IUser) {
     return this.authService.login(user);
   }
 
   @MessagePattern('get-account')
-  async getAccount(@Payload() user: IUserDecorator) {
+  getAccount(@Payload() user: IUserDecorator) {
     return this.authService.getAccount(user);
   }
 
   @MessagePattern('auth-refresh')
-  async refresh(@Payload() refreshToken: string) {
+  refresh(@Payload() refreshToken: string) {
     return this.authService.processNewToken(refreshToken);
   }
 
   @EventPattern('logout')
-  async logout(@Payload() user: IUserDecorator) {
+  logout(@Payload() user: IUserDecorator) {
     return this.authService.logout(user);
+  }
+
+  @MessagePattern('verify-account')
+  verifyAccount(@Payload() id: number) {
+    return this.authService.genAuthToken(id, TokenType.VERIFY_ACCOUNT);
+  }
+
+  @MessagePattern('active-account')
+  ativeAccount(@Payload() token: string) {
+    return this.authService.activeAccount(token);
+  }
+
+  @MessagePattern('gen-token-reset-pass')
+  genTokenResetPass(@Payload() id: number) {
+    return this.authService.genAuthToken(id, TokenType.RESET_PASSWORD);
+  }
+
+  @MessagePattern('reset-password')
+  resetPassword(
+    @Payload()
+    { token, password }: { token: string; password: string },
+  ) {
+    return this.authService.resetPassword(token, password);
   }
 }

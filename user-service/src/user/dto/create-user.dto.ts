@@ -6,7 +6,7 @@ import {
   IsEnum,
   IsString,
 } from 'class-validator';
-import { UserRole } from '../entities/user.entity';
+import { StatusUser, UserRole } from '../entities/user.entity';
 
 export class CreateUserDto {
   @IsEmail()
@@ -33,4 +33,7 @@ export class CreateUserDto {
 
   @IsOptional()
   viewingTime: number;
+
+  @IsNotEmpty()
+  status: StatusUser;
 }

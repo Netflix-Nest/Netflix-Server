@@ -2,9 +2,10 @@ config DLQ
 haven't try catch important tasks
 
 handle logic upload thumbnail
-upload thumbnail or automatic generation 
-relation: - single video: video 1-1 content
-          - series:       video 1-1 content, series 1-1 content, series of video: video.content.series
+notification at api gateway: just for dev
+
+upload thumbnail or automatic generation
+
 logic increase view 
 
 create user -> create default list (like video.)
@@ -16,11 +17,8 @@ create account -> mailer welcome, confirm account, status account in entity user
 forgot password -> user gen code -> mailer
 update content ?: if publish (null -> !null) -> notification to user interested
 user click interested a movie or series -> update their interested list (list of contents). When update content -> find and notice
-verify account: send user a token and call api verify <-> similar with reset password (valid token ? -> reset pass)
-logic verify and reset password: use token
-after notification -> save db
 UI at '/' of server.
-convert publishAt to time can see
+create, update content,.... -> notification
 prod: 
     - private bucket and GET /video/:videoId/stream return master.m3u8 instead or use nginx
 

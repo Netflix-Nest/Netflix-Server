@@ -6,20 +6,20 @@ import { ContentEpisodeDto, ContentMovieDto } from 'src/dto/content.dto';
 @Controller()
 export class MailController {
   constructor(private readonly mailService: MailService) {}
-  @MessagePattern('send-welcome')
+  @EventPattern('send-welcome')
   welcome(
     @Payload()
-    { email, name, code }: { email: string; name: string; code: string },
+    { email, name, token }: { email: string; name: string; token: string },
   ) {
-    return this.mailService.sendUserWelcome(email, name, code);
+    return this.mailService.sendUserWelcome(email, name, token);
   }
 
-  @MessagePattern('reset-password')
+  @EventPattern('reset-password')
   resetPass(
     @Payload()
-    { email, name, code }: { email: string; name: string; code: string },
+    { email, name, token }: { email: string; name: string; token: string },
   ) {
-    return this.mailService.resetPassword(email, name, code);
+    return this.mailService.resetPassword(email, name, token);
   }
 
   @EventPattern('mail-new-movie')

@@ -5,11 +5,18 @@ import { LocalStrategy } from "./passport/local.strategy";
 import { JwtStrategy } from "./passport/jwt.strategy";
 import { AuthService } from "./auth.service";
 import { ConfigModule } from "@nestjs/config";
+import { NotificationClientProvider } from "src/client/notification-client.provider";
 
 @Module({
-  imports: [ConfigModule],
-  controllers: [AuthController],
-  providers: [AuthClientProvider, LocalStrategy, JwtStrategy, AuthService],
-  exports: [],
+	imports: [ConfigModule],
+	controllers: [AuthController],
+	providers: [
+		AuthClientProvider,
+		LocalStrategy,
+		JwtStrategy,
+		AuthService,
+		NotificationClientProvider,
+	],
+	exports: [],
 })
 export class AuthModule {}

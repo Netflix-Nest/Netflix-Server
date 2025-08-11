@@ -58,7 +58,8 @@ export class UserService {
   }
 
   async registerUser(registerDto: CreateUserDto) {
-    const { email, fullName, role } = registerDto;
+    const { email, fullName, role, avatar, phoneNumber, viewingTime, status } =
+      registerDto;
     const existUser = await this.userRepository.findOne({ where: { email } });
     if (existUser) {
       throw new RpcException('User already exist !');
@@ -77,6 +78,10 @@ export class UserService {
       fullName,
       role: userRole,
       password,
+      avatar,
+      phoneNumber,
+      viewingTime,
+      status,
     });
     return this.userRepository.save(user);
   }
@@ -101,8 +106,12 @@ export class UserService {
       order: sort || { createdAt: 'DESC' },
       select:
         projection && Object.keys(projection).length > 0
-          ? (Object.keys(projection) as (keyof User)[])
-          : undefined,
+          ? (Object.keys(projection) as (keyof User)[]).filter(
+              (f) => f !== 'password',
+            )
+          : this.userRepository.metadata.columns
+              .map((col) => col.propertyName as keyof User)
+              .filter((col) => col !== 'password'),
     });
 
     return {
@@ -117,7 +126,13 @@ export class UserService {
   }
 
   async findOne(id: number) {
-    const existUser = await this.userRepository.findOneBy({ id });
+    const allColumns = this.userRepository.metadata.columns.map(
+      (col) => col.propertyName as keyof User,
+    );
+    const existUser = await this.userRepository.findOne({
+      where: { id },
+      select: allColumns.filter((c) => c !== 'password'),
+    });
     if (!existUser) {
       throw new RpcException('User Not Found !');
     }

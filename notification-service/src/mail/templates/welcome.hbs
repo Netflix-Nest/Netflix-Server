@@ -2,9 +2,9 @@
   <head>
     <meta charset='UTF-8' />
     <meta name='viewport' content='width=device-width, initial-scale=1.0' />
-    <title>Welcome to Netflix Lite</title>
+    <title>Verify Your Netflix Account</title>
     <style>
-      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+      @import url('https://fonts.googleapis.com/css2?family=Netflix+Sans:wght@300;400;500;700&display=swap');
 
       * {
         margin: 0;
@@ -14,41 +14,28 @@
 
       body {
         font-family:
-          'Inter',
+          'Netflix Sans',
           -apple-system,
           BlinkMacSystemFont,
           'Segoe UI',
-          Roboto,
+          Arial,
           sans-serif;
+        background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 100%);
+        color: #ffffff;
         line-height: 1.6;
-        background: linear-gradient(
-          135deg,
-          #0f0f23 0%,
-          #1a1a2e 50%,
-          #16213e 100%
-        );
-        min-height: 100vh;
-        padding: 20px;
       }
 
-      .container {
+      .email-container {
         max-width: 600px;
         margin: 0 auto;
-        background: rgba(255, 255, 255, 0.05);
-        backdrop-filter: blur(20px);
-        border-radius: 24px;
-        border: 1px solid rgba(255, 255, 255, 0.1);
+        background: linear-gradient(145deg, #141414 0%, #0a0a0a 100%);
+        border-radius: 12px;
         overflow: hidden;
-        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
       }
 
       .header {
-        background: linear-gradient(
-          135deg,
-          #e50914 0%,
-          #ff1744 50%,
-          #d32f2f 100%
-        );
+        background: linear-gradient(90deg, #e50914 0%, #f40612 100%);
         padding: 40px 30px;
         text-align: center;
         position: relative;
@@ -58,229 +45,252 @@
       .header::before {
         content: '';
         position: absolute;
-        top: -50%;
-        left: -50%;
-        width: 200%;
-        height: 200%;
-        background: radial-gradient(
-          circle,
-          rgba(255, 255, 255, 0.1) 0%,
-          transparent 70%
-        );
-        animation: shimmer 3s ease-in-out infinite;
-      }
-
-      @keyframes shimmer {
-        0%,
-        100% {
-          transform: rotate(0deg);
-          opacity: 0.3;
-        }
-        50% {
-          transform: rotate(180deg);
-          opacity: 0.6;
-        }
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" patternUnits="userSpaceOnUse" width="100" height="100"><filter id="noiseFilter"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="4" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(%23noiseFilter)" opacity="0.05"/></pattern></defs><rect width="100%" height="100%" fill="url(%23grain)"/></svg>');
+        pointer-events: none;
       }
 
       .logo {
-        font-size: 32px;
+        font-size: 36px;
         font-weight: 700;
-        color: white;
-        margin-bottom: 10px;
-        position: relative;
-        z-index: 2;
+        letter-spacing: -1px;
+        color: #ffffff;
         text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-      }
-
-      .subtitle {
-        color: rgba(255, 255, 255, 0.9);
-        font-size: 16px;
-        font-weight: 300;
         position: relative;
         z-index: 2;
       }
 
       .content {
-        padding: 40px 30px;
-        color: white;
+        padding: 50px 40px;
+        text-align: center;
+      }
+
+      .welcome-text {
+        font-size: 28px;
+        font-weight: 500;
+        margin-bottom: 15px;
+        color: #ffffff;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
       }
 
       .greeting {
-        font-size: 28px;
-        font-weight: 600;
-        margin-bottom: 20px;
-        background: linear-gradient(135deg, #fff 0%, #e0e0e0 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
+        font-size: 18px;
+        color: #b3b3b3;
+        margin-bottom: 35px;
       }
 
       .message {
         font-size: 16px;
-        color: rgba(255, 255, 255, 0.8);
-        margin-bottom: 30px;
-        line-height: 1.7;
+        color: #cccccc;
+        margin-bottom: 40px;
+        line-height: 1.8;
+        max-width: 480px;
+        margin-left: auto;
+        margin-right: auto;
       }
 
-      .code-section {
+      .verify-button {
+        display: inline-block;
         background: linear-gradient(
-          135deg,
-          rgba(229, 9, 20, 0.1) 0%,
-          rgba(255, 23, 68, 0.05) 100%
+          45deg,
+          #e50914 0%,
+          #f40612 50%,
+          #e50914 100%
         );
-        border: 2px solid rgba(229, 9, 20, 0.3);
-        border-radius: 16px;
-        padding: 30px;
-        text-align: center;
-        margin: 30px 0;
+        color: #ffffff;
+        text-decoration: none;
+        padding: 18px 45px;
+        font-size: 18px;
+        font-weight: 600;
+        border-radius: 8px;
+        box-shadow: 0 8px 25px rgba(229, 9, 20, 0.4);
+        transition: all 0.3s ease;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        border: 2px solid transparent;
         position: relative;
+        overflow: hidden;
       }
 
-      .code-section::before {
+      .verify-button::before {
         content: '';
         position: absolute;
         top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
         background: linear-gradient(
-          135deg,
-          rgba(229, 9, 20, 0.1) 0%,
-          transparent 50%
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.2),
+          transparent
         );
-        border-radius: 14px;
-        pointer-events: none;
+        transition: left 0.5s;
       }
 
-      .code-label {
-        font-size: 14px;
-        color: rgba(255, 255, 255, 0.6);
-        text-transform: uppercase;
-        letter-spacing: 2px;
-        margin-bottom: 15px;
-        font-weight: 500;
+      .verify-button:hover::before {
+        left: 100%;
       }
 
-      .verification-code {
-        font-size: 36px;
-        font-weight: 700;
-        color: #e50914;
-        font-family: 'Monaco', 'Consolas', monospace;
-        letter-spacing: 8px;
-        margin: 10px 0;
-        text-shadow: 0 0 20px rgba(229, 9, 20, 0.5);
-        position: relative;
-        z-index: 2;
-      }
-
-      .code-info {
-        font-size: 13px;
-        color: rgba(255, 255, 255, 0.5);
-        margin-top: 15px;
-        font-style: italic;
-      }
-
-      .cta-section {
-        text-align: center;
-        margin: 30px 0;
-      }
-
-      .cta-button {
-        display: inline-block;
-        background: linear-gradient(135deg, #e50914 0%, #ff1744 100%);
-        color: white;
-        padding: 16px 40px;
-        border-radius: 50px;
-        text-decoration: none;
-        font-weight: 600;
-        font-size: 16px;
-        transition: all 0.3s ease;
-        box-shadow: 0 8px 25px rgba(229, 9, 20, 0.3);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-      }
-
-      .cta-button:hover {
+      .verify-button:hover {
         transform: translateY(-2px);
-        box-shadow: 0 12px 35px rgba(229, 9, 20, 0.4);
+        box-shadow: 0 12px 35px rgba(229, 9, 20, 0.6);
+        border-color: rgba(255, 255, 255, 0.2);
+      }
+
+      .security-note {
+        margin-top: 50px;
+        padding: 25px;
+        background: rgba(255, 255, 255, 0.05);
+        border-left: 4px solid #e50914;
+        border-radius: 6px;
+        text-align: left;
+      }
+
+      .security-note h3 {
+        color: #ffffff;
+        font-size: 16px;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+      }
+
+      .security-icon {
+        margin-right: 10px;
+        font-size: 18px;
+      }
+
+      .security-note p {
+        color: #b3b3b3;
+        font-size: 14px;
+        line-height: 1.6;
       }
 
       .footer {
+        background: #0a0a0a;
+        padding: 30px 40px;
         text-align: center;
-        padding: 20px 30px;
-        border-top: 1px solid rgba(255, 255, 255, 0.1);
-        background: rgba(0, 0, 0, 0.2);
+        border-top: 1px solid #333;
       }
 
       .footer-text {
-        color: rgba(255, 255, 255, 0.4);
+        color: #666;
         font-size: 14px;
+        margin-bottom: 15px;
       }
 
-      .emoji {
-        font-size: 20px;
-        margin-left: 8px;
+      .social-links {
+        margin-top: 20px;
       }
 
-      @media (max-width: 480px) {
-        .container {
+      .social-links a {
+        color: #888;
+        text-decoration: none;
+        margin: 0 15px;
+        font-size: 14px;
+        transition: color 0.3s ease;
+      }
+
+      .social-links a:hover {
+        color: #e50914;
+      }
+
+      .divider {
+        height: 2px;
+        background: linear-gradient(
+          90deg,
+          transparent 0%,
+          #e50914 50%,
+          transparent 100%
+        );
+        margin: 30px auto;
+        width: 100px;
+        border-radius: 2px;
+      }
+
+      @media (max-width: 600px) {
+        .email-container {
           margin: 10px;
-          border-radius: 16px;
+          border-radius: 8px;
         }
 
-        .header,
-        .content,
-        .footer {
-          padding: 20px;
+        .header {
+          padding: 30px 20px;
         }
 
-        .greeting {
+        .logo {
+          font-size: 28px;
+        }
+
+        .content {
+          padding: 30px 25px;
+        }
+
+        .welcome-text {
           font-size: 24px;
         }
 
-        .verification-code {
-          font-size: 28px;
-          letter-spacing: 4px;
+        .verify-button {
+          padding: 16px 35px;
+          font-size: 16px;
+        }
+
+        .footer {
+          padding: 25px 20px;
         }
       }
     </style>
   </head>
   <body>
-    <div class='container'>
+    <div class='email-container'>
       <div class='header'>
-        <div class='logo'>NETFLIX LITE</div>
-        <div class='subtitle'>Premium Streaming Experience</div>
+        <div class='logo'>NETFLIX</div>
       </div>
 
       <div class='content'>
-        <div class='greeting'>Hi {{name}},</div>
+        <h1 class='welcome-text'>Welcome to Netflix!</h1>
+        <p class='greeting'>Hello {{name}},</p>
 
-        <div class='message'>
-          Welcome to Netflix Lite! We're excited to have you join our community
-          of movie and series enthusiasts. To complete your account setup,
-          please verify your email address using the code below.
-        </div>
+        <div class='divider'></div>
 
-        <div class='code-section'>
-          <div class='code-label'>Verification Code</div>
-          <div class='verification-code'>{{code}}</div>
-          <div class='code-info'>This code expires in 10 minutes</div>
-        </div>
+        <p class='message'>
+          Thank you for signing up for Netflix! To complete your registration
+          and start enjoying thousands of movies, TV shows, and Netflix
+          originals, please verify your email address by clicking the button
+          below.
+        </p>
 
-        <div class='cta-section'>
-          <a href='#' class='cta-button'>Verify Account</a>
-        </div>
+        <a
+          href='http://localhost:3000/auth/active-account?token={{token}}'
+          class='verify-button'
+        >
+          Verify Account
+        </a>
 
-        <div class='message'>
-          Once verified, you'll have access to thousands of movies, TV shows,
-          and exclusive content. Get ready for an amazing streaming experience!
-          <span class='emoji'>🎬</span>
+        <div class='security-note'>
+          <h3>
+            <span class='security-icon'>🔒</span>
+            Account Security
+          </h3>
+          <p>
+            This verification link is valid for 24 hours only. If you didn't
+            request this verification, please ignore this email. For your
+            security, do not share this link with anyone.
+          </p>
         </div>
       </div>
 
       <div class='footer'>
-        <div class='footer-text'>
-          Netflix Lite Team<br />
-          © 2025 Netflix Lite. All rights reserved.
+        <p class='footer-text'>
+          © 2024 Netflix Clone. All rights reserved.
+        </p>
+        <div class='social-links'>
+          <a href='#'>Terms of Use</a>
+          <a href='#'>Privacy Policy</a>
+          <a href='#'>Help Center</a>
         </div>
       </div>
     </div>
