@@ -68,8 +68,8 @@ export class Content {
   @Column({ type: 'bigint' })
   view: number;
 
-  @Column({ type: 'bigint' })
-  followers: number;
+  @Column({ type: 'int', nullable: true, array: true })
+  followers: number[];
 
   @Column({ nullable: true })
   publishAt: Date;

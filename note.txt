@@ -1,21 +1,15 @@
 config DLQ
-haven't try catch important tasks
+haven't try catch important tasks, return message err match
 
 handle logic upload thumbnail
 api notification at api gateway: just for dev
-write lib dto, interface
-
+write lib dto, interface, common (filter, guard, interceptor,...) for all service
+redesign db, system architecture
 upload thumbnail or automatic generation
-create watchlist when user register: get a default picture or url.
-
 comment: mention -> notification.
-search service: api search user theo tên -> mention (in Zalo)
-update content: publish ? yes -> notification
-create account -> mailer welcome, confirm account, status account in entity users
-update content ?: if publish (null -> !null) -> notification to user interested
-user click interested a movie or series -> update their interested list (list of contents). When update content -> find and notice
+haven't mailer when new episode publish
 UI at '/' of server.
-create, update content,.... -> notification
+
 prod: 
     - private bucket and GET /video/:videoId/stream return master.m3u8 instead or use nginx
 
@@ -23,4 +17,8 @@ Season: 'Spring' | 'Summer' | 'Autumn' | 'Winter
 quantity: '360p', '720p', 'HD', 'HD+', 'fullHD', 'fullHD+', '2K', '4K', '8K'
 
 write API design 
-frontend: handle 3 replies level
+frontend: 
+    - handle 3 replies level
+    - handle watchlist haven't thumbnail
+    - user click followers movie -> update followers -> publish -> notification
+    - new episode -> notification

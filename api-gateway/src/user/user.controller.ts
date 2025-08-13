@@ -29,6 +29,14 @@ export class UserController {
 		);
 	}
 
+	@Get("search")
+	searchUsername(@Query("u") username: string) {
+		if (!username || username.trim().length === 0) {
+			return [];
+		}
+		return lastValueFrom(this.userClient.send("search-username", username));
+	}
+
 	@Get()
 	async findAll(
 		@Query("current") currentPage: number,

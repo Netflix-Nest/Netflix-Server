@@ -10,35 +10,40 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @MessagePattern('get-user-by-email')
-  async getUserByEmail(@Payload() email: string) {
+  getUserByEmail(@Payload() email: string) {
     return this.userService.findByEmail(email);
   }
 
   @MessagePattern('register-user')
-  async registerUser(@Payload() registerDto: CreateUserDto) {
+  registerUser(@Payload() registerDto: CreateUserDto) {
     return this.userService.registerUser(registerDto);
   }
 
   @MessagePattern('update-user-token')
-  async updateUserToken(@Payload() payload: UpdateUserTokenDto) {
+  updateUserToken(@Payload() payload: UpdateUserTokenDto) {
     return this.userService.updateUserToken(
       payload.refreshToken,
       payload.userId,
     );
   }
 
+  @MessagePattern('find-user-by-ids')
+  findByIds(@Payload() ids: number[]) {
+    return this.userService.findByIds(ids);
+  }
+
   @EventPattern('remove-token')
-  async removeToken(@Payload() id: number) {
+  removeToken(@Payload() id: number) {
     return this.userService.removeToken(id);
   }
 
   @MessagePattern('get-user-by-token')
-  async getUserByToken(@Payload() refreshToken: string) {
+  getUserByToken(@Payload() refreshToken: string) {
     return this.userService.getUserByToken(refreshToken);
   }
 
   @MessagePattern('find-users')
-  async findAll(
+  findAll(
     @Payload()
     {
       currentPage,
@@ -54,12 +59,12 @@ export class UserController {
   }
 
   @MessagePattern('find-user')
-  async findOne(@Payload() id: number) {
+  findOne(@Payload() id: number) {
     return this.userService.findOne(id);
   }
 
   @MessagePattern('update-user')
-  async update(
+  update(
     @Payload()
     { id, updateUserDto }: { id: number; updateUserDto: UpdateUserDto },
   ) {
@@ -67,7 +72,12 @@ export class UserController {
   }
 
   @MessagePattern('delete-user')
-  async delete(@Payload() id: number) {
+  delete(@Payload() id: number) {
     return this.userService.remove(id);
+  }
+
+  @MessagePattern('search-username')
+  searchUsername(@Payload() username: string) {
+    return this.userService.searchUsername(username);
   }
 }

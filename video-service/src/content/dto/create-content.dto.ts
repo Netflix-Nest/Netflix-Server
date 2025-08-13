@@ -64,8 +64,7 @@ export class CreateContentDto {
   view: number = 0;
 
   @IsOptional()
-  @IsInt()
-  followers: number = 0;
+  followers: number[];
 
   @IsOptional()
   publishAt: Date;

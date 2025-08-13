@@ -97,7 +97,7 @@ export class CommentService {
     if (createCommentDto.parentId) {
       await this.validateReplyDepth(createCommentDto.parentId);
     }
-    // Save comment
+    // Todo: notification to user is mentioned
     const comment = await this.commentModel.create({
       content: createCommentDto.content,
       mentions: mentionIds,

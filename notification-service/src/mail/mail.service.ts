@@ -1,11 +1,15 @@
 import { MailerService } from '@nestjs-modules/mailer';
-import { Injectable } from '@nestjs/common';
-import dayjs from 'dayjs';
+import { Inject, Injectable } from '@nestjs/common';
+import { ClientProxy } from '@nestjs/microservices';
+import { lastValueFrom } from 'rxjs';
 import { ContentEpisodeDto, ContentMovieDto } from 'src/dto/content.dto';
 
 @Injectable()
 export class MailService {
-  constructor(private mailerService: MailerService) {}
+  constructor(
+    private mailerService: MailerService,
+    @Inject('USER_SERVICE') private readonly userClient: ClientProxy,
+  ) {}
 
   async sendUserWelcome(email: string, name: string, token: string) {
     try {
@@ -81,5 +85,21 @@ export class MailService {
         series,
       },
     });
+  }
+
+  async contentPublish(followers: number[], content: ContentMovieDto) {
+    const users = await lastValueFrom(
+      this.userClient.send('find-user-by-ids', followers),
+    );
+    await Promise.all(
+      users.map(async (user) => {
+        try {
+          await this.newFilm(user.email, user.fullName, content);
+          console.log('Mail success to', user.email);
+        } catch (error) {
+          console.error('Error when mailer to', user.email, error);
+        }
+      }),
+    );
   }
 }

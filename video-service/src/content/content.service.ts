@@ -4,7 +4,7 @@ import { UpdateContentDto } from './dto/update-content.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Content } from './entities/content.entity';
 import { Repository } from 'typeorm';
-import { RpcException } from '@nestjs/microservices';
+import { ClientProxy, RpcException } from '@nestjs/microservices';
 import aqp from 'api-query-params';
 import { Actor } from 'src/actor/entities/actor.entity';
 import { Genre } from 'src/genre/entities/genre.entity';
@@ -28,6 +28,8 @@ export class ContentService {
     private readonly seriesRepository: Repository<Series>,
     @InjectRepository(Video)
     private readonly videoRepository: Repository<Video>,
+    @Inject('NOTIFICATION_SERVICE')
+    private readonly notificationClient: ClientProxy,
   ) {}
   async validate(createContentDto: CreateContentDto | UpdateContentDto) {
     const {
@@ -241,6 +243,19 @@ export class ContentService {
     }
     const { actors, genres, tags, series, video, trailer } =
       await this.validate(updateContentDto);
+
+    if (updateContentDto.publishAt) {
+      const contentDto = {
+        title: updateContentDto.title ?? content.title,
+        thumbnail: updateContentDto.thumbnail ?? content.thumbnail,
+        publishAt: updateContentDto.publishAt,
+        quality: updateContentDto.quality ?? content.quality,
+      };
+      this.notificationClient.emit('content-publish', {
+        followers: content.followers,
+        content: contentDto,
+      });
+    }
     // use .save instead .update() to let typeORM resolve relation.
     await this.contentRepository.save({
       id: content.id,
@@ -260,6 +275,7 @@ export class ContentService {
       studio: updateContentDto.studio ?? content.studio,
       season: updateContentDto.season ?? content.season,
       ageRating: updateContentDto.ageRating ?? content.ageRating,
+      publishAt: updateContentDto.publishAt ?? content.publishAt,
       actors,
       genres,
       tags,

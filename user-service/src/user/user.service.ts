@@ -8,7 +8,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { StatusUser, User, UserRole } from './entities/user.entity';
-import { Repository } from 'typeorm';
+import { In, Like, Repository } from 'typeorm';
 import aqp from 'api-query-params';
 import { compareSync, genSaltSync, hashSync } from 'bcryptjs';
 import { ClientProxy, RpcException } from '@nestjs/microservices';
@@ -193,5 +193,20 @@ export class UserService {
       throw new RpcException('User Not Found !');
     }
     return this.userRepository.softDelete(id);
+  }
+
+  async searchUsername(username: string) {
+    return this.userRepository.find({
+      where: { username: Like(`%${username}%`) },
+      select: ['id', 'username', 'fullName', 'avatar'],
+      take: 10,
+    });
+  }
+
+  async findByIds(ids: number[]) {
+    return this.userRepository.find({
+      where: { id: In(ids) },
+      select: ['fullName', 'email'],
+    });
   }
 }

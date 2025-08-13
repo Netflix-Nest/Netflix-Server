@@ -53,4 +53,12 @@ export class MailController {
   ) {
     return this.mailService.newEpisode(email, name, content);
   }
+
+  @EventPattern('content-publish')
+  async contentPublish(
+    @Payload()
+    { followers, content }: { followers: number[]; content: ContentMovieDto },
+  ) {
+    return this.mailService.contentPublish(followers, content);
+  }
 }
