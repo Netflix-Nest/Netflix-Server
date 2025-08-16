@@ -7,7 +7,7 @@ import {
   SuggestDto,
   UpdateMovieDto,
 } from './dto/search.dto';
-import { MessagePattern, Payload } from '@nestjs/microservices';
+import { EventPattern, MessagePattern, Payload } from '@nestjs/microservices';
 
 @Controller('search')
 export class SearchController {
@@ -30,7 +30,14 @@ export class SearchController {
 
   @MessagePattern('add-movies')
   indexMovie(@Payload() dto: IndexMovieDto) {
-    return this.service.indexMovie(dto);
+    const cleaned = JSON.parse(JSON.stringify(dto));
+    return this.service.indexMovie(cleaned);
+  }
+
+  @EventPattern('movies.added')
+  indexMovieSubscribe(@Payload() dto: IndexMovieDto) {
+    const cleaned = JSON.parse(JSON.stringify(dto));
+    return this.service.indexMovie(cleaned);
   }
 
   @MessagePattern('add-bulk-movies')
@@ -40,7 +47,15 @@ export class SearchController {
 
   @MessagePattern('update-movies')
   update(@Payload() { id, dto }: { id: string; dto: UpdateMovieDto }) {
-    return this.service.updateMovie(id, dto);
+    const cleaned = JSON.parse(JSON.stringify(dto));
+    return this.service.updateMovie(id, cleaned);
+  }
+
+  @MessagePattern('movies.updated')
+  updateSubscribe(@Payload() { id, dto }: { id: string; dto: UpdateMovieDto }) {
+    const cleaned = JSON.parse(JSON.stringify(dto));
+    console.log(id, dto);
+    return this.service.updateMovie(id, cleaned);
   }
 
   @MessagePattern('delete-movies')

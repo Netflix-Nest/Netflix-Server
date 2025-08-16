@@ -10,6 +10,9 @@ comment: mention -> notification.
 haven't mailer when new episode publish
 UI at '/' of server.
 create, update content -> add movies to elastic
+caching
+favorite genre each user
+event pattern: ., event pattern: -
 prod: 
     - private bucket and GET /video/:videoId/stream return master.m3u8 instead or use nginx
 

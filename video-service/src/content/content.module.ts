@@ -14,6 +14,7 @@ import { Tag } from 'src/tag/entities/tag.entity';
 import { Video } from 'src/video/entities/video.entity';
 import { Series } from 'src/series/entities/series.entity';
 import { NotificationClientProvider } from 'src/providers/notification-client.provider';
+import { SearchClientProvider } from 'src/providers/search-client.provider';
 
 @Module({
   imports: [
@@ -25,7 +26,7 @@ import { NotificationClientProvider } from 'src/providers/notification-client.pr
     forwardRef(() => SeriesModule),
   ],
   controllers: [ContentController],
-  providers: [ContentService, NotificationClientProvider],
+  providers: [ContentService, NotificationClientProvider, SearchClientProvider],
   exports: [ContentService],
 })
 export class ContentModule {}

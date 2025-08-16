@@ -30,6 +30,7 @@ export class ContentService {
     private readonly videoRepository: Repository<Video>,
     @Inject('NOTIFICATION_SERVICE')
     private readonly notificationClient: ClientProxy,
+    @Inject('SEARCH_SERVICE') private readonly searchClient: ClientProxy,
   ) {}
   async validate(createContentDto: CreateContentDto | UpdateContentDto) {
     const {
@@ -154,6 +155,7 @@ export class ContentService {
       video,
     });
     await this.contentRepository.save(content);
+    this.searchClient.emit('movies.added', content);
     return content;
   }
 
@@ -256,8 +258,7 @@ export class ContentService {
         content: contentDto,
       });
     }
-    // use .save instead .update() to let typeORM resolve relation.
-    await this.contentRepository.save({
+    const newContent = {
       id: content.id,
       title: updateContentDto.title ?? content.title,
       description: updateContentDto.description ?? content.description,
@@ -282,6 +283,12 @@ export class ContentService {
       series,
       video,
       trailer,
+    };
+    // use .save instead .update() to let typeORM resolve relation.
+    await this.contentRepository.save(newContent);
+    this.searchClient.emit('movies.updated', {
+      id: String(content.id),
+      dto: content,
     });
     return this.contentRepository.findOne({
       where: { id },
