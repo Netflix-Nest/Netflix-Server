@@ -1,9 +1,12 @@
+import slugify from 'slugify';
 import { Actor } from 'src/actor/entities/actor.entity';
 import { Genre } from 'src/genre/entities/genre.entity';
 import { Series } from 'src/series/entities/series.entity';
 import { Tag } from 'src/tag/entities/tag.entity';
 import { Video } from 'src/video/entities/video.entity';
 import {
+  BeforeInsert,
+  BeforeUpdate,
   Column,
   CreateDateColumn,
   DeleteDateColumn,
@@ -27,6 +30,18 @@ export class Content {
 
   @Column({ unique: true })
   title: string;
+
+  @Column({ unique: true })
+  slug: string;
+
+  @BeforeInsert()
+  @BeforeUpdate()
+  generateSlug() {
+    if (this.title) {
+      const baseSlug = slugify(this.title, { lower: true, strict: true });
+      this.slug = `${baseSlug}-${Date.now()}`;
+    }
+  }
 
   @Column({ nullable: true })
   description?: string;
