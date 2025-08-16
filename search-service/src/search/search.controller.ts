@@ -51,7 +51,8 @@ export class SearchController {
   // Reindex (admin) – pass full dataset from DB via body or call service internally
   @MessagePattern('reindex')
   async reindex(@Payload() dto: BulkIndexMoviesDto) {
-    return this.service.reindex(dto.movies);
+    const cleaned = JSON.parse(JSON.stringify(dto.movies));
+    return this.service.reindex(cleaned);
   }
 
   @MessagePattern('movies')

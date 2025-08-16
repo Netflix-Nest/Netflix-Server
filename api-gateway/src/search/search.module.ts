@@ -1,9 +1,9 @@
-import { Module } from '@nestjs/common';
-import { SearchService } from './search.service';
-import { SearchController } from './search.controller';
+import { Module } from "@nestjs/common";
+import { SearchController } from "./search.controller";
+import { SearchClientProvider } from "src/client/search-client.provider";
 
 @Module({
-  controllers: [SearchController],
-  providers: [SearchService],
+	controllers: [SearchController],
+	providers: [SearchClientProvider],
 })
 export class SearchModule {}

@@ -58,20 +58,17 @@ export class SearchService {
     await this.ensureIndex();
     if (!payload.movies?.length) return { indexed: 0 };
 
-    const operations: any[] = [];
-    for (const m of payload.movies) {
-      operations.push({ index: { _index: MOVIE_INDEX, _id: m.id } });
-      operations.push(this.toDoc(m));
-    }
     const res = await this.es.helpers.bulk({
-      datasource: operations,
-      onDocument() {
-        return undefined as any;
+      datasource: payload.movies.map((m) => this.toDoc(m)),
+      onDocument(doc) {
+        return {
+          index: { _index: MOVIE_INDEX, _id: String(doc.id) },
+        };
       },
-    } as any);
+    });
+
     return { ...res };
   }
-
   async updateMovie(id: string, patch: UpdateMovieDto) {
     return this.es.update({ index: MOVIE_INDEX, id, doc: patch as any });
   }
