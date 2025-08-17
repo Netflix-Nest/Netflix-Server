@@ -37,4 +37,7 @@ export class CreateUserDto {
 
 	@IsOptional()
 	viewingTime: number;
+
+	@IsOptional()
+	favoriteGenre: number[];
 }

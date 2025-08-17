@@ -70,6 +70,7 @@ export class UserService {
       phoneNumber,
       viewingTime,
       username,
+      favoriteGenre = [],
     } = registerDto;
 
     const existUser = await this.userRepository.findOne({ where: { email } });
@@ -96,6 +97,7 @@ export class UserService {
       phoneNumber,
       viewingTime,
       status,
+      favoriteGenre,
     });
     await this.userRepository.save(user);
     const createWatchlistDto = {
@@ -179,7 +181,7 @@ export class UserService {
     if (updateUserDto.password) {
       updateUserDto.password = this.getHashPassword(updateUserDto.password);
     }
-    console.log(updateUserDto);
+
     if (updateUserDto.viewingTime) {
       updateUserDto.viewingTime += existUser.viewingTime;
     }

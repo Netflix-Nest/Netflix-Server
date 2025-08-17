@@ -59,6 +59,9 @@ export class User {
   @Column({ default: 'PENDING' })
   status: StatusUser;
 
+  @Column('int', { nullable: true, array: true })
+  favoriteGenre: number[];
+
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
 
