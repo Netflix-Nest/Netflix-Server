@@ -1,4 +1,4 @@
-import { Content } from 'src/content/entities/content.entity';
+import { Content } from '../../content/entities/content.entity';
 import {
   Column,
   CreateDateColumn,

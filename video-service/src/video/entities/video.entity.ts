@@ -1,5 +1,4 @@
-import { Content } from 'src/content/entities/content.entity';
-import { Series } from 'src/series/entities/series.entity';
+import { Content } from '../../content/entities/content.entity';
 import {
   Entity,
   PrimaryGeneratedColumn,

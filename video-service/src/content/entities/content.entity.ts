@@ -1,9 +1,9 @@
 import slugify from 'slugify';
-import { Actor } from 'src/actor/entities/actor.entity';
-import { Genre } from 'src/genre/entities/genre.entity';
-import { Series } from 'src/series/entities/series.entity';
-import { Tag } from 'src/tag/entities/tag.entity';
-import { Video } from 'src/video/entities/video.entity';
+import { Actor } from '../../actor/entities/actor.entity';
+import { Genre } from '../../genre/entities/genre.entity';
+import { Series } from '../../series/entities/series.entity';
+import { Tag } from '../../tag/entities/tag.entity';
+import { Video } from '../../video/entities/video.entity';
 import {
   BeforeInsert,
   BeforeUpdate,
