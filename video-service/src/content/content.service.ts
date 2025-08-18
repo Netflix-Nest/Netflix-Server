@@ -214,6 +214,43 @@ export class ContentService {
     });
   }
 
+  async findContentByGenres(favoriteGenreIds: number[], page = 1, limit = 10) {
+    const offset = (page - 1) * limit;
+
+    const query = this.contentRepository
+      .createQueryBuilder('contents')
+      .leftJoin('contents.genres', 'genres')
+      .where('genres.id IN (:...ids)', { ids: favoriteGenreIds })
+      .groupBy('contents.id')
+      .addSelect('COUNT(genres.id)', 'matchcount')
+      .orderBy('matchcount', 'DESC')
+      .skip(offset)
+      .take(limit);
+
+    const { entities, raw } = await query.getRawAndEntities();
+
+    const totalItems = await this.contentRepository
+      .createQueryBuilder('contents')
+      .leftJoin('contents.genres', 'genres')
+      .where('genres.id IN (:...ids)', { ids: favoriteGenreIds })
+      .getCount();
+
+    const contents = entities.map((entity, idx) => ({
+      ...entity,
+      matchCount: Number(raw[idx].matchcount),
+    }));
+
+    return {
+      meta: {
+        currentPage: page,
+        pageSize: limit,
+        totalItems,
+        totalPages: Math.ceil(totalItems / limit),
+      },
+      data: contents,
+    };
+  }
+
   async update(id: number, updateContentDto: UpdateContentDto) {
     const content = await this.contentRepository.findOne({ where: { id } });
     if (!content) {

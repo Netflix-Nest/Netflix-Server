@@ -13,6 +13,7 @@ import { EngagementModule } from './engagement/engagement.module';
 import { CommentModule } from './comment/comment.module';
 import { NotificationModule } from './notification/notification.module';
 import { SearchModule } from './search/search.module';
+import { RecommendationModule } from './recommendation/recommendation.module';
 
 @Module({
 	imports: [
@@ -32,6 +33,7 @@ import { SearchModule } from './search/search.module';
 		CommentModule,
 		NotificationModule,
 		SearchModule,
+		RecommendationModule,
 	],
 })
 export class AppModule {}

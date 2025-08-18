@@ -19,6 +19,26 @@ export class ContentController {
     return this.contentService.findAll(currentPage, limit, qs);
   }
 
+  @MessagePattern('find-content-by-genres')
+  findByGenres(
+    @Payload()
+    {
+      favoriteGenreIds,
+      page,
+      limit,
+    }: {
+      favoriteGenreIds: number[];
+      page: number;
+      limit: number;
+    },
+  ) {
+    return this.contentService.findContentByGenres(
+      favoriteGenreIds,
+      page,
+      limit,
+    );
+  }
+
   @MessagePattern('find-one-content')
   findOne(@Payload() id: number) {
     return this.contentService.findOne(id);
