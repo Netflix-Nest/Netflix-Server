@@ -34,7 +34,7 @@ import { InteractionModule } from './interaction/interaction.module';
         password: config.get<string>('DATABASE_PASSWORD'),
         database: config.get<string>('DATABASE_NAME'),
         entities: [Video, Content, Actor, Genre, Series, Tag],
-        synchronize: false,
+        synchronize: true,
         migrationsRun: true,
         ssl: true,
       }),
