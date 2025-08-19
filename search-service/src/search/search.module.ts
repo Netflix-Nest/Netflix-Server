@@ -12,7 +12,7 @@ import { SearchService } from './search.service';
       inject: [ConfigService],
       useFactory: (cfg: ConfigService) => ({
         node: cfg.get('ELASTIC_NODE') || 'http://localhost:9200',
-        // If you enable xpack security in prod:
+        // enable xpack security in prod is needed:
         // auth: { username: cfg.get('ELASTIC_USER'), password: cfg.get('ELASTIC_PASS') },
         // tls: { rejectUnauthorized: false },
       }),
