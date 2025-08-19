@@ -10,11 +10,12 @@ export class MinioService implements OnModuleInit {
 
   constructor(private readonly configService: ConfigService) {
     this.minioClient = new Client({
-      endPoint: this.configService.get<string>('SERVER_IP') ?? 'localhost',
+      endPoint: this.configService.get<string>('MINIO_ENDPOINT') ?? 'localhost',
       port: 9000,
       useSSL: false,
       accessKey: this.configService.get<string>('MINIO_ACCESS_KEY'),
       secretKey: this.configService.get<string>('MINIO_SECRET_KEY'),
+      pathStyle: true,
     });
   }
 
