@@ -4,11 +4,22 @@ import { WatchlistService } from './watchlist.service';
 
 describe('WatchlistController', () => {
   let controller: WatchlistController;
-
+  const mockWatchlistRepository = {
+    findAll: jest.fn(),
+    findOne: jest.fn(),
+    create: jest.fn(),
+    save: jest.fn(),
+  };
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [WatchlistController],
-      providers: [WatchlistService],
+      providers: [
+        WatchlistService,
+        {
+          provide: 'WatchlistRepository',
+          useValue: mockWatchlistRepository,
+        },
+      ],
     }).compile();
 
     controller = module.get<WatchlistController>(WatchlistController);

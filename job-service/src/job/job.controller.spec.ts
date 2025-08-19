@@ -4,11 +4,20 @@ import { JobService } from './job.service';
 
 describe('JobController', () => {
   let controller: JobController;
-
+  const mockStorageService = {
+    send: jest.fn(),
+    emit: jest.fn(),
+  };
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [JobController],
-      providers: [JobService],
+      providers: [
+        JobService,
+        {
+          provide: 'STORAGE_SERVICE',
+          useValue: mockStorageService,
+        },
+      ],
     }).compile();
 
     controller = module.get<JobController>(JobController);

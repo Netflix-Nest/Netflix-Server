@@ -4,11 +4,20 @@ import { InteractionService } from './interaction.service';
 
 describe('InteractionController', () => {
   let controller: InteractionController;
-
+  const mockVideoService = {
+    send: jest.fn(),
+    emit: jest.fn(),
+  };
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [InteractionController],
-      providers: [InteractionService],
+      providers: [
+        InteractionService,
+        {
+          provide: 'VIDEO_SERVICE',
+          useValue: mockVideoService,
+        },
+      ],
     }).compile();
 
     controller = module.get<InteractionController>(InteractionController);
