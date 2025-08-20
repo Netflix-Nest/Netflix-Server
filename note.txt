@@ -9,6 +9,7 @@ upload thumbnail or automatic generation
 comment: mention -> notification.
 haven't mailer when new episode publish
 UI at '/' of server.
+NODE_ENV = production
 caching
 rate limiting
 event pattern: ., event pattern: -

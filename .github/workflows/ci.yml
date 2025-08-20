@@ -1,0 +1,112 @@
+name: Monorepo CI (12 services)
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "api-gateway/**"
+      - "auth-service/**"
+      - "comment-service/**"
+      - "engagement-service/**"
+      - "interaction-service/**"
+      - "job-service/**"
+      - "notification-service/**"
+      - "recommendation-service/**"
+      - "search-service/**"
+      - "storage-service/**"
+      - "user-service/**"
+      - "video-service/**"
+      - ".github/workflows/ci.yml"
+  pull_request:
+    branches: [main]
+    paths:
+      - "api-gateway/**"
+      - "auth-service/**"
+      - "comment-service/**"
+      - "engagement-service/**"
+      - "interaction-service/**"
+      - "job-service/**"
+      - "notification-service/**"
+      - "recommendation-service/**"
+      - "search-service/**"
+      - "storage-service/**"
+      - "user-service/**"
+      - "video-service/**"
+      - ".github/workflows/ci.yml"
+
+jobs:
+  build-test:
+    name: CI • ${{ matrix.service }}
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        service:
+          - api-gateway
+          - auth-service
+          - comment-service
+          - engagement-service
+          - interaction-service
+          - job-service
+          - notification-service
+          - recommendation-service
+          - search-service
+          - storage-service
+          - user-service
+          - video-service
+
+    defaults:
+      run:
+        working-directory: ./${{ matrix.service }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Use Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: |
+            ${{ matrix.service }}/package-lock.json
+            ${{ matrix.service }}/npm-shrinkwrap.json
+
+      - name: Install deps (clean)
+        run: |
+          npm ci || npm install
+
+      - name: Lint
+        if: exists('./${{ matrix.service }}/package.json')
+        run: |
+          if npm run | grep -q "lint"; then
+            npm run lint
+          else
+            echo "No lint script. Skipping."
+          fi
+
+      - name: Run unit tests
+        run: |
+          if npm run | grep -q "test"; then
+            npm run test -- --ci --passWithNoTests
+          else
+            echo "No test script. Skipping."
+          fi
+
+      - name: Build
+        run: |
+          if npm run | grep -q "build"; then
+            npm run build
+          else
+            echo "No build script. Skipping."
+          fi
+
+      - name: Enable Docker BuildKit
+        run: echo "DOCKER_BUILDKIT=1" >> $GITHUB_ENV
+
+      - name: Docker build (verify only)
+        if: ${{ hashFiles(format('{0}/Dockerfile', matrix.service)) != '' }}
+        run: |
+          IMAGE=ghcr.io/${{ github.repository }}/${{ matrix.service }}:ci-${{ github.sha }}
+          docker build -f Dockerfile -t $IMAGE .
