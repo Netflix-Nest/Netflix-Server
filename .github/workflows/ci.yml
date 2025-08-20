@@ -99,5 +99,5 @@ jobs:
       - name: Docker build (verify only)
         if: ${{ hashFiles(format('{0}/Dockerfile', matrix.service)) != '' }}
         run: |
-          IMAGE=ghcr.io/${{ github.repository }}/${{ matrix.service }}:ci-${{ github.sha }}
+          IMAGE=ghcr.io/$(echo "${{ github.repository }}" | tr '[:upper:]' '[:lower:]')/${{ matrix.service }}:ci-${{ github.sha }}
           docker build -f Dockerfile -t $IMAGE .
