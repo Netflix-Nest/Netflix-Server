@@ -19,7 +19,7 @@ RUN addgroup -g 1001 -S nodejs && \
 COPY --from=deps --chown=nextjs:nodejs /app/node_modules ./node_modules
 COPY --from=builder --chown=nextjs:nodejs /app/dist ./dist
 COPY --chown=nextjs:nodejs package*.json ./
-COPY --chown=nextjs:nodejs .env ./
+COPY --chown=nextjs:nodejs .env* ./
 
 USER nextjs
 
