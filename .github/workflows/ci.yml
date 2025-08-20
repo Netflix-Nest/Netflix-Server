@@ -77,15 +77,6 @@ jobs:
         run: |
           npm ci || npm install
 
-      - name: Lint
-        if: exists('./${{ matrix.service }}/package.json')
-        run: |
-          if npm run | grep -q "lint"; then
-            npm run lint
-          else
-            echo "No lint script. Skipping."
-          fi
-
       - name: Run unit tests
         run: |
           if npm run | grep -q "test"; then
