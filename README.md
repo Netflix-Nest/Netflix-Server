@@ -69,7 +69,7 @@ graph TB
 
 ### **Authentication & Authorization**
 
--   **`auth-service`** - JWT-based authentication, OAuth integration, session management
+-   **`auth-service`** - JWT-based authentication, Decentralization
 
 ### **API Management**
 
@@ -81,13 +81,13 @@ graph TB
 
 ### **Content Management**
 
--   **`video-service`** - Video metadata, streaming URLs, content catalog
--   **`storage-service`** - File storage, CDN integration, video processing
+-   **`video-service`** - Video metadata, content catalog
+-   **`storage-service`** - File storage with minIO, video processing
 
 ### **Discovery & Intelligence**
 
 -   **`search-service`** - Elasticsearch-powered search, filtering, content discovery
--   **`recommendation-service`** - ML-based recommendations, collaborative filtering
+-   **`recommendation-service`** - Algorithms-based recommendations, collaborative filtering
 
 ### **Social Features**
 
@@ -208,8 +208,9 @@ SMTP_PASS=your_password
 The `docker-compose.yml` includes:
 
 -   **Application Services**: All microservices
+-   **Storage and Stream**: MinIO, FFmpeg
 -   **Databases**: PostgreSQL, MongoDB, Redis
--   **Message Queue**: RabbitMQ
+-   **Message Queue**: RabbitMQ, Redis
 -   **Search Engine**: Elasticsearch
 -   **Monitoring**: Prometheus, Grafana
 -   **Load Balancer**: Nginx
@@ -312,7 +313,7 @@ Use the provided Postman collection: `postman/Netflix-Server-API.json`
 kubectl apply -f k8s/
 ```
 
-## Contributing 🤝
+## Contributing
 
 1. Fork the repository
 2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
