@@ -8,7 +8,10 @@ import {
 import { Reflector } from "@nestjs/core";
 import { AuthGuard } from "@nestjs/passport";
 import { Request } from "express";
-import { IS_PUBLIC_KEY } from "src/common/decorators/customize";
+import {
+	IS_PUBLIC_KEY,
+	IS_PUBLIC_PERMISSION,
+} from "src/common/decorators/customize";
 
 @Injectable()
 export class JwtAuthGuard extends AuthGuard("jwt") {
@@ -28,7 +31,10 @@ export class JwtAuthGuard extends AuthGuard("jwt") {
 
 	handleRequest(err, user, info, context: ExecutionContext) {
 		const request: Request = context.switchToHttp().getRequest();
-
+		const isSkipPermission = this.reflector.getAllAndOverride<Boolean>(
+			IS_PUBLIC_PERMISSION,
+			[context.getHandler(), context.getClass()]
+		);
 		// You can throw an exception based on either "info" or "err" arguments
 		if (err || !user) {
 			throw (
@@ -36,21 +42,21 @@ export class JwtAuthGuard extends AuthGuard("jwt") {
 			);
 		}
 
-		// //check permissions
-		// const targetMethod = request.method;
-		// const targetEndpoint = request.route?.path as string;
+		//check permissions
+		const targetMethod = request.method;
+		const targetEndpoint = request.route?.path as string;
 
-		// const permissions = user?.permissions ?? [];
-		// let isExist = permissions.find(
-		//   (permission) =>
-		//     targetMethod === permission.method &&
-		//     targetEndpoint === permission.apiPath,
-		// );
+		const permissions = user?.permissions ?? [];
+		let isExist = permissions.find(
+			(permission) =>
+				targetMethod === permission.method &&
+				targetEndpoint === permission.apiPath
+		);
 		// if (targetEndpoint.startsWith('/api/v1/auth')) isExist = true;
-		// if (!isExist && !isSkipPermission)
-		//   throw new ForbiddenException(
-		//     'You do not have permission to access this endpoint',
-		//   );
+		if (!isExist && !isSkipPermission)
+			throw new ForbiddenException(
+				"You do not have permission to access this endpoint!"
+			);
 
 		return user;
 	}

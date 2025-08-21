@@ -66,6 +66,11 @@ export class AuthController {
 		return this.authService.logout(user, response);
 	}
 
+	@Get("permissions")
+	getPermissions(role: string) {
+		return lastValueFrom(this.authClient.send("findOneRole", role));
+	}
+
 	@Public()
 	@Post("verify-account/:id")
 	verifyAccount(@Param("id") id: number) {
