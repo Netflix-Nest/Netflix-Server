@@ -108,9 +108,9 @@ export class CommentService {
     return comment;
   }
 
-  async findAll(currentPage: number, limit: number) {
+  async findAll(currentPage: number, limit: number, content: number) {
     const roots = await this.commentModel
-      .find({ parentId: null })
+      .find({ parentId: null, contentId: content })
       .skip((currentPage - 1) * limit)
       .limit(limit)
       .lean();
@@ -126,6 +126,7 @@ export class CommentService {
 
     const replies2 = await this.commentModel.find({
       parentId: { $in: repliesIds },
+      contentId: content,
     });
 
     const allComments = [...roots, ...replies, ...replies2];

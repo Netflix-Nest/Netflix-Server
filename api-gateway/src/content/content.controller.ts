@@ -8,11 +8,13 @@ import {
 	Delete,
 	Inject,
 	Query,
+	UseInterceptors,
 } from "@nestjs/common";
 import { CreateContentDto } from "./dto/create-content.dto";
 import { UpdateContentDto } from "./dto/update-content.dto";
 import { ClientProxy } from "@nestjs/microservices";
 import { lastValueFrom } from "rxjs";
+import { CacheInterceptor } from "src/common/interceptors/cache.interceptor";
 
 @Controller("content")
 export class ContentController {
@@ -28,6 +30,7 @@ export class ContentController {
 	}
 
 	@Get()
+	@UseInterceptors(CacheInterceptor)
 	findAll(
 		@Query("current") currentPage: number,
 		@Query("pageSize") limit: number,
@@ -43,6 +46,7 @@ export class ContentController {
 	}
 
 	@Get(":id")
+	@UseInterceptors(CacheInterceptor)
 	findOne(@Param("id") id: string) {
 		return lastValueFrom(this.videoClient.send("find-one-content", +id));
 	}

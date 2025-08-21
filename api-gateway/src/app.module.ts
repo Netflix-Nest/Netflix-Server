@@ -8,15 +8,29 @@ import { ContentModule } from "./content/content.module";
 import { GenreModule } from "./genre/genre.module";
 import { SeriesModule } from "./serries/series.module";
 import { TagModule } from "./tag/tag.module";
-import { InteractionModule } from './interaction/interaction.module';
-import { EngagementModule } from './engagement/engagement.module';
-import { CommentModule } from './comment/comment.module';
-import { NotificationModule } from './notification/notification.module';
-import { SearchModule } from './search/search.module';
-import { RecommendationModule } from './recommendation/recommendation.module';
+import { InteractionModule } from "./interaction/interaction.module";
+import { EngagementModule } from "./engagement/engagement.module";
+import { CommentModule } from "./comment/comment.module";
+import { NotificationModule } from "./notification/notification.module";
+import { SearchModule } from "./search/search.module";
+import { RecommendationModule } from "./recommendation/recommendation.module";
+import { CacheModule } from "@nestjs/cache-manager";
+import { redisStore } from "cache-manager-redis-yet";
 
 @Module({
 	imports: [
+		CacheModule.registerAsync({
+			isGlobal: true,
+			useFactory: async () => ({
+				store: await redisStore({
+					socket: {
+						host: "netflix-redis",
+						port: 6379,
+					},
+					ttl: 60,
+				}),
+			}),
+		}),
 		ConfigModule.forRoot({
 			isGlobal: true,
 		}),

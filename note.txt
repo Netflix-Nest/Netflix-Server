@@ -9,8 +9,7 @@ upload thumbnail or automatic generation
 comment: mention -> notification.
 haven't mailer when new episode publish
 UI at '/' of server.
-NODE_ENV = production
-caching
+role: request some important service without per ADMIN -> reject, request without id of this user -> reject.
 rate limiting
 event pattern: ., event pattern: -
 prod: 

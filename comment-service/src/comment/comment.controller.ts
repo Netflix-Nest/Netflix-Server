@@ -25,8 +25,9 @@ export class CommentController {
   findAll(
     @Query('currentPage') currentPage: number,
     @Query('limit') limit: number,
+    @Query('content') content: number,
   ) {
-    return this.commentService.findAll(currentPage, limit);
+    return this.commentService.findAll(currentPage, limit, content);
   }
 
   @Get(':id')
@@ -51,9 +52,18 @@ export class CommentController {
 
   @MessagePattern('get-comments')
   getComments(
-    @Payload() { currentPage, limit }: { currentPage: number; limit: number },
+    @Payload()
+    {
+      currentPage,
+      limit,
+      content,
+    }: {
+      currentPage: number;
+      limit: number;
+      content: number;
+    },
   ) {
-    return this.commentService.findAll(currentPage, limit);
+    return this.commentService.findAll(currentPage, limit, content);
   }
 
   @MessagePattern('update-comment')

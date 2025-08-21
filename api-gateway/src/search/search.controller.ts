@@ -9,6 +9,7 @@ import {
 	Post,
 	Put,
 	Query,
+	UseInterceptors,
 } from "@nestjs/common";
 import { ClientProxy } from "@nestjs/microservices";
 import { lastValueFrom } from "rxjs";
@@ -19,6 +20,7 @@ import {
 	SuggestDto,
 	UpdateMovieDto,
 } from "./dto/search.dto";
+import { CacheInterceptor } from "src/common/interceptors/cache.interceptor";
 
 @Controller("search")
 export class SearchController {
@@ -77,6 +79,7 @@ export class SearchController {
 	}
 
 	@Get("movies")
+	@UseInterceptors(CacheInterceptor)
 	search(@Body() q: SearchMoviesDto) {
 		return lastValueFrom(this.searchClient.send("movies", q));
 	}

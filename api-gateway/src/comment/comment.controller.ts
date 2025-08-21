@@ -8,6 +8,7 @@ import {
 	Patch,
 	Post,
 	Query,
+	UseInterceptors,
 } from "@nestjs/common";
 import { ClientProxy } from "@nestjs/microservices";
 import { UpdateCommentDto } from "./dto/update-comment.dto";
@@ -15,6 +16,7 @@ import { CreateCommentDto } from "./dto/create-comment.dto";
 import { lastValueFrom } from "rxjs";
 import { User } from "src/common/decorators/customize";
 import { IUserDecorator } from "src/interfaces/auth.interfaces";
+import { CacheInterceptor } from "src/common/interceptors/cache.interceptor";
 
 @Controller("comment")
 export class CommentController {
@@ -33,12 +35,18 @@ export class CommentController {
 	}
 
 	@Get()
+	@UseInterceptors(CacheInterceptor)
 	findAll(
 		@Query("currentPage") currentPage: number,
-		@Query("limit") limit: number
+		@Query("limit") limit: number,
+		@Query("content") content: number
 	) {
 		return lastValueFrom(
-			this.commentClient.send("get-comments", { currentPage, limit })
+			this.commentClient.send("get-comments", {
+				currentPage,
+				limit,
+				content,
+			})
 		);
 	}
 

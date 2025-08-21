@@ -11,6 +11,7 @@ export const CommentClientProvider = {
 					configService.get<string>("COMMENT_SERVICE_HOST") ||
 					"localhost",
 				port: configService.get<number>("COMMENT_SERVICE_PORT") || 6379,
+				password: configService.get<string>("USER_SERVICE_PASSWORD"),
 			},
 		});
 	},

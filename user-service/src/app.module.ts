@@ -22,6 +22,7 @@ import { User } from './user/entities/user.entity';
         username: config.get<string>('DATABASE_USERNAME'),
         password: config.get<string>('DATABASE_PASSWORD'),
         database: config.get<string>('DATABASE_NAME'),
+        migrations: [__dirname + './migrations/*.{ts,js}'],
         entities: [User],
         synchronize: false,
         migrationsRun: true,

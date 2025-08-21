@@ -8,12 +8,14 @@ import {
 	Patch,
 	Post,
 	Query,
+	UseInterceptors,
 } from "@nestjs/common";
 import { ClientProxy } from "@nestjs/microservices";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { UpdateUserDto } from "./dto/update-user.dto";
 import { Public } from "src/common/decorators/customize";
 import { lastValueFrom } from "rxjs";
+import { CacheInterceptor } from "src/common/interceptors/cache.interceptor";
 
 @Controller("user")
 export class UserController {
@@ -51,6 +53,7 @@ export class UserController {
 	}
 
 	@Get(":id")
+	@UseInterceptors(CacheInterceptor)
 	async findOne(@Param("id") id: number) {
 		return lastValueFrom(this.userClient.send("find-user", id));
 	}

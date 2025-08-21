@@ -23,6 +23,7 @@ import { MailModule } from './mail/mail.module';
         username: config.get<string>('DATABASE_USERNAME'),
         password: config.get<string>('DATABASE_PASSWORD'),
         database: config.get<string>('DATABASE_NAME'),
+        migrations: [__dirname + './migrations/*.{ts,js}'],
         entities: [Notification],
         synchronize: false,
         migrationsRun: true,
