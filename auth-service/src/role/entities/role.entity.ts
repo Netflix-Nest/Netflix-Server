@@ -1,4 +1,4 @@
-import { Permission } from 'src/permission/entities/permission.entity';
+import { Permission } from '../../permission/entities/permission.entity';
 import {
   Column,
   CreateDateColumn,
@@ -11,7 +11,6 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-@Index(['permissions'])
 @Entity('roles')
 export class Role {
   @PrimaryGeneratedColumn()
