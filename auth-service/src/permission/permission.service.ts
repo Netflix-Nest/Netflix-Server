@@ -4,6 +4,7 @@ import { UpdatePermissionDto } from './dto/update-permission.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Permission } from './entities/permission.entity';
 import { Repository } from 'typeorm';
+import { RpcException } from '@nestjs/microservices';
 
 @Injectable()
 export class PermissionService {
@@ -11,7 +12,16 @@ export class PermissionService {
     @InjectRepository(Permission)
     private readonly permissionsRepository: Repository<Permission>,
   ) {}
-  create(createPermissionDto: CreatePermissionDto) {
+  async create(createPermissionDto: CreatePermissionDto) {
+    const existPer = await this.permissionsRepository.findOne({
+      where: {
+        apiPath: createPermissionDto.apiPath,
+        method: createPermissionDto.method,
+      },
+    });
+    if (existPer) {
+      throw new RpcException('Permission already exist !');
+    }
     const per = this.permissionsRepository.create(createPermissionDto);
     return this.permissionsRepository.save(per);
   }

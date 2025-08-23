@@ -41,7 +41,6 @@ export class EngagementController {
     @Body() createBookmarkDto: CreateBookmarkDto,
     @User() user: IUserDecorator
   ) {
-    console.log("receive request....");
     if (!createBookmarkDto.userId) {
       createBookmarkDto.userId = user.userId;
     }
@@ -52,7 +51,6 @@ export class EngagementController {
 
   @Delete("bookmark/:id")
   deleteBookmark(@Param("id") id: number) {
-    console.log(id);
     return lastValueFrom(this.engagementClient.send("delete-bookmark", id));
   }
 

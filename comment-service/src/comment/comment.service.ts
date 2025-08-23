@@ -93,7 +93,6 @@ export class CommentService {
 
   async create(createCommentDto: CreateCommentDto) {
     const mentionIds = await this.detectMention(createCommentDto.content);
-    console.log(createCommentDto);
     if (createCommentDto.parentId) {
       await this.validateReplyDepth(createCommentDto.parentId);
     }

@@ -16,6 +16,8 @@ import { SearchModule } from "./search/search.module";
 import { RecommendationModule } from "./recommendation/recommendation.module";
 import { CacheModule } from "@nestjs/cache-manager";
 import { redisStore } from "cache-manager-redis-yet";
+import { RoleModule } from './role/role.module';
+import { PermissionModule } from './permission/permission.module';
 
 @Module({
 	imports: [
@@ -48,6 +50,8 @@ import { redisStore } from "cache-manager-redis-yet";
 		NotificationModule,
 		SearchModule,
 		RecommendationModule,
+		RoleModule,
+		PermissionModule,
 	],
 })
 export class AppModule {}

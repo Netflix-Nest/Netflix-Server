@@ -37,10 +37,11 @@ export class RoleService {
   }
 
   async findOne(name: string) {
-    return this.roleRepository.findOne({
+    const role = await this.roleRepository.findOne({
       where: { name },
       relations: ['permissions'],
     });
+    return role?.permissions;
   }
   async updateRole(id: number, dto: UpdateRoleDto) {
     const { name, permissionIds = [] } = dto;
@@ -49,20 +50,22 @@ export class RoleService {
       where: { id },
       relations: ['permissions'],
     });
-    const existRole = await this.roleRepository.findOne({
-      where: { name: dto.name },
-    });
-    if (existRole) {
-      throw new RpcException('Role have already exist !');
-    }
     if (!role) throw new RpcException('Role not found');
-    if (!role.name) throw new RpcException('Role must have name !');
+
+    if (name) {
+      const existRole = await this.roleRepository.findOne({
+        where: { name },
+      });
+      if (existRole) {
+        throw new RpcException('Role have already exist !');
+      }
+      role.name = name;
+    }
 
     const permissions = await this.permissionRepository.findBy({
       id: In(permissionIds),
     });
 
-    role.name = name!;
     role.permissions = permissions;
 
     return this.roleRepository.save(role);

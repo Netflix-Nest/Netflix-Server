@@ -69,36 +69,36 @@ graph TB
 
 ### **Authentication & Authorization**
 
--   **`auth-service`** - JWT-based authentication, Decentralization
+- **`auth-service`** - JWT-based authentication, Decentralization
 
 ### **API Management**
 
--   **`api-gateway`** - Request routing, load balancing, rate limiting, API versioning
+- **`api-gateway`** - Request routing, load balancing, rate limiting, API versioning
 
 ### **User Management**
 
--   **`user-service`** - User profiles, preferences, subscription management
+- **`user-service`** - User profiles, preferences, subscription management
 
 ### **Content Management**
 
--   **`video-service`** - Video metadata, content catalog
--   **`storage-service`** - File storage with minIO, video processing
+- **`video-service`** - Video metadata, content catalog
+- **`storage-service`** - File storage with minIO, video processing
 
 ### **Discovery & Intelligence**
 
--   **`search-service`** - Elasticsearch-powered search, filtering, content discovery
--   **`recommendation-service`** - Algorithms-based recommendations, collaborative filtering
+- **`search-service`** - Elasticsearch-powered search, filtering, content discovery
+- **`recommendation-service`** - Algorithms-based recommendations, collaborative filtering
 
 ### **Social Features**
 
--   **`comment-service`** - User reviews, ratings, comments system
--   **`engagement-service`** - Watch history, favorites, watchlists
--   **`interaction-service`** - Likes, shares, social interactions
+- **`comment-service`** - User reviews, ratings, comments system
+- **`engagement-service`** - Watch history, favorites, watchlists
+- **`interaction-service`** - Likes, shares, social interactions
 
 ### **System Services**
 
--   **`notification-service`** - Push notifications, email alerts, in-app messaging
--   **`job-service`** - Background tasks, video processing, data analytics
+- **`notification-service`** - Push notifications, email alerts, in-app messaging
+- **`job-service`** - Background tasks, video processing, data analytics
 
 ## Technology Stack
 
@@ -120,36 +120,36 @@ graph TB
 
 ### Prerequisites
 
--   Docker & Docker Compose
--   Node.js 18+
--   Git
+- Docker & Docker Compose
+- Node.js 18+
+- Git
 
 ### Installation
 
 1. **Clone the repository**
 
-    ```bash
-    git clone https://github.com/your-username/netflix-server.git
-    cd netflix-server
-    ```
+   ```bash
+   git clone https://github.com/your-username/netflix-server.git
+   cd netflix-server
+   ```
 
 2. **Environment Setup**
 
-    ```bash
-    cp .env.example .env
-    # Edit .env file with your configuration
-    ```
+   ```bash
+   cp .env.example .env
+   # Edit .env file with your configuration
+   ```
 
 3. **Start all services**
 
-    ```bash
-    docker-compose up -d
-    ```
+   ```bash
+   docker-compose up -d
+   ```
 
 4. **Verify services**
-    ```bash
-    docker-compose ps
-    ```
+   ```bash
+   docker-compose ps
+   ```
 
 ### 🔧 Development Mode
 
@@ -207,13 +207,13 @@ SMTP_PASS=your_password
 
 The `docker-compose.yml` includes:
 
--   **Application Services**: All microservices
--   **Storage and Stream**: MinIO, FFmpeg
--   **Databases**: PostgreSQL, MongoDB, Redis
--   **Message Queue**: RabbitMQ, Redis
--   **Search Engine**: Elasticsearch
--   **Monitoring**: Prometheus, Grafana
--   **Load Balancer**: Nginx
+- **Application Services**: All microservices
+- **Storage and Stream**: MinIO, FFmpeg
+- **Databases**: PostgreSQL, MongoDB, Redis
+- **Message Queue**: RabbitMQ, Redis
+- **Search Engine**: Elasticsearch
+- **Monitoring**: Prometheus, Grafana
+- **Load Balancer**: Nginx
 
 ## API Documentation
 
@@ -258,15 +258,15 @@ GET    /search/trending - Trending searches
 
 Each service provides health check endpoints:
 
--   `GET /{service}/health` - Service health status
--   `GET /{service}/metrics` - Prometheus metrics
+- `GET /{service}/health` - Service health status
+- `GET /{service}/metrics` - Prometheus metrics
 
 ### Monitoring Dashboard
 
 Access Grafana dashboard at: `http://localhost:3000`
 
--   Username: `admin`
--   Password: `admin`
+- Username: `admin`
+- Password: `admin`
 
 ## Testing
 
@@ -298,14 +298,14 @@ Use the provided Postman collection: `postman/Netflix-Server-API.json`
 
 1. **Build production images**
 
-    ```bash
-    docker-compose -f docker-compose.prod.yml build
-    ```
+   ```bash
+   docker-compose -f docker-compose.prod.yml build
+   ```
 
 2. **Deploy to production**
-    ```bash
-    docker-compose -f docker-compose.prod.yml up -d
-    ```
+   ```bash
+   docker-compose -f docker-compose.prod.yml up -d
+   ```
 
 ### Kubernetes Deployment
 
@@ -323,10 +323,10 @@ kubectl apply -f k8s/
 
 ### Development Guidelines
 
--   Follow conventional commit messages
--   Add tests for new features
--   Update documentation
--   Ensure Docker builds pass
+- Follow conventional commit messages
+- Add tests for new features
+- Update documentation
+- Ensure Docker builds pass
 
 ## License
 
@@ -334,9 +334,9 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Acknowledgments
 
--   Inspired by Netflix's microservices architecture
--   Built with modern cloud-native technologies
--   Special thanks to the open-source community
+- Inspired by Netflix's microservices architecture
+- Built with modern cloud-native technologies
+- Special thanks to the open-source community
 
 ---
 
@@ -344,6 +344,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 **⭐ Star this repository if you found it helpful!**
 
-Made with ❤️ by [Tri Ngoc](https://github.com/your-username)
+Made with ❤️ by [Tri Ngoc](https://github.com/TriNgoc2077)
 
 </div>

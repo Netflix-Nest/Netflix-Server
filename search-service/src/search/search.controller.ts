@@ -54,7 +54,6 @@ export class SearchController {
   @MessagePattern('movies.updated')
   updateSubscribe(@Payload() { id, dto }: { id: string; dto: UpdateMovieDto }) {
     const cleaned = JSON.parse(JSON.stringify(dto));
-    console.log(id, dto);
     return this.service.updateMovie(id, cleaned);
   }
 

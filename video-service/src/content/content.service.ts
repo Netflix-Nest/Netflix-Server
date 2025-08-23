@@ -207,7 +207,6 @@ export class ContentService {
         trailer: true,
       },
     });
-    console.log(content);
     return this.contentRepository.findOne({
       where: { id },
       relations: ['genres', 'tags', 'series', 'actors'],
