@@ -6,8 +6,8 @@ import {
   SearchMoviesDto,
   SuggestDto,
   UpdateMovieDto,
-} from './dto/search.dto';
-import { MOVIE_INDEX, MOVIE_INDEX_SETTINGS } from './search.constants';
+} from '@netflix-clone/types';
+import { MOVIE_INDEX, MOVIE_INDEX_SETTINGS } from '@netflix-clone/types';
 
 @Injectable()
 export class SearchService {

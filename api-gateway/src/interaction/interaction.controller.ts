@@ -8,8 +8,7 @@ import {
   Delete,
   Inject,
 } from "@nestjs/common";
-import { CreateInteractionDto, RateDto } from "./dto/create-interaction.dto";
-import { UpdateInteractionDto } from "./dto/update-interaction.dto";
+import { CreateInteractionDto, RateDto } from "@netflix-clone/types";
 import { lastValueFrom } from "rxjs";
 import { ClientProxy } from "@nestjs/microservices";
 

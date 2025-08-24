@@ -12,7 +12,7 @@ import {
   BadRequestException,
 } from "@nestjs/common";
 import { ClientProxy } from "@nestjs/microservices";
-import { LoginDto } from "./dto/login.dto";
+import { LoginDto } from "@netflix-clone/types";
 import { AuthService } from "./auth.service";
 import { Public, User } from "src/common/decorators/customize";
 import { IUser, IUserDecorator } from "src/interfaces/auth.interfaces";

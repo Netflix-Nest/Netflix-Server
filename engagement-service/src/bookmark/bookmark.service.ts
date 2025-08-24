@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Bookmark } from './entities/bookmark.entity';
 import { Repository } from 'typeorm';
-import { CreateBookmarkDto } from './dto/create-bookmark.dto';
+import { CreateBookmarkDto } from '@netflix-clone/types';
 import { RpcException } from '@nestjs/microservices';
 
 @Injectable()

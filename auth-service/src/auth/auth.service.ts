@@ -13,7 +13,7 @@ import {
   IUserDecorator,
   StatusUser,
   TokenType,
-} from './auth.interfaces';
+} from '@netflix-clone/types';
 import { ConfigService } from '@nestjs/config';
 import ms, { StringValue } from 'ms';
 @Injectable()

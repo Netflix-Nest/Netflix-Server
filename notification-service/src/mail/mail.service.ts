@@ -2,7 +2,7 @@ import { MailerService } from '@nestjs-modules/mailer';
 import { Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { lastValueFrom } from 'rxjs';
-import { ContentEpisodeDto, ContentMovieDto } from 'src/dto/content.dto';
+import { ContentEpisodeDto, ContentMovieDto } from '@netflix-clone/types';
 
 @Injectable()
 export class MailService {

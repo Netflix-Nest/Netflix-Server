@@ -1,7 +1,7 @@
 import { Controller } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 import { RoleService } from './role.service';
-import { CreateRoleDto } from './dto/create-role.dto';
+import { CreateRoleDto } from '@netflix-clone/types';
 import { UpdateRoleDto } from './dto/update-role.dto';
 
 @Controller()

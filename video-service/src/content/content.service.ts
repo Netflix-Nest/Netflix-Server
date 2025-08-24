@@ -1,5 +1,5 @@
 import { forwardRef, Inject, Injectable } from '@nestjs/common';
-import { CreateContentDto } from './dto/create-content.dto';
+import { CreateContentDto } from '@netflix-clone/types';
 import { UpdateContentDto } from './dto/update-content.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Content } from './entities/content.entity';

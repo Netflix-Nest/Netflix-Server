@@ -11,13 +11,9 @@ import {
 import {
   AddHistoryDto,
   CreateBookmarkDto,
-  CreateEngagementDto,
   CreateWatchlistDto,
-} from "./dto/create-engagement.dto";
-import {
-  UpdateEngagementDto,
-  UpdateWatchlistDto,
-} from "./dto/update-engagement.dto";
+} from "@netflix-clone/types";
+import { UpdateWatchlistDto } from "./dto/update-engagement.dto";
 import { ClientProxy } from "@nestjs/microservices";
 import { lastValueFrom } from "rxjs";
 import { User } from "src/common/decorators/customize";

@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { AddHistoryDto } from './dto/create-history.dto';
+import { AddHistoryDto } from '@netflix-clone/types';
 import { History } from './entities/history.entity';
 
 @Injectable()

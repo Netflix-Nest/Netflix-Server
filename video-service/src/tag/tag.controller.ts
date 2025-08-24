@@ -1,7 +1,7 @@
 import { Controller } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 import { TagService } from './tag.service';
-import { CreateTagDto } from './dto/create-tag.dto';
+import { CreateTagDto } from '@netflix-clone/types';
 import { UpdateTagDto } from './dto/update-tag.dto';
 
 @Controller()

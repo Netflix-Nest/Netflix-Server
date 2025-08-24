@@ -1,5 +1,4 @@
 import { PartialType } from "@nestjs/mapped-types";
-import { CreateRoleDto } from "./create-role.dto";
-import { IsNotEmpty } from "class-validator";
+import { CreateRoleDto } from "@netflix-clone/types";
 
 export class UpdateRoleDto extends PartialType(CreateRoleDto) {}

@@ -8,7 +8,7 @@ import {
   Delete,
   Inject,
 } from "@nestjs/common";
-import { CreateRoleDto } from "./dto/create-role.dto";
+import { CreateRoleDto } from "@netflix-clone/types";
 import { UpdateRoleDto } from "./dto/update-role.dto";
 import { ClientProxy } from "@nestjs/microservices";
 import { lastValueFrom } from "rxjs";

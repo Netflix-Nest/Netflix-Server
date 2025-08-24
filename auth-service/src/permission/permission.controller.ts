@@ -1,7 +1,7 @@
 import { Controller } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 import { PermissionService } from './permission.service';
-import { CreatePermissionDto } from './dto/create-permission.dto';
+import { CreatePermissionDto } from '@netflix-clone/types';
 import { UpdatePermissionDto } from './dto/update-permission.dto';
 
 @Controller()

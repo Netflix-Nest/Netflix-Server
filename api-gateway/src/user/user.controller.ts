@@ -11,7 +11,7 @@ import {
   UseInterceptors,
 } from "@nestjs/common";
 import { ClientProxy } from "@nestjs/microservices";
-import { CreateUserDto } from "./dto/create-user.dto";
+import { CreateUserDto } from "@netflix-clone/types";
 import { UpdateUserDto } from "./dto/update-user.dto";
 import { Public } from "src/common/decorators/customize";
 import { lastValueFrom } from "rxjs";

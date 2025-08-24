@@ -1,7 +1,7 @@
 import { Controller } from '@nestjs/common';
 import { WatchlistService } from './watchlist.service';
 import { MessagePattern, Payload } from '@nestjs/microservices';
-import { CreateWatchlistDto } from './dto/create-watchlist.dto';
+import { CreateWatchlistDto } from '@netflix-clone/types';
 import { UpdateWatchlistDto } from './dto/update-watchlist.dto';
 
 @Controller()

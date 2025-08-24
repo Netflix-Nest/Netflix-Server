@@ -1,7 +1,7 @@
 import { Controller } from '@nestjs/common';
 import { MailService } from './mail.service';
 import { EventPattern, MessagePattern, Payload } from '@nestjs/microservices';
-import { ContentEpisodeDto, ContentMovieDto } from 'src/dto/content.dto';
+import { ContentEpisodeDto, ContentMovieDto } from '@netflix-clone/types';
 
 @Controller()
 export class MailController {

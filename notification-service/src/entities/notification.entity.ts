@@ -1,3 +1,4 @@
+import { Channels, Status, StatusInApp } from '@netflix-clone/types';
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -5,22 +6,6 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
 } from 'typeorm';
-export enum Channels {
-  EMAIL = 'EMAIL',
-  PUSH = 'PUSH',
-  IN_APP = 'IN_APP',
-}
-
-export enum Status {
-  SENT = 'SENT',
-  FAILED = 'FAILED',
-  PENDING = 'PENDING',
-}
-
-export enum StatusInApp {
-  READ = 'READ',
-  UNREAD = 'UNREAD',
-}
 
 @Entity('notifications')
 export class Notification {

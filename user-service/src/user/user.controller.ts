@@ -1,9 +1,8 @@
 import { Controller } from '@nestjs/common';
 import { UserService } from './user.service';
-import { CreateUserDto } from './dto/create-user.dto';
+import { CreateUserDto } from '@netflix-clone/types';
 import { UpdateUserDto, UpdateUserTokenDto } from './dto/update-user.dto';
 import { EventPattern, MessagePattern, Payload } from '@nestjs/microservices';
-import { RegisterUser } from './user.interfaces';
 
 @Controller('user')
 export class UserController {

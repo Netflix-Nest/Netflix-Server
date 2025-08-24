@@ -1,4 +1,4 @@
-import { PartialType } from '@nestjs/mapped-types';
-import { CreateInteractionDto } from './create-interaction.dto';
+import { PartialType } from "@nestjs/mapped-types";
+import { CreateInteractionDto } from "@netflix-clone/types";
 
 export class UpdateInteractionDto extends PartialType(CreateInteractionDto) {}

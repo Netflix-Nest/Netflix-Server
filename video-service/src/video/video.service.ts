@@ -2,12 +2,10 @@ import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Video } from './entities/video.entity';
 import { Repository } from 'typeorm';
-import { CreateVideoDto } from './dto/create-video.dto';
+import { CreateVideoDto } from '@netflix-clone/types';
 import { UpdateVideoDto } from './dto/update-video.dto';
 import aqp from 'api-query-params';
 import { RpcException } from '@nestjs/microservices';
-import { Content } from 'src/content/entities/content.entity';
-import { ContentModule } from 'src/content/content.module';
 import { ContentService } from 'src/content/content.service';
 
 @Injectable()

@@ -6,7 +6,7 @@ import {
   SearchMoviesDto,
   SuggestDto,
   UpdateMovieDto,
-} from './dto/search.dto';
+} from '@netflix-clone/types';
 import { EventPattern, MessagePattern, Payload } from '@nestjs/microservices';
 
 @Controller('search')

@@ -4,7 +4,7 @@ import {
   Inject,
   Injectable,
 } from '@nestjs/common';
-import { CreateUserDto } from './dto/create-user.dto';
+import { CreateUserDto } from '@netflix-clone/types';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { StatusUser, User, UserRole } from './entities/user.entity';
@@ -12,7 +12,6 @@ import { In, Like, Repository } from 'typeorm';
 import aqp from 'api-query-params';
 import { compareSync, genSaltSync, hashSync } from 'bcryptjs';
 import { ClientProxy, RpcException } from '@nestjs/microservices';
-import { RegisterUser } from './user.interfaces';
 import { lastValueFrom } from 'rxjs';
 
 @Injectable()

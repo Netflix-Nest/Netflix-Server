@@ -9,7 +9,7 @@ import {
   Inject,
   Query,
 } from "@nestjs/common";
-import { CreateSeriesDto } from "./dto/create-series.dto";
+import { CreateSeriesDto } from "@netflix-clone/types";
 import { UpdateSeriesDto } from "./dto/update-series.dto";
 import { ClientProxy } from "@nestjs/microservices";
 import { lastValueFrom } from "rxjs";

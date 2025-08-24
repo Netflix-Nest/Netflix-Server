@@ -8,7 +8,7 @@ import {
   Delete,
   Inject,
 } from "@nestjs/common";
-import { CreatePermissionDto } from "./dto/create-permission.dto";
+import { CreatePermissionDto } from "@netflix-clone/types";
 import { UpdatePermissionDto } from "./dto/update-permission.dto";
 import { ClientProxy } from "@nestjs/microservices";
 import { lastValueFrom } from "rxjs";

@@ -1,7 +1,7 @@
 import { Controller } from '@nestjs/common';
 import { HistoryService } from './history.service';
 import { MessagePattern, Payload } from '@nestjs/microservices';
-import { AddHistoryDto } from './dto/create-history.dto';
+import { AddHistoryDto } from '@netflix-clone/types';
 
 @Controller()
 export class HistoryController {

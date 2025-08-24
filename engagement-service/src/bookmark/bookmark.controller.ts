@@ -1,7 +1,7 @@
 import { Controller } from '@nestjs/common';
 import { BookmarkService } from './bookmark.service';
 import { MessagePattern, Payload } from '@nestjs/microservices';
-import { CreateBookmarkDto } from './dto/create-bookmark.dto';
+import { CreateBookmarkDto } from '@netflix-clone/types';
 
 @Controller()
 export class BookmarkController {

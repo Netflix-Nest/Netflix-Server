@@ -1,7 +1,7 @@
 import { Controller } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 import { ActorService } from './actor.service';
-import { CreateActorDto } from './dto/create-actor.dto';
+import { CreateActorDto } from '@netflix-clone/types';
 import { UpdateActorDto } from './dto/update-actor.dto';
 
 @Controller()

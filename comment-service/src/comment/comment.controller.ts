@@ -9,8 +9,8 @@ import {
   Query,
 } from '@nestjs/common';
 import { CommentService } from './comment.service';
-import { CreateCommentDto } from './dto/create-comment.dto';
-import { UpdateCommentDto } from './dto/update-comment.dto';
+import { CreateCommentDto } from '@netflix-clone/types';
+import { UpdateCommentDto } from '@netflix-clone/types';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 
 @Controller('comment')

@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Watchlist } from './entities/watchlist.entity';
 import { Raw, Repository } from 'typeorm';
 import { RpcException } from '@nestjs/microservices';
-import { CreateWatchlistDto } from './dto/create-watchlist.dto';
+import { CreateWatchlistDto } from '@netflix-clone/types';
 import { UpdateWatchlistDto } from './dto/update-watchlist.dto';
 
 @Injectable()

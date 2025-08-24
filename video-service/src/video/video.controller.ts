@@ -1,7 +1,7 @@
 import { Controller, ParseUUIDPipe } from '@nestjs/common';
 import { VideoService } from './video.service';
 import { EventPattern, MessagePattern, Payload } from '@nestjs/microservices';
-import { CreateVideoDto } from './dto/create-video.dto';
+import { CreateVideoDto } from '@netflix-clone/types';
 import { UpdateVideoDto } from './dto/update-video.dto';
 
 @Controller()
