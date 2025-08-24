@@ -26,6 +26,7 @@
     "@nestjs/mapped-types": "*",
     "@nestjs/microservices": "^11.1.5",
     "@nestjs/platform-express": "^11.0.1",
+    "@netflix-clone/common": "^1.0.0",
     "amqp-connection-manager": "^4.1.14",
     "amqplib": "^0.10.8",
     "class-validator": "^0.14.2",

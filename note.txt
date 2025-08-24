@@ -3,15 +3,12 @@ haven't try catch important tasks, return message err match
 
 handle logic upload thumbnail
 api notification at api gateway: just for dev
-write lib dto, interface, common (filter, guard, interceptor,...) for all service
 redesign db, system architecture
 upload thumbnail or automatic generation
 comment: mention -> notification.
 haven't mailer when new episode publish
 UI at '/' of server.
-role: request some important service without per ADMIN -> reject, request without id of this user -> reject.
-rate limiting
-event pattern: ., event pattern: -
+
 prod: 
     - private bucket and GET /video/:videoId/stream return master.m3u8 instead or use nginx
 
