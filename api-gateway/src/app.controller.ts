@@ -1,11 +1,12 @@
 import { Controller, Get } from "@nestjs/common";
+import { Public } from "@netflix-clone/common";
 
 @Controller()
 export class AppController {
-  constructor() {}
-
-  @Get("health")
-  health() {
-    return "Service working !!!";
-  }
+	constructor() {}
+	@Public()
+	@Get("health")
+	health() {
+		return "Service working 123!!!";
+	}
 }
