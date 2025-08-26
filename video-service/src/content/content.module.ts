@@ -13,8 +13,11 @@ import { Genre } from 'src/genre/entities/genre.entity';
 import { Tag } from 'src/tag/entities/tag.entity';
 import { Video } from 'src/video/entities/video.entity';
 import { Series } from 'src/series/entities/series.entity';
-import { NotificationClientProvider } from 'src/providers/notification-client.provider';
-import { SearchClientProvider } from 'src/providers/search-client.provider';
+import {
+  NotificationClientModule,
+  SearchClientModule,
+} from '@netflix-clone/common';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 
 @Module({
   imports: [
@@ -24,9 +27,31 @@ import { SearchClientProvider } from 'src/providers/search-client.provider';
     forwardRef(() => TagModule),
     forwardRef(() => VideoModule),
     forwardRef(() => SeriesModule),
+    NotificationClientModule.registerAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (cfg: ConfigService) => ({
+        urls: [cfg.get<string>('RMQ_URL') || 'amqp://netflix-rabbitmq:5672'],
+        queue: cfg.get<string>('NOTIFICATION_QUEUE') || 'notification_queue',
+        queueOptions: {
+          durable: true,
+        },
+      }),
+    }),
+    SearchClientModule.registerAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (cfg: ConfigService) => ({
+        urls: [cfg.get<string>('RMQ_URL') || 'amqp://netflix-rabbitmq:5672'],
+        queue: cfg.get<string>('SEARCH_QUEUE') || 'search_queue',
+        queueOptions: {
+          durable: true,
+        },
+      }),
+    }),
   ],
   controllers: [ContentController],
-  providers: [ContentService, NotificationClientProvider, SearchClientProvider],
+  providers: [ContentService],
   exports: [ContentService],
 })
 export class ContentModule {}

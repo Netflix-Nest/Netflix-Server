@@ -1,9 +1,23 @@
 import { Module } from "@nestjs/common";
-import { VideoClientProvider } from "src/client/video-client.provider";
 import { ContentController } from "./content.controller";
+import { VideoClientModule } from "@netflix-clone/common";
+import { ConfigModule, ConfigService } from "@nestjs/config";
 
 @Module({
-	controllers: [ContentController],
-	providers: [VideoClientProvider],
+  imports: [
+    VideoClientModule.registerAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (cfg: ConfigService) => ({
+        urls: [cfg.get<string>("RMQ_URL") || "amqp://netflix-rabbitmq:5672"],
+        queue: cfg.get<string>("VIDEO_QUEUE") || "video_queue",
+        queueOptions: {
+          durable: true,
+        },
+      }),
+    }),
+  ],
+  controllers: [ContentController],
+  providers: [],
 })
 export class ContentModule {}

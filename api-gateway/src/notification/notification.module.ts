@@ -1,9 +1,23 @@
 import { Module } from "@nestjs/common";
 import { NotificationController } from "./notification.controller";
-import { NotificationClientProvider } from "src/client/notification-client.provider";
+import { NotificationClientModule } from "@netflix-clone/common";
+import { ConfigModule, ConfigService } from "@nestjs/config";
 
 @Module({
-	controllers: [NotificationController],
-	providers: [NotificationClientProvider],
+  imports: [
+    NotificationClientModule.registerAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (cfg: ConfigService) => ({
+        urls: [cfg.get<string>("RMQ_URL") || "amqp://netflix-rabbitmq:5672"],
+        queue: cfg.get<string>("NOTIFICATION_QUEUE") || "notification_queue",
+        queueOptions: {
+          durable: true,
+        },
+      }),
+    }),
+  ],
+  controllers: [NotificationController],
+  providers: [],
 })
 export class NotificationModule {}

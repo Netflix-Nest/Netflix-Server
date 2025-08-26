@@ -1,12 +1,21 @@
 import { Module } from "@nestjs/common";
 import { UserController } from "./user.controller";
-import { UserClientProvider } from "src/client/user-client.provider";
-import { ConfigModule } from "@nestjs/config";
+import { ConfigModule, ConfigService } from "@nestjs/config";
+import { UserClientModule } from "@netflix-clone/common";
 
 @Module({
-  imports: [ConfigModule],
+  imports: [
+    ConfigModule,
+    UserClientModule.registerAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (cfg: ConfigService) => ({
+        host: cfg.get<string>("REDIS_HOST") || "netflix-redis",
+        port: cfg.get<number>("REDIS_PORT") || 6379,
+        password: cfg.get<string>("REDIS_PASSWORD"),
+      }),
+    }),
+  ],
   controllers: [UserController],
-  providers: [UserClientProvider],
-  exports: [],
 })
 export class UserModule {}

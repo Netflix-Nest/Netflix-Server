@@ -11,6 +11,7 @@ import {
 import { CreateInteractionDto, RateDto } from "@netflix-clone/types";
 import { lastValueFrom } from "rxjs";
 import { ClientProxy } from "@nestjs/microservices";
+import { Public } from "@netflix-clone/common";
 
 @Controller("interaction")
 export class InteractionController {
@@ -18,6 +19,12 @@ export class InteractionController {
     @Inject("INTERACTION_SERVICE")
     private readonly interactionClient: ClientProxy
   ) {}
+  @Public()
+  @Get("health")
+  health() {
+    return lastValueFrom(this.interactionClient.send("health", {}));
+  }
+
   @Post("like/:contentId")
   async handleLike(@Param("contentId") contentId: number) {
     return lastValueFrom(this.interactionClient.send("like", contentId));

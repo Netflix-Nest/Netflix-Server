@@ -18,6 +18,7 @@ import { User } from "src/common/decorators/customize";
 import { IUserDecorator } from "src/interfaces/auth.interfaces";
 import { lastValueFrom } from "rxjs";
 import { FileInterceptor } from "@nestjs/platform-express";
+import { Public } from "@netflix-clone/common";
 
 @Controller("video")
 export class VideoController {
@@ -26,6 +27,12 @@ export class VideoController {
     @Inject("STORAGE_SERVICE") private readonly storageClient: ClientProxy,
     @Inject("JOB_SERVICE") private readonly jobClient: ClientProxy
   ) {}
+
+  @Public()
+  @Get("health")
+  health() {
+    return lastValueFrom(this.videoClient.send("health", {}));
+  }
 
   @Post()
   async create(

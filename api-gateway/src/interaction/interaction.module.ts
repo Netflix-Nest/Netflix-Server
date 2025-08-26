@@ -1,9 +1,23 @@
 import { Module } from "@nestjs/common";
 import { InteractionController } from "./interaction.controller";
-import { InteractionProvider } from "src/client/interaction-client.provider";
+import { InteractionClientModule } from "@netflix-clone/common";
+import { ConfigModule, ConfigService } from "@nestjs/config";
 
 @Module({
+  imports: [
+    InteractionClientModule.registerAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (cfg: ConfigService) => ({
+        urls: [cfg.get<string>("RMQ_URL") || "amqp://netflix-rabbitmq:5672"],
+        queue: cfg.get<string>("INTERACTION_QUEUE") || "interaction_queue",
+        queueOptions: {
+          durable: true,
+        },
+      }),
+    }),
+  ],
   controllers: [InteractionController],
-  providers: [InteractionProvider],
+  providers: [],
 })
 export class InteractionModule {}

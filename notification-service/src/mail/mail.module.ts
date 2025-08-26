@@ -3,8 +3,8 @@ import { MailService } from './mail.service';
 import { MailController } from './mail.controller';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
-import { ConfigService } from '@nestjs/config';
-import { UserClientProvider } from 'src/providers/user-client.provider';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { UserClientModule } from '@netflix-clone/common';
 
 @Module({
   imports: [
@@ -32,8 +32,17 @@ import { UserClientProvider } from 'src/providers/user-client.provider';
         },
       }),
     }),
+    UserClientModule.registerAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (cfg: ConfigService) => ({
+        host: cfg.get<string>('REDIS_HOST') || 'netflix-redis',
+        port: cfg.get<number>('REDIS_PORT') || 6379,
+        password: cfg.get<string>('REDIS_PASSWORD'),
+      }),
+    }),
   ],
   controllers: [MailController],
-  providers: [MailService, UserClientProvider],
+  providers: [MailService],
 })
 export class MailModule {}

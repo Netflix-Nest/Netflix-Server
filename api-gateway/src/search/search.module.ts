@@ -1,9 +1,23 @@
 import { Module } from "@nestjs/common";
 import { SearchController } from "./search.controller";
-import { SearchClientProvider } from "src/client/search-client.provider";
+import { SearchClientModule } from "@netflix-clone/common";
+import { ConfigModule, ConfigService } from "@nestjs/config";
 
 @Module({
-	controllers: [SearchController],
-	providers: [SearchClientProvider],
+  imports: [
+    SearchClientModule.registerAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (cfg: ConfigService) => ({
+        urls: [cfg.get<string>("RMQ_URL") || "amqp://netflix-rabbitmq:5672"],
+        queue: cfg.get<string>("SEARCH_QUEUE") || "search_queue",
+        queueOptions: {
+          durable: true,
+        },
+      }),
+    }),
+  ],
+  controllers: [SearchController],
+  providers: [],
 })
 export class SearchModule {}
