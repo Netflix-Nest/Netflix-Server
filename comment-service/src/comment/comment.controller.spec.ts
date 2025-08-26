@@ -1,7 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { CommentController } from './comment.controller';
 import { CommentService } from './comment.service';
-import { UserClientProvider } from '../providers/user-client.provider';
 import { getModelToken, MongooseModule } from '@nestjs/mongoose';
 import { Comment, CommentSchema } from './schemas/comment.schema';
 import { ConfigModule, ConfigService } from '@nestjs/config';
@@ -19,7 +18,10 @@ describe('CommentController', () => {
       controllers: [CommentController],
       providers: [
         CommentService,
-        UserClientProvider,
+        {
+          provide: 'USER_SERVICE',
+          useValue: {},
+        },
         {
           provide: getModelToken('Comment'),
           useValue: mockCommentModel,

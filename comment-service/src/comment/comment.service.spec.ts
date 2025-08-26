@@ -1,6 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { CommentService } from './comment.service';
-import { UserClientProvider } from '../providers/user-client.provider';
 import { getModelToken } from '@nestjs/mongoose';
 import { ConfigService } from '@nestjs/config';
 
@@ -15,7 +14,10 @@ describe('CommentService', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         CommentService,
-        UserClientProvider,
+        {
+          provide: 'USER_SERVICE',
+          useValue: {},
+        },
         {
           provide: getModelToken('Comment'),
           useValue: mockCommentModel,
