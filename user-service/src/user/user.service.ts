@@ -73,7 +73,13 @@ export class UserService {
 
     const existUser = await this.userRepository.findOne({ where: { email } });
     if (existUser) {
-      throw new RpcException('User already exist !');
+      throw new RpcException('This email has already use !');
+    }
+    const existUsername = await this.userRepository.findOne({
+      where: { username: registerDto.username },
+    });
+    if (existUsername) {
+      throw new RpcException('This username has already use !');
     }
     const password = this.getHashPassword(registerDto.password);
     let userRole: UserRole;
@@ -150,6 +156,7 @@ export class UserService {
   }
 
   async findOne(id: number) {
+    console.log('receive messsage....');
     const allColumns = this.userRepository.metadata.columns.map(
       (col) => col.propertyName as keyof User,
     );

@@ -22,6 +22,7 @@ import { ThrottlerGuard, ThrottlerModule } from "@nestjs/throttler";
 import { RedisThrottlerStorage } from "./config/storage.throttler";
 import { AppController } from "./app.controller";
 import { APP_GUARD } from "@nestjs/core";
+import { MediaModule } from './media/media.module';
 
 @Module({
 	imports: [
@@ -83,6 +84,7 @@ import { APP_GUARD } from "@nestjs/core";
 		RecommendationModule,
 		RoleModule,
 		PermissionModule,
+		MediaModule,
 	],
 	controllers: [AppController],
 	providers: [

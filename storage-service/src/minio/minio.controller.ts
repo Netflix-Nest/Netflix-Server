@@ -14,13 +14,36 @@ export class MinioController {
     @Inject('JOB_SERVICE') private readonly jobClient: ClientProxy,
   ) {}
 
+  @MessagePattern('verify-file-access')
+  verifyAccess(@Payload() data: { fileName: string; bucket: string }) {
+    return this.minioService.verifyFileAccess(data);
+  }
+
   @MessagePattern('upload-video')
-  async handleUpload(@Payload() data) {
+  async handleUploadVideo(@Payload() data) {
     const { originalname, base64, mimetype } = data;
     const fileName = Date.now() + '-' + originalname;
     const buffer = Buffer.from(base64, 'base64');
     const url = await this.minioService.upload(
       'video-bucket',
+      fileName,
+      buffer,
+      mimetype,
+    );
+
+    return {
+      url,
+      fileName,
+    };
+  }
+
+  @MessagePattern('upload-image')
+  async handleUploadImage(@Payload() data) {
+    const { originalname, base64, mimetype } = data;
+    const fileName = Date.now() + '-' + originalname;
+    const buffer = Buffer.from(base64, 'base64');
+    const url = await this.minioService.upload(
+      'image-bucket',
       fileName,
       buffer,
       mimetype,

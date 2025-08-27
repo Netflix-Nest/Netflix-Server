@@ -10,7 +10,7 @@ export class MinioService implements OnModuleInit {
 
   constructor(private readonly configService: ConfigService) {
     this.minioClient = new Client({
-      endPoint: this.configService.get<string>('MINIO_ENDPOINT') ?? 'localhost',
+      endPoint: this.configService.get<string>('SERVER_IP') ?? 'localhost',
       port: 9000,
       useSSL: false,
       accessKey: this.configService.get<string>('MINIO_ACCESS_KEY'),
@@ -22,6 +22,7 @@ export class MinioService implements OnModuleInit {
   async onModuleInit() {
     await this.ensureBucketExists('video-bucket');
     await this.ensureBucketExists('hls-bucket');
+    await this.ensureBucketExists('image-bucket');
     await this.setPublicPolicy('hls-bucket');
   }
 
@@ -47,6 +48,24 @@ export class MinioService implements OnModuleInit {
     if (!exists) {
       await this.minioClient.makeBucket(bucketName, 'us-east-1');
       Logger.log(`Bucket "${bucketName}" created.`);
+    }
+  }
+
+  async verifyFileAccess(data: { fileName: string; bucket: string }) {
+    try {
+      const stat = await this.minioClient.statObject(
+        data.bucket,
+        data.fileName,
+      );
+      return {
+        exists: true,
+        bucket: data.bucket,
+        size: stat.size,
+        contentType: stat.metaData['content-type'],
+        lastModified: stat.lastModified,
+      };
+    } catch (error) {
+      return { exists: false };
     }
   }
 
