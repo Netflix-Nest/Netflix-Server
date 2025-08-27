@@ -9,7 +9,8 @@ comment: mention -> notification.
 haven't mailer when new episode publish
 UI at '/' of server.
 index movies after create movies
-handle img, video expires
+exception filter: catch err, log, throw gateway
+
 prod: 
     - private bucket and GET /video/:videoId/stream return master.m3u8 instead or use nginx
 
