@@ -46,6 +46,6 @@ async function bootstrap() {
     defaultVersion: ["1"],
   });
 
-  await app.listen(configService.get<number>("PORT") || 3000);
+  await app.listen(configService.get<number>("PORT") || 8000);
 }
 bootstrap();
