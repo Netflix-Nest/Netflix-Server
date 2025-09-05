@@ -1,7 +1,7 @@
 import { Controller } from '@nestjs/common';
 import { UserService } from './user.service';
-import { CreateUserDto } from '@netflix-clone/types';
-import { UpdateUserDto, UpdateUserTokenDto } from './dto/update-user.dto';
+import { CreateUserDto, UpdateUserTokenDto } from '@netflix-clone/types';
+import { UpdateUserDto } from './dto/update-user.dto';
 import { EventPattern, MessagePattern, Payload } from '@nestjs/microservices';
 
 @Controller('user')
@@ -18,11 +18,13 @@ export class UserController {
     return this.userService.registerUser(registerDto);
   }
 
-  @MessagePattern('update-user-token')
-  updateUserToken(@Payload() payload: UpdateUserTokenDto) {
+  @EventPattern('update-user-token')
+  updateUserToken(@Payload() payload: string) {
+    const parsedPayload: UpdateUserTokenDto = JSON.parse(payload);
+
     return this.userService.updateUserToken(
-      payload.refreshToken,
-      payload.userId,
+      parsedPayload.refreshToken,
+      parsedPayload.userId,
     );
   }
 
@@ -33,6 +35,7 @@ export class UserController {
 
   @EventPattern('remove-token')
   removeToken(@Payload() id: number) {
+    console.log(id);
     return this.userService.removeToken(id);
   }
 

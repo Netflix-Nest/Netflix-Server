@@ -3,7 +3,6 @@ import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { ConfigModule } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
-import { UserClientProvider } from './providers/user-client.provider';
 
 describe('AuthController', () => {
   let controller: AuthController;
@@ -18,7 +17,13 @@ describe('AuthController', () => {
         }),
       ],
       controllers: [AuthController],
-      providers: [AuthService, UserClientProvider],
+      providers: [
+        AuthService,
+        {
+          provide: 'USER_SERVICE',
+          useValue: {},
+        },
+      ],
     }).compile();
 
     controller = module.get<AuthController>(AuthController);

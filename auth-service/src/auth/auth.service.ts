@@ -13,6 +13,7 @@ import {
   IUserDecorator,
   StatusUser,
   TokenType,
+  UpdateUserTokenDto,
 } from '@netflix-clone/types';
 import { ConfigService } from '@nestjs/config';
 import ms, { StringValue } from 'ms';
@@ -75,12 +76,14 @@ export class AuthService {
       role,
     };
     const refreshToken = this.createRefreshToken(payload);
-    await lastValueFrom(
-      this.userClient.send('update-user-token', {
-        refreshToken,
-        userId: id,
-      }),
-    );
+    const dataUpdateToken: UpdateUserTokenDto = {
+      refreshToken,
+      userId: id,
+    };
+    // cause refreshToken is very long, so it's encountered some issue when send payload to user service
+    // so we should convert it to string before send so that can avoid err
+    this.userClient.emit('update-user-token', JSON.stringify(dataUpdateToken));
+
     return {
       accessToken: this.jwtService.sign(payload),
       refreshToken,

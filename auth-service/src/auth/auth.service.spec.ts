@@ -1,6 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AuthService } from './auth.service';
-import { UserClientProvider } from './providers/user-client.provider';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule } from '@nestjs/config';
 
@@ -16,7 +15,13 @@ describe('AuthService', () => {
           signOptions: { expiresIn: '60s' },
         }),
       ],
-      providers: [AuthService, UserClientProvider],
+      providers: [
+        AuthService,
+        {
+          provide: 'USER_SERVICE',
+          useValue: {},
+        },
+      ],
     }).compile();
 
     service = module.get<AuthService>(AuthService);

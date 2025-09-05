@@ -10,6 +10,7 @@ import {
   Transport,
 } from '@nestjs/microservices';
 import ms, { StringValue } from 'ms';
+import { UserClientModule } from '@netflix-clone/common';
 
 @Module({
   imports: [
@@ -24,21 +25,19 @@ import ms, { StringValue } from 'ms';
       }),
       inject: [ConfigService],
     }),
-    ClientsModule.registerAsync([
-      {
-        name: 'USER_SERVICE',
-        imports: [ConfigModule],
-        inject: [ConfigService],
-        useFactory: async (config: ConfigService) => ({
-          transport: Transport.REDIS,
-          options: {
-            host: config.get<string>('REDIS_HOST'),
-            port: config.get<number>('REDIS_PORT'),
-            password: config.get<string>('REDIS_PASSWORD'),
-          },
-        }),
-      },
-    ]),
+    UserClientModule.registerAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (cfg: ConfigService) => ({
+        host: cfg.get<string>('REDIS_HOST') || 'netflix-redis',
+        port: cfg.get<number>('REDIS_PORT') || 6379,
+        password: cfg.get<string>('REDIS_PASSWORD'),
+        serializer: {
+          serialize: (value) => JSON.stringify(value),
+          deserialize: (value) => JSON.parse(value),
+        },
+      }),
+    }),
   ],
   controllers: [AuthController],
   providers: [AuthService],
