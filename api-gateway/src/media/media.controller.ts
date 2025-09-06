@@ -67,7 +67,7 @@ export class MediaController {
     return {
       uploader: user.userId,
       fileName,
-      url: `${process.env.ORIGIN_URL_MEDIA}/media/videos/${fileName}`,
+      url: `${process.env.ORIGIN_URL_MEDIA}/api/v1/media/videos/${fileName}`,
     };
   }
 
@@ -89,7 +89,7 @@ export class MediaController {
     return {
       uploader: user.userId,
       fileName,
-      url: `${process.env.ORIGIN_URL_MEDIA}/media/images/${fileName}`,
+      url: `${process.env.ORIGIN_URL_MEDIA}/api/v1/media/images/${fileName}`,
     };
   }
 
@@ -122,7 +122,6 @@ export class MediaController {
           bucket,
         })
       );
-
       if (!fileInfo.exists) {
         throw new NotFoundException("File not found");
       }

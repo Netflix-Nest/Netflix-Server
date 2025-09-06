@@ -15,6 +15,7 @@ import {
   JoinColumn,
   JoinTable,
   ManyToMany,
+  OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -66,8 +67,8 @@ export class Content {
   @Column({ default: 'single' })
   type: 'single' | 'series';
 
-  @OneToOne(() => Video, (video) => video.contents, { nullable: true })
-  video?: Video;
+  @OneToMany(() => Video, (video) => video.contents, { nullable: true })
+  video?: Video[];
 
   @OneToOne(() => Series, (series) => series.contents, { nullable: true })
   @JoinColumn()

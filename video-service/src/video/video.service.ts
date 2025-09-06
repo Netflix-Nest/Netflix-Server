@@ -22,7 +22,11 @@ export class VideoService {
       where: {
         seasonNumber: createVideoDto.seasonNumber,
         episodeNumber: createVideoDto.episodeNumber,
+        contents: {
+          id: createVideoDto.contentId,
+        },
       },
+      relations: ['contents'],
     });
     if (existVideo) {
       throw new RpcException('Video already exist !');

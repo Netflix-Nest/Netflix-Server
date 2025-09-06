@@ -30,7 +30,7 @@ export class Video {
   @Column({ nullable: true })
   seasonNumber?: number;
 
-  @OneToOne(() => Content, { nullable: true })
+  @ManyToOne(() => Content, { nullable: true })
   @JoinColumn()
   contents: Content;
 

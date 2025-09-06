@@ -3,7 +3,7 @@ import { CreateContentDto } from '@netflix-clone/types';
 import { UpdateContentDto } from './dto/update-content.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Content } from './entities/content.entity';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { ClientProxy, RpcException } from '@nestjs/microservices';
 import aqp from 'api-query-params';
 import { Actor } from 'src/actor/entities/actor.entity';
@@ -54,7 +54,7 @@ export class ContentService {
       seriesId,
       thumbnail,
       trailerId,
-      videoId,
+      videoIds,
     } = createContentDto;
     const actors = await validateEntitiesOrThrow(
       actorIds,
@@ -80,13 +80,17 @@ export class ContentService {
       throw new RpcException('Invalid seriesId');
     }
 
-    const video = videoId
-      ? ((await this.videoRepository.findOne({ where: { id: videoId } })) ??
-        undefined)
-      : undefined;
+    const videos =
+      videoIds && videoIds.length > 0
+        ? await this.videoRepository.findBy({ id: In(videoIds) })
+        : [];
 
-    if (videoId && !video) {
-      throw new RpcException('Invalid videoId');
+    if (videoIds && videoIds.length > 0) {
+      if (videos.length !== videoIds.length) {
+        const foundIds = videos.map((video) => video.id);
+        const invalidIds = videoIds.filter((id) => !foundIds.includes(id));
+        throw new RpcException(`Invalid videoIds: ${invalidIds.join(', ')}`);
+      }
     }
     const trailer = trailerId
       ? ((await this.videoRepository.findOne({ where: { id: trailerId } })) ??
@@ -96,7 +100,7 @@ export class ContentService {
     if (trailerId && !trailer) {
       throw new RpcException('Invalid trailerId');
     }
-    return { actors, genres, tags, series, video, trailer };
+    return { actors, genres, tags, series, videos, trailer };
   }
   async create(createContentDto: CreateContentDto) {
     const {
@@ -120,7 +124,7 @@ export class ContentService {
       seriesId,
       thumbnail,
       trailerId,
-      videoId,
+      videoIds,
     } = createContentDto;
     const existContent = await this.contentRepository.findOne({
       where: { title: title },
@@ -128,7 +132,7 @@ export class ContentService {
     if (existContent) {
       throw new RpcException('Content already exist !');
     }
-    const { actors, genres, tags, series, video, trailer } =
+    const { actors, genres, tags, series, videos, trailer } =
       await this.validate(createContentDto);
     const content = this.contentRepository.create();
     Object.assign(content, {
@@ -152,7 +156,7 @@ export class ContentService {
       series,
       thumbnail,
       trailer,
-      video,
+      videos,
     });
     await this.contentRepository.save(content);
     this.searchClient.emit('movies.added', content);
@@ -270,8 +274,8 @@ export class ContentService {
         (id) => id as unknown as number,
       );
     }
-    if (!updateContentDto.videoId) {
-      updateContentDto.videoId = content.video as unknown as number;
+    if (!updateContentDto.videoIds) {
+      updateContentDto.videoIds = content.video as unknown as number[];
     }
     if (!updateContentDto.seriesId) {
       updateContentDto.seriesId = content.series as unknown as number;
@@ -279,7 +283,7 @@ export class ContentService {
     if (!updateContentDto.trailerId) {
       updateContentDto.trailerId = content.trailer as unknown as number;
     }
-    const { actors, genres, tags, series, video, trailer } =
+    const { actors, genres, tags, series, videos, trailer } =
       await this.validate(updateContentDto);
 
     if (updateContentDto.publishAt) {
@@ -317,7 +321,7 @@ export class ContentService {
       genres,
       tags,
       series,
-      video,
+      videos,
       trailer,
     };
     // use .save instead .update() to let typeORM resolve relation.
