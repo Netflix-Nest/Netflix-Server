@@ -53,7 +53,7 @@ export class ContentService {
       director,
       seriesId,
       thumbnail,
-      trailerId,
+      trailer,
       videoIds,
     } = createContentDto;
     const actors = await validateEntitiesOrThrow(
@@ -92,15 +92,8 @@ export class ContentService {
         throw new RpcException(`Invalid videoIds: ${invalidIds.join(', ')}`);
       }
     }
-    const trailer = trailerId
-      ? ((await this.videoRepository.findOne({ where: { id: trailerId } })) ??
-        undefined)
-      : undefined;
 
-    if (trailerId && !trailer) {
-      throw new RpcException('Invalid trailerId');
-    }
-    return { actors, genres, tags, series, videos, trailer };
+    return { actors, genres, tags, series, videos };
   }
   async create(createContentDto: CreateContentDto) {
     const {
@@ -123,7 +116,7 @@ export class ContentService {
       director,
       seriesId,
       thumbnail,
-      trailerId,
+      trailer,
       videoIds,
     } = createContentDto;
     const existContent = await this.contentRepository.findOne({
@@ -132,7 +125,7 @@ export class ContentService {
     if (existContent) {
       throw new RpcException('Content already exist !');
     }
-    const { actors, genres, tags, series, videos, trailer } =
+    const { actors, genres, tags, series, videos } =
       await this.validate(createContentDto);
     const content = this.contentRepository.create();
     Object.assign(content, {
@@ -159,6 +152,7 @@ export class ContentService {
       videos,
     });
     await this.contentRepository.save(content);
+    console.log('created....');
     this.searchClient.emit('movies.added', content);
     return content;
   }
@@ -208,7 +202,6 @@ export class ContentService {
         actors: true,
         series: true,
         video: true,
-        trailer: true,
       },
     });
     return this.contentRepository.findOne({
@@ -280,10 +273,10 @@ export class ContentService {
     if (!updateContentDto.seriesId) {
       updateContentDto.seriesId = content.series as unknown as number;
     }
-    if (!updateContentDto.trailerId) {
-      updateContentDto.trailerId = content.trailer as unknown as number;
+    if (!updateContentDto.trailer) {
+      updateContentDto.trailer = content.trailer as unknown as string;
     }
-    const { actors, genres, tags, series, videos, trailer } =
+    const { actors, genres, tags, series, videos } =
       await this.validate(updateContentDto);
 
     if (updateContentDto.publishAt) {
@@ -322,7 +315,7 @@ export class ContentService {
       tags,
       series,
       videos,
-      trailer,
+      trailer: updateContentDto.trailer,
     };
     // use .save instead .update() to let typeORM resolve relation.
     await this.contentRepository.save(newContent);

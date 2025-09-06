@@ -108,9 +108,8 @@ export class Content {
   @Column()
   season: string; // spring / summer / autumn / winter
 
-  @OneToOne(() => Video)
-  @JoinColumn()
-  trailer: Video;
+  @Column({ nullable: true })
+  trailer: string;
 
   @Column()
   ageRating: number; // 16+, 17+,...

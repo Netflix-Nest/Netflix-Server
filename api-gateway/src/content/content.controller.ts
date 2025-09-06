@@ -53,12 +53,11 @@ export class ContentController {
 
   @Patch(":id")
   update(@Param("id") id: string, @Body() updateContentDto: UpdateContentDto) {
-    const newId = +id;
+    if (!updateContentDto.id) {
+      updateContentDto.id = +id;
+    }
     return lastValueFrom(
-      this.videoClient.send("update-content", {
-        ...updateContentDto,
-        newId,
-      })
+      this.videoClient.send("update-content", updateContentDto)
     );
   }
 
