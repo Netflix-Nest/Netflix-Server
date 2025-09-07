@@ -10,7 +10,6 @@ export class ContentController {
 
   @MessagePattern('create-content')
   create(@Payload() createContentDto: CreateContentDto) {
-    console.log('get req: ', createContentDto);
     return this.contentService.create(createContentDto);
   }
 
