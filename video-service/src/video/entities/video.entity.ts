@@ -34,7 +34,7 @@ export class Video {
   @JoinColumn()
   contents: Content;
 
-  @Column({ type: 'bigint' })
+  @Column({ type: 'int' })
   uploader: number;
 
   @Column()

@@ -81,7 +81,7 @@ export class Content {
   @Column({ type: 'int' })
   year: number;
 
-  @Column({ type: 'bigint' })
+  @Column({ type: 'int' })
   view: number;
 
   @Column({ type: 'int', nullable: true, array: true })

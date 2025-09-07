@@ -179,7 +179,7 @@ export class ContentService {
         projection && Object.keys(projection).length > 0
           ? (Object.keys(projection) as (keyof Content)[])
           : undefined,
-      relations: ['genres', 'tags', 'series', 'actors'],
+      relations: ['genres', 'tags', 'series', 'actors', 'video'],
     });
 
     return {
@@ -194,19 +194,9 @@ export class ContentService {
   }
 
   async findOne(id: number) {
-    const content = await this.contentRepository.findOne({
-      where: { id },
-      relations: {
-        genres: true,
-        tags: true,
-        actors: true,
-        series: true,
-        video: true,
-      },
-    });
     return this.contentRepository.findOne({
       where: { id },
-      relations: ['genres', 'tags', 'series', 'actors'],
+      relations: ['genres', 'tags', 'series', 'actors', 'video'],
     });
   }
 
