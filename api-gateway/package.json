@@ -30,7 +30,7 @@
     "@nestjs/passport": "^11.0.5",
     "@nestjs/platform-express": "^11.0.1",
     "@nestjs/throttler": "^6.4.0",
-    "@netflix-clone/common": "^1.1.2",
+    "@netflix-clone/common": "^1.2.0",
     "@netflix-clone/types": "^1.1.1",
     "@types/cookie-parser": "^1.4.9",
     "amqp-connection-manager": "^4.1.14",

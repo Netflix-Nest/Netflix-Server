@@ -18,7 +18,7 @@ export class VideoService {
   ) {}
 
   async create(createVideoDto: CreateVideoDto) {
-    const existVideo = await this.videoRepository.findOne({
+    const existVideoSeries = await this.videoRepository.findOne({
       where: {
         seasonNumber: createVideoDto.seasonNumber,
         episodeNumber: createVideoDto.episodeNumber,
@@ -28,8 +28,18 @@ export class VideoService {
       },
       relations: ['contents'],
     });
-    if (existVideo) {
+    if (existVideoSeries) {
       throw new RpcException('Video already exist !');
+    }
+
+    const existVideoSingle = await this.videoRepository.findOne({
+      where: {
+        contents: { id: createVideoDto.contentId, type: 'single' },
+      },
+    });
+
+    if (existVideoSingle) {
+      throw new RpcException('This movie has video !');
     }
 
     const content = await this.contentService.findOne(createVideoDto.contentId);

@@ -13,7 +13,7 @@ VIDEO_SERVICE = video-service
 
 MIGRATE_RUN = npm run migration:run
 SCHEMA_DROP = npm run schema:drop
-DO_SOMETHING = npm install @netflix-clone/types
+DO_SOMETHING = npm install @netflix-clone/common
 # Drop
 drop-user:
 	cd $(USER_SERVICE) && $(SCHEMA_DROP)
@@ -75,5 +75,5 @@ dosomething-user:
 
 migrate-all: migrate-auth migrate-engagement migrate-notification migrate-user migrate-video
 drop-and-migrate-all: drop-auth drop-engagement drop-notification drop-user drop-video migrate-auth migrate-engagement migrate-notification migrate-user migrate-video
-do-something-all: dosomething-gateway dosomething-auth dosomething-comment dosomething-engagement   dosomething-notification  dosomething-search dosomething-user dosomething-video
+do-something-all: dosomething-gateway dosomething-auth dosomething-comment dosomething-engagement   dosomething-notification  dosomething-search dosomething-user dosomething-video dosomething-interaction dosomething-job dosomething-recommendation  dosomething-storage
 # dosomething-interaction dosomething-job dosomething-recommendation  dosomething-storage
