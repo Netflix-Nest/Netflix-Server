@@ -1,9 +1,11 @@
 import { Controller } from '@nestjs/common';
 import { EventPattern, MessagePattern, Payload } from '@nestjs/microservices';
 import { ContentService } from './content.service';
-import { CreateContentDto } from '@netflix-clone/types';
+import {
+  CreateContentDto,
+  QueryContentExcludeIdsFilter,
+} from '@netflix-clone/types';
 import { UpdateContentDto } from './dto/update-content.dto';
-
 @Controller()
 export class ContentController {
   constructor(private readonly contentService: ContentService) {}
@@ -36,6 +38,21 @@ export class ContentController {
       favoriteGenreIds,
       page,
       limit,
+    );
+  }
+
+  @MessagePattern('find-all-exclude-ids')
+  findExcludeIds(@Payload() data: QueryContentExcludeIdsFilter) {
+    console.log(data);
+    const { ids, currentPage, limit, additionalFilters, sortField, sortOrder } =
+      data;
+    return this.contentService.findAllExcludingIds(
+      ids,
+      currentPage,
+      limit,
+      additionalFilters,
+      sortField,
+      sortOrder,
     );
   }
 

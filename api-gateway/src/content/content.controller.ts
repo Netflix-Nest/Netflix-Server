@@ -10,7 +10,10 @@ import {
   Query,
   UseInterceptors,
 } from "@nestjs/common";
-import { CreateContentDto } from "@netflix-clone/types";
+import {
+  CreateContentDto,
+  QueryContentExcludeIdsFilter,
+} from "@netflix-clone/types";
 import { UpdateContentDto } from "./dto/update-content.dto";
 import { ClientProxy } from "@nestjs/microservices";
 import { lastValueFrom } from "rxjs";
@@ -30,12 +33,13 @@ export class ContentController {
   }
 
   @Get()
-  @UseInterceptors(CacheInterceptor)
+  // @UseInterceptors(CacheInterceptor)
   findAll(
     @Query("current") currentPage: number,
     @Query("pageSize") limit: number,
     @Query("qs") qs: string
   ) {
+    console.log(qs);
     return lastValueFrom(
       this.videoClient.send("find-all-content", {
         currentPage,
@@ -43,6 +47,18 @@ export class ContentController {
         qs,
       })
     );
+  }
+
+  @Post("exclude")
+  // @UseInterceptors(CacheInterceptor)
+  findAllExclude(
+    @Body() data: QueryContentExcludeIdsFilter,
+    @Query("current") currentPage: string,
+    @Query("pageSize") limit: string
+  ) {
+    data.currentPage = +currentPage;
+    data.limit = +limit;
+    return lastValueFrom(this.videoClient.send("find-all-exclude-ids", data));
   }
 
   @Get(":id")

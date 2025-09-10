@@ -3,7 +3,7 @@ import { CreateContentDto } from '@netflix-clone/types';
 import { UpdateContentDto } from './dto/update-content.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Content } from './entities/content.entity';
-import { In, Repository } from 'typeorm';
+import { In, Not, Repository } from 'typeorm';
 import { ClientProxy, RpcException } from '@nestjs/microservices';
 import aqp from 'api-query-params';
 import { Actor } from 'src/actor/entities/actor.entity';
@@ -159,6 +159,7 @@ export class ContentService {
 
   async findAll(currentPage: number = 1, limit: number = 10, qs: string) {
     const { filter, sort, projection } = aqp(qs);
+    console.log(filter);
     delete filter.current;
     delete filter.pageSize;
 
@@ -190,6 +191,48 @@ export class ContentService {
         totalPages,
       },
       data: videos,
+    };
+  }
+
+  async findAllExcludingIds(
+    excludeIds: number[] = [],
+    currentPage: number = 1,
+    limit: number = 10,
+    additionalFilters: any = {},
+    sortField: string = 'createdAt',
+    sortOrder: 'ASC' | 'DESC' = 'DESC',
+  ) {
+    const offset = (+currentPage - 1) * +limit;
+    const defaultLimit = +limit ? +limit : 10;
+
+    // Combine exclude condition với additional filters
+    const whereCondition = {
+      ...additionalFilters,
+      ...(excludeIds && excludeIds.length > 0 && { id: Not(In(excludeIds)) }),
+    };
+
+    const totalItems = await this.contentRepository.count({
+      where: whereCondition,
+    });
+
+    const totalPages = Math.ceil(totalItems / defaultLimit);
+
+    const contents = await this.contentRepository.find({
+      where: whereCondition,
+      skip: offset,
+      take: defaultLimit,
+      order: { [sortField]: sortOrder },
+      relations: ['genres', 'tags', 'series', 'actors', 'video'],
+    });
+
+    return {
+      meta: {
+        currentPage: +currentPage,
+        pageSize: defaultLimit,
+        totalItems,
+        totalPages,
+      },
+      data: contents,
     };
   }
 

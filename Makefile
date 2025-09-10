@@ -72,6 +72,12 @@ dosomething-video:
 dosomething-user:
 	cd $(USER_SERVICE) && $(DO_SOMETHING)
 
+# Docker
+docker-up: 
+	docker-compose up --scale job-service=0 --scale comment-service=0 --scale search-service=0 --scale kibana=0 --scale elasticsearch=0
+docker-build: 
+	docker-compose build --no-cache api-gateway video-service
+
 
 migrate-all: migrate-auth migrate-engagement migrate-notification migrate-user migrate-video
 drop-and-migrate-all: drop-auth drop-engagement drop-notification drop-user drop-video migrate-auth migrate-engagement migrate-notification migrate-user migrate-video
