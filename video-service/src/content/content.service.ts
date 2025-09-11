@@ -205,7 +205,7 @@ export class ContentService {
     const offset = (+currentPage - 1) * +limit;
     const defaultLimit = +limit ? +limit : 10;
 
-    // Combine exclude condition với additional filters
+    // Combine exclude condition with additional filters
     const whereCondition = {
       ...additionalFilters,
       ...(excludeIds && excludeIds.length > 0 && { id: Not(In(excludeIds)) }),
@@ -243,13 +243,23 @@ export class ContentService {
     });
   }
 
-  async findContentByGenres(favoriteGenreIds: number[], page = 1, limit = 10) {
+  async findContentByGenres(
+    favoriteGenreIds: number[],
+    page = 1,
+    limit = 10,
+    excludeIds?: number[],
+  ) {
     const offset = (page - 1) * limit;
 
     const query = this.contentRepository
       .createQueryBuilder('contents')
       .leftJoin('contents.genres', 'genres')
-      .where('genres.id IN (:...ids)', { ids: favoriteGenreIds })
+      .where('genres.id IN (:...ids)', { ids: favoriteGenreIds });
+    if (excludeIds && excludeIds.length > 0) {
+      query.andWhere('contents.id NOT IN (:...excludeIds)', { excludeIds });
+    }
+
+    query
       .groupBy('contents.id')
       .addSelect('COUNT(genres.id)', 'matchcount')
       .orderBy('matchcount', 'DESC')
@@ -258,11 +268,17 @@ export class ContentService {
 
     const { entities, raw } = await query.getRawAndEntities();
 
-    const totalItems = await this.contentRepository
+    const countQuery = this.contentRepository
       .createQueryBuilder('contents')
       .leftJoin('contents.genres', 'genres')
-      .where('genres.id IN (:...ids)', { ids: favoriteGenreIds })
-      .getCount();
+      .where('genres.id IN (:...ids)', { ids: favoriteGenreIds });
+    if (excludeIds && excludeIds.length > 0) {
+      countQuery.andWhere('contents.id NOT IN (:...excludeIds)', {
+        excludeIds,
+      });
+    }
+
+    const totalItems = await countQuery.getCount();
 
     const contents = entities.map((entity, idx) => ({
       ...entity,

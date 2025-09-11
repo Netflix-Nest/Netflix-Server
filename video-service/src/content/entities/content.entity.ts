@@ -93,7 +93,7 @@ export class Content {
   @Column()
   quality: string;
 
-  @Column({ type: 'float', default: 5 })
+  @Column({ type: 'int', default: 5 })
   totalScoreRating: number;
 
   @Column({ type: 'int', default: 1 })

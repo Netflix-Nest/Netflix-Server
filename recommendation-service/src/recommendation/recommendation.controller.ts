@@ -8,8 +8,19 @@ export class RecommendationController {
 
   @MessagePattern('recommend')
   recommend(
-    @Payload() { id, page, limit }: { id: number; page: number; limit: number },
+    @Payload()
+    {
+      id,
+      page,
+      limit,
+      excludeIds,
+    }: {
+      id: number;
+      page: number;
+      limit: number;
+      excludeIds: number[];
+    },
   ) {
-    return this.recommendationService.recommend(id, page, limit);
+    return this.recommendationService.recommend(id, page, limit, excludeIds);
   }
 }

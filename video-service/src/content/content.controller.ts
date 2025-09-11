@@ -28,16 +28,19 @@ export class ContentController {
       favoriteGenreIds,
       page,
       limit,
+      excludeIds,
     }: {
       favoriteGenreIds: number[];
       page: number;
       limit: number;
+      excludeIds: number[];
     },
   ) {
     return this.contentService.findContentByGenres(
       favoriteGenreIds,
       page,
       limit,
+      excludeIds,
     );
   }
 
