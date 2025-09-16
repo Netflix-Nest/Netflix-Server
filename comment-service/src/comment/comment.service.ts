@@ -103,6 +103,7 @@ export class CommentService {
       userId: createCommentDto.userId,
       parentId: createCommentDto.parentId || null,
       contentId: createCommentDto.contentId,
+      fullName: createCommentDto.fullName,
     });
     return comment;
   }
