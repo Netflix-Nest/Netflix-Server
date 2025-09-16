@@ -74,7 +74,7 @@ dosomething-user:
 
 # Docker
 up: 
-	docker-compose up --scale job-service=0 --scale comment-service=0 --scale search-service=0 --scale kibana=0 --scale elasticsearch=0
+	docker-compose up --scale job-service=0 --scale search-service=0 --scale kibana=0 --scale elasticsearch=0
 build: 
 	docker-compose build --no-cache api-gateway video-service
 

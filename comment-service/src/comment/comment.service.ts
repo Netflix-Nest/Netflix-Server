@@ -101,8 +101,8 @@ export class CommentService {
       content: createCommentDto.content,
       mentions: mentionIds,
       userId: createCommentDto.userId,
-      videoId: createCommentDto.contentId,
       parentId: createCommentDto.parentId || null,
+      contentId: createCommentDto.contentId,
     });
     return comment;
   }
