@@ -3,7 +3,7 @@ import { CreateGenreDto } from '@netflix-clone/types';
 import { UpdateGenreDto } from './dto/update-genre.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Genre } from './entities/genre.entity';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { RpcException } from '@nestjs/microservices';
 import aqp from 'api-query-params';
 import { ContentService } from 'src/content/content.service';
@@ -71,6 +71,10 @@ export class GenreService {
       },
       data: videos,
     };
+  }
+
+  async findByIds(ids: number[]) {
+    return this.genreRepository.find({ where: { id: In(ids) } });
   }
 
   async findOne(id: number) {

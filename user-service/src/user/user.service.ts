@@ -20,6 +20,8 @@ export class UserService {
     @InjectRepository(User) private readonly userRepository: Repository<User>,
     @Inject('ENGAGEMENT_SERVICE')
     private readonly engagementClient: ClientProxy,
+    @Inject('VIDEO_SERVICE')
+    private readonly videoClient: ClientProxy,
   ) {}
 
   getHashPassword = (password: string) => {
@@ -48,7 +50,11 @@ export class UserService {
     if (!user) {
       throw new RpcException('User not found !');
     }
-    return user;
+    const genres = await lastValueFrom(
+      this.videoClient.send('find-genre-by-ids', user.favoriteGenre),
+    );
+    const res = { ...user, favoriteGenre: genres };
+    return res;
   }
 
   async removeToken(id: number) {

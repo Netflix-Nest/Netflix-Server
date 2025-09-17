@@ -3,7 +3,10 @@ import { UserService } from './user.service';
 import { UserController } from './user.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
-import { EngagementClientModule } from '@netflix-clone/common';
+import {
+  EngagementClientModule,
+  VideoClientModule,
+} from '@netflix-clone/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 
 @Module({
@@ -15,6 +18,17 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
       useFactory: (cfg: ConfigService) => ({
         urls: [cfg.get<string>('RMQ_URL') || 'amqp://netflix-rabbitmq:5672'],
         queue: cfg.get<string>('ENGAGEMENT_QUEUE') || 'engagement_queue',
+        queueOptions: {
+          durable: true,
+        },
+      }),
+    }),
+    VideoClientModule.registerAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (cfg: ConfigService) => ({
+        urls: [cfg.get<string>('RMQ_URL') || 'amqp://netflix-rabbitmq:5672'],
+        queue: cfg.get<string>('VIDEO_QUEUE') || 'video_queue',
         queueOptions: {
           durable: true,
         },

@@ -34,7 +34,7 @@ export class User {
   @Column({ name: 'full_name' })
   fullName: string;
 
-  @Column()
+  @Column({ select: false })
   password: string;
 
   @Column({ type: 'int', default: 0, name: 'viewing_time' })
@@ -43,7 +43,7 @@ export class User {
   @Column({ nullable: true, name: 'phone_number' })
   phoneNumber: string;
 
-  @Column({ nullable: true })
+  @Column({ nullable: true, select: false })
   refreshToken: string;
 
   @Column({

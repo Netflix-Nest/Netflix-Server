@@ -19,6 +19,11 @@ export class GenreController {
     return this.genreService.findAll(currentPage, limit, qs);
   }
 
+  @MessagePattern('find-genre-by-ids')
+  findByIds(@Payload() ids: number[]) {
+    return this.genreService.findByIds(ids);
+  }
+
   @MessagePattern('find-one-genre')
   findOne(@Payload() id: number) {
     return this.genreService.findOne(id);
