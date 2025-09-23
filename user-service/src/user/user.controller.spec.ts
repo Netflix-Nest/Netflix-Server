@@ -22,6 +22,9 @@ describe('UserController', () => {
   const mockEngagementService = {
     send: jest.fn(),
   };
+  const mockVideoService = {
+    send: jest.fn(),
+  };
   const mockUserRepository = {};
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -35,6 +38,10 @@ describe('UserController', () => {
         {
           provide: getRepositoryToken(User),
           useValue: mockUserRepository,
+        },
+        {
+          provide: 'VIDEO_SERVICE',
+          useValue: mockVideoService,
         },
       ],
     }).compile();

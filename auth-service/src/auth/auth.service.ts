@@ -37,6 +37,13 @@ export class AuthService {
     const user = await lastValueFrom(
       this.userClient.send('get-user-by-email', email),
     );
+    const isTruePass = await lastValueFrom(
+      this.userClient.send('compare-pass', { email, pass }),
+    );
+    console.log('true pass: ', isTruePass);
+    if (!isTruePass) {
+      throw new RpcException('Email or password is incorrect!');
+    }
     if (user.status === 'BANNED') {
       throw new RpcException(new NotAcceptableException('Account banned !'));
     } else if (user.status === 'PENDING') {
@@ -44,11 +51,7 @@ export class AuthService {
         new NotAcceptableException('Account is inactive !'),
       );
     }
-    if (user && (await compare(pass, user.password))) {
-      const { password, ...result } = user;
-      return result;
-    }
-    return null;
+    return user;
   }
 
   async getAccount(user: IUserDecorator) {

@@ -11,7 +11,7 @@ import {
   UseInterceptors,
 } from "@nestjs/common";
 import { ClientProxy } from "@nestjs/microservices";
-import { CreateUserDto } from "@netflix-clone/types";
+import { ChangePassDto, CreateUserDto } from "@netflix-clone/types";
 import { UpdateUserDto } from "./dto/update-user.dto";
 import { Public } from "src/common/decorators/customize";
 import { lastValueFrom } from "rxjs";
@@ -25,7 +25,7 @@ export class UserController {
 
   @Public()
   @Post("register")
-  async register(@Body() createUserDto: CreateUserDto) {
+  register(@Body() createUserDto: CreateUserDto) {
     return lastValueFrom(this.userClient.send("register-user", createUserDto));
   }
 
@@ -38,7 +38,7 @@ export class UserController {
   }
 
   @Get()
-  async findAll(
+  findAll(
     @Query("current") currentPage: number,
     @Query("pageSize") limit: number,
     @Query() qs: string
@@ -52,19 +52,26 @@ export class UserController {
 
   @Get(":id")
   @UseInterceptors(CacheInterceptor)
-  async findOne(@Param("id") id: number) {
+  findOne(@Param("id") id: number) {
     return lastValueFrom(this.userClient.send("find-user", id));
   }
 
   @Patch(":id")
-  async update(@Param("id") id: number, @Body() updateUserDto: UpdateUserDto) {
+  update(@Param("id") id: number, @Body() updateUserDto: UpdateUserDto) {
     return lastValueFrom(
       this.userClient.send("update-user", { id, updateUserDto })
     );
   }
 
   @Delete(":id")
-  async delete(@Param("id") id: number) {
+  delete(@Param("id") id: number) {
     return lastValueFrom(this.userClient.send("delete-user", id));
+  }
+
+  @Patch("change-pass/:id")
+  changePass(@Param("id") id: number, @Body() changePassDto: ChangePassDto) {
+    return lastValueFrom(
+      this.userClient.send("change-pass", { changePassDto, id })
+    );
   }
 }

@@ -1,6 +1,10 @@
 import { Controller } from '@nestjs/common';
 import { UserService } from './user.service';
-import { CreateUserDto, UpdateUserTokenDto } from '@netflix-clone/types';
+import {
+  ChangePassDto,
+  CreateUserDto,
+  UpdateUserTokenDto,
+} from '@netflix-clone/types';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { EventPattern, MessagePattern, Payload } from '@nestjs/microservices';
 
@@ -18,6 +22,10 @@ export class UserController {
     return this.userService.registerUser(registerDto);
   }
 
+  @MessagePattern('compare-pass')
+  comparePass(@Payload() { email, pass }: { email: string; pass: string }) {
+    return this.userService.comparePass(email, pass);
+  }
   @EventPattern('update-user-token')
   updateUserToken(@Payload() payload: string) {
     const parsedPayload: UpdateUserTokenDto = JSON.parse(payload);
@@ -71,6 +79,14 @@ export class UserController {
     { id, updateUserDto }: { id: number; updateUserDto: UpdateUserDto },
   ) {
     return this.userService.update(id, updateUserDto);
+  }
+
+  @MessagePattern('change-pass')
+  changePass(
+    @Payload()
+    { id, changePassDto }: { id: number; changePassDto: ChangePassDto },
+  ) {
+    return this.userService.changePass(id, changePassDto);
   }
 
   @MessagePattern('delete-user')

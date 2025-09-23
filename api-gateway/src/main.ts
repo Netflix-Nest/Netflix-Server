@@ -6,10 +6,8 @@ import {
 import { AppModule } from "./app.module";
 import { AllExceptionsFilter } from "@netflix-clone/common";
 import { ConfigService } from "@nestjs/config";
-import { RequestMethod, ValidationPipe, VersioningType } from "@nestjs/common";
+import { ValidationPipe, VersioningType } from "@nestjs/common";
 import cookieParser from "cookie-parser";
-// import { JwtAuthGuard } from "@netflix-clone/common";
-import { ThrottlerGuard } from "@nestjs/throttler";
 import { JwtAuthGuard } from "./common/guards/jwt-auth.guard";
 
 async function bootstrap() {

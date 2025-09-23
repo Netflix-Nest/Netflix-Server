@@ -20,6 +20,9 @@ describe('UserService', () => {
   const mockEngagementService = {
     send: jest.fn(),
   };
+  const mockVideoService = {
+    send: jest.fn(),
+  };
   const mockUserRepository = {};
 
   beforeEach(async () => {
@@ -33,6 +36,10 @@ describe('UserService', () => {
         {
           provide: getRepositoryToken(User),
           useValue: mockUserRepository,
+        },
+        {
+          provide: 'VIDEO_SERVICE',
+          useValue: mockVideoService,
         },
       ],
     }).compile();

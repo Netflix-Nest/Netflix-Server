@@ -4,7 +4,7 @@ import {
   Inject,
   Injectable,
 } from '@nestjs/common';
-import { CreateUserDto } from '@netflix-clone/types';
+import { ChangePassDto, CreateUserDto } from '@netflix-clone/types';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { StatusUser, User, UserRole } from './entities/user.entity';
@@ -43,6 +43,19 @@ export class UserService {
       { id: userId },
       { refreshToken: refreshToken },
     );
+  }
+
+  async comparePass(email: string, pass: string) {
+    const user = await this.userRepository
+      .createQueryBuilder('user')
+      .addSelect('user.password')
+      .where('user.email = :email', { email })
+      .getOne();
+    if (!user) {
+      return false;
+    }
+    console.log(user);
+    return compareSync(pass, user.password);
   }
 
   async findByEmail(email: string) {
@@ -162,7 +175,6 @@ export class UserService {
   }
 
   async findOne(id: number) {
-    console.log('receive messsage....');
     const allColumns = this.userRepository.metadata.columns.map(
       (col) => col.propertyName as keyof User,
     );
@@ -197,6 +209,23 @@ export class UserService {
       updateUserDto.viewingTime += existUser.viewingTime;
     }
     await this.userRepository.update({ id }, { ...updateUserDto });
+    return this.findOne(id);
+  }
+
+  async changePass(id: number, { newPass, oldPass }: ChangePassDto) {
+    const user = await this.userRepository
+      .createQueryBuilder('user')
+      .addSelect('user.password')
+      .where('user.id = :id', { id })
+      .getOne();
+    if (!user) {
+      throw new RpcException('User not found!');
+    }
+    if (!compareSync(oldPass, user.password)) {
+      throw new RpcException('Old password is not correct!');
+    }
+    const hashPass = this.getHashPassword(newPass);
+    await this.userRepository.update({ id }, { password: hashPass });
     return this.findOne(id);
   }
 
