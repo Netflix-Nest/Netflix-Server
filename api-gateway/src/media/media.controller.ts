@@ -19,6 +19,7 @@ import { lastValueFrom } from "rxjs";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { IUserDecorator } from "@netflix-clone/types";
 import { UpdateVideoDto } from "src/video/dto/update-video.dto";
+import { SkipThrottle } from "@nestjs/throttler";
 
 @Controller("media")
 export class MediaController {
@@ -99,6 +100,7 @@ export class MediaController {
     return this.streamFile(fileName, "image-bucket", res);
   }
 
+  @SkipThrottle()
   @Public()
   @Get("videos/:fileName")
   async getVideo(

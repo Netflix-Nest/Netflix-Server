@@ -41,33 +41,33 @@ import { MediaModule } from "./media/media.module";
     ConfigModule.forRoot({
       isGlobal: true,
     }),
-    // ThrottlerModule.forRootAsync({
-    //   inject: [ConfigService],
-    //   useFactory: (cfg: ConfigService) => ({
-    //     throttlers: [
-    //       {
-    //         name: "short",
-    //         ttl: 1 * 1000, // 1s -> 3req
-    //         limit: 30,
-    //       },
-    //       {
-    //         name: "medium",
-    //         ttl: 10 * 1000,
-    //         limit: 200,
-    //       },
-    //       {
-    //         name: "long",
-    //         ttl: 60 * 1000,
-    //         limit: 1000,
-    //       },
-    //     ],
-    //     // storage: new RedisThrottlerStorage({
-    //     // 	host: cfg.get<string>("REDIS_HOST") || "localhost",
-    //     // 	port: cfg.get<number>("REDIS_PORT") || 6379,
-    //     // 	password: cfg.get<string>("REDIS_PASSWORD") || undefined,
-    //     // }),
-    //   }),
-    // }),
+    ThrottlerModule.forRootAsync({
+      inject: [ConfigService],
+      useFactory: (cfg: ConfigService) => ({
+        throttlers: [
+          {
+            name: "short",
+            ttl: 1 * 1000, // 1s -> 3req
+            limit: 30,
+          },
+          {
+            name: "medium",
+            ttl: 10 * 1000,
+            limit: 200,
+          },
+          {
+            name: "long",
+            ttl: 60 * 1000,
+            limit: 1000,
+          },
+        ],
+        // storage: new RedisThrottlerStorage({
+        // 	host: cfg.get<string>("REDIS_HOST") || "localhost",
+        // 	port: cfg.get<number>("REDIS_PORT") || 6379,
+        // 	password: cfg.get<string>("REDIS_PASSWORD") || undefined,
+        // }),
+      }),
+    }),
     AuthModule,
     UserModule,
     VideoModule,
@@ -87,11 +87,11 @@ import { MediaModule } from "./media/media.module";
     MediaModule,
   ],
   controllers: [AppController],
-  //   providers: [
-  //     {
-  //       provide: APP_GUARD,
-  //       useClass: ThrottlerGuard,
-  //     },
-  //   ],
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard,
+    },
+  ],
 })
 export class AppModule {}
