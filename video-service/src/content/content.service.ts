@@ -243,6 +243,56 @@ export class ContentService {
     });
   }
 
+  async findByIds(
+    ids: number[],
+    currentPage: number = 1,
+    limit: number = 10,
+    sortField: string = 'createdAt',
+    sortOrder: 'ASC' | 'DESC' = 'DESC',
+  ) {
+    const offset = (+currentPage - 1) * +limit;
+    const defaultLimit = +limit ? +limit : 10;
+
+    // If no ids provided, return empty result
+    if (!ids || ids.length === 0) {
+      return {
+        meta: {
+          currentPage: +currentPage,
+          pageSize: defaultLimit,
+          totalItems: 0,
+          totalPages: 0,
+        },
+        data: [],
+      };
+    }
+
+    const whereCondition = { id: In(ids) };
+
+    const totalItems = await this.contentRepository.count({
+      where: whereCondition,
+    });
+
+    const totalPages = Math.ceil(totalItems / defaultLimit);
+
+    const contents = await this.contentRepository.find({
+      where: whereCondition,
+      skip: offset,
+      take: defaultLimit,
+      order: { [sortField]: sortOrder },
+      relations: ['genres', 'tags', 'series', 'actors', 'video'],
+    });
+
+    return {
+      meta: {
+        currentPage: +currentPage,
+        pageSize: defaultLimit,
+        totalItems,
+        totalPages,
+      },
+      data: contents,
+    };
+  }
+
   async findContentByGenres(
     favoriteGenreIds: number[],
     page = 1,

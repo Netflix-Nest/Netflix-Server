@@ -84,6 +84,18 @@ export class WatchlistService {
     });
   }
 
+  async removeVideosFromWatchlist(ids: number[], listId: number) {
+    const watchlist = await this.watchlistRepository.findOne({
+      where: {
+        id: listId,
+      },
+    });
+    if (!watchlist) {
+      throw new RpcException('Watchlist not found!');
+    }
+    return this.watchlistRepository.update({ id: listId }, { contentIds: ids });
+  }
+
   async deleteWatchlist(watchlistId: number) {
     const watchlist = await this.watchlistRepository.findOne({
       where: { id: watchlistId },

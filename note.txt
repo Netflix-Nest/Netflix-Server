@@ -11,7 +11,7 @@ index movies after create movies
 
 create default permission for account which have just created
 handle cal duration video when upload
-
+delete user ?-> delete watchlist/history/bookmark
 prod: 
     - private bucket and GET /video/:videoId/stream return master.m3u8 instead or use nginx
 

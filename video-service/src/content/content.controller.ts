@@ -44,6 +44,22 @@ export class ContentController {
     );
   }
 
+  @MessagePattern('find-contents-by-ids')
+  findByIds(
+    @Payload()
+    {
+      currentPage,
+      ids,
+      limit,
+    }: {
+      ids: number[];
+      currentPage: number;
+      limit: number;
+    },
+  ) {
+    return this.contentService.findByIds(ids, currentPage, limit);
+  }
+
   @MessagePattern('find-all-exclude-ids')
   findExcludeIds(@Payload() data: QueryContentExcludeIdsFilter) {
     console.log(data);

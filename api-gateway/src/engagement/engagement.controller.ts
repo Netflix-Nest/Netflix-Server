@@ -99,15 +99,14 @@ export class EngagementController {
     );
   }
 
-  @Delete("watchlist/:id")
-  removeFromWatchlist(
-    @Body()
-    { watchlistId, contentId }: { watchlistId: number; contentId: number }
-  ) {
-    return this.engagementClient.send("remove-video-from-watchlist", {
-      watchlistId,
-      contentId,
-    });
+  @Patch("update-watchlist")
+  removeVideos(@Body() { ids, listId }: { ids: number[]; listId: number }) {
+    return lastValueFrom(
+      this.engagementClient.send("remove-videos-from-watchlist", {
+        ids,
+        listId,
+      })
+    );
   }
 
   @Delete("watchlist/:id")

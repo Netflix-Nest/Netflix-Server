@@ -33,7 +33,7 @@ export class ContentController {
   }
 
   @Get()
-  // @UseInterceptors(CacheInterceptor)
+  @UseInterceptors(CacheInterceptor)
   findAll(
     @Query("current") currentPage: number,
     @Query("pageSize") limit: number,
@@ -50,7 +50,7 @@ export class ContentController {
   }
 
   @Post("exclude")
-  // @UseInterceptors(CacheInterceptor)
+  @UseInterceptors(CacheInterceptor)
   findAllExclude(
     @Body() data: QueryContentExcludeIdsFilter,
     @Query("current") currentPage: string,
@@ -59,6 +59,22 @@ export class ContentController {
     data.currentPage = +currentPage;
     data.limit = +limit;
     return lastValueFrom(this.videoClient.send("find-all-exclude-ids", data));
+  }
+
+  @Post("by-ids")
+  @UseInterceptors(CacheInterceptor)
+  findByIds(
+    @Body() { ids }: { ids: number[] },
+    @Query("current") currentPage: string,
+    @Query("pageSize") limit: string
+  ) {
+    const data = {
+      ids,
+      currentPage,
+      limit,
+    };
+    console.log("ids body: ", ids, "data: ", data);
+    return lastValueFrom(this.videoClient.send("find-contents-by-ids", data));
   }
 
   @Get(":id")

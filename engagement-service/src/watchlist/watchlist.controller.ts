@@ -37,16 +37,21 @@ export class WatchlistController {
     return this.watchlistService.addVideoToWatchlist(contentId, watchlistId);
   }
 
-  @MessagePattern('remove-video-from-watchlist')
-  async removeVideo(
-    @Payload()
-    { watchlistId, contentId }: { watchlistId: number; contentId: number },
-  ) {
-    return this.watchlistService.removeVideoFromWatchlist(
-      watchlistId,
-      contentId,
-    );
+  @MessagePattern('remove-videos-from-watchlist')
+  removeVideos(@Payload() { ids, listId }: { ids: number[]; listId: number }) {
+    return this.watchlistService.removeVideosFromWatchlist(ids, listId);
   }
+
+  // @MessagePattern('remove-video-from-watchlist')
+  // async removeVideo(
+  //   @Payload()
+  //   { watchlistId, contentId }: { watchlistId: number; contentId: number },
+  // ) {
+  //   return this.watchlistService.removeVideoFromWatchlist(
+  //     watchlistId,
+  //     contentId,
+  //   );
+  // }
 
   @MessagePattern('delete-watchlist')
   async deleteWatchlist(@Payload() watchlistId: number) {
