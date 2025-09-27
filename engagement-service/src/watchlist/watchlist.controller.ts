@@ -42,16 +42,21 @@ export class WatchlistController {
     return this.watchlistService.removeVideosFromWatchlist(ids, listId);
   }
 
-  // @MessagePattern('remove-video-from-watchlist')
-  // async removeVideo(
-  //   @Payload()
-  //   { watchlistId, contentId }: { watchlistId: number; contentId: number },
-  // ) {
-  //   return this.watchlistService.removeVideoFromWatchlist(
-  //     watchlistId,
-  //     contentId,
-  //   );
-  // }
+  @MessagePattern('change-exist')
+  changeExist(
+    @Payload()
+    {
+      watchlistIds,
+      contentId,
+      add,
+    }: {
+      watchlistIds: number[];
+      contentId: number;
+      add: boolean;
+    },
+  ) {
+    return this.watchlistService.changeExist(watchlistIds, contentId, add);
+  }
 
   @MessagePattern('delete-watchlist')
   async deleteWatchlist(@Payload() watchlistId: number) {

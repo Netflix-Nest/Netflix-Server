@@ -69,19 +69,38 @@ export class WatchlistService {
     );
   }
 
-  async removeVideoFromWatchlist(watchlistId: number, contentId: number) {
-    const watchlist = await this.watchlistRepository.findOne({
-      where: {
-        id: watchlistId,
-        contentIds: Raw((alias) => `${alias} @> ARRAY[${contentId}]`),
-      },
-    });
-    if (!watchlist) {
-      throw new RpcException('Video does not exist in watchlist !');
+  async changeExist(watchlistIds: number[], contentId: number, add: boolean) {
+    if (!watchlistIds || watchlistIds.length === 0) {
+      throw new RpcException('Watchlist IDs array cannot be empty!');
     }
-    return this.watchlistRepository.update(watchlistId, {
-      contentIds: () => `array_remove(content_ids, ${contentId})`,
-    });
+
+    if (add) {
+      await this.watchlistRepository
+        .createQueryBuilder()
+        .update()
+        .set({
+          contentIds: () => `array_append(content_ids, ${contentId})`,
+        })
+        .where('id IN (:...watchlistIds)', { watchlistIds })
+        .andWhere(`NOT (content_ids @> ARRAY[${contentId}])`)
+        .execute();
+    } else {
+      await this.watchlistRepository
+        .createQueryBuilder()
+        .update()
+        .set({
+          contentIds: () => `array_remove(content_ids, ${contentId})`,
+        })
+        .where('id IN (:...watchlistIds)', { watchlistIds })
+        .andWhere(`content_ids @> ARRAY[${contentId}]`)
+        .execute();
+    }
+
+    return {
+      success: true,
+      data: true,
+      message: `Content ${add ? 'added to' : 'removed from'} watchlists successfully`,
+    };
   }
 
   async removeVideosFromWatchlist(ids: number[], listId: number) {

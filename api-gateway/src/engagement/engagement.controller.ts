@@ -109,6 +109,26 @@ export class EngagementController {
     );
   }
 
+  @Patch("change-exist")
+  removeFromWatchlist(
+    @Body()
+    {
+      watchlistIds,
+      contentId,
+      add,
+    }: {
+      watchlistIds: number[];
+      contentId: number;
+      add: boolean;
+    }
+  ) {
+    return this.engagementClient.send("change-exist", {
+      watchlistIds,
+      contentId,
+      add,
+    });
+  }
+
   @Delete("watchlist/:id")
   deleteWatchlist(@Param("id") watchlistId: number) {
     return lastValueFrom(
