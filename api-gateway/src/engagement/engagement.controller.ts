@@ -26,9 +26,9 @@ export class EngagementController {
   ) {}
   // bookmark
   @Get("bookmark")
-  getAllBookmark(@Body() { userId }: { userId: number }) {
+  getAllBookmark(@User() user: IUserDecorator) {
     return lastValueFrom(
-      this.engagementClient.send("get-all-bookmark", userId)
+      this.engagementClient.send("get-all-bookmark", user.userId)
     );
   }
 

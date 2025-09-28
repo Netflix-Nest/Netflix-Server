@@ -43,7 +43,7 @@
     "@nestjs/platform-express": "^11.0.1",
     "@nestjs/typeorm": "^11.0.0",
     "@netflix-clone/common": "^1.2.0",
-    "@netflix-clone/types": "^1.1.1",
+    "@netflix-clone/types": "^2.1.7",
     "amqp-connection-manager": "^4.1.14",
     "amqplib": "^0.10.8",
     "class-transformer": "^0.5.1",

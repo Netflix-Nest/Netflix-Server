@@ -1,7 +1,7 @@
 import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Video } from './entities/video.entity';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { CreateVideoDto } from '@netflix-clone/types';
 import { UpdateVideoDto } from './dto/update-video.dto';
 import aqp from 'api-query-params';
@@ -89,6 +89,13 @@ export class VideoService {
       },
       data: videos,
     };
+  }
+
+  async findByIds(ids: number[]) {
+    return this.videoRepository.find({
+      where: { id: In(ids) },
+      relations: ['contents'],
+    });
   }
 
   async findOne(id: number) {

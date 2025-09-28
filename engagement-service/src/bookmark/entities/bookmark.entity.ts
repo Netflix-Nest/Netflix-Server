@@ -18,7 +18,7 @@ export class Bookmark {
   userId: number;
 
   @Column()
-  contentId: number;
+  videoId: number;
 
   @Column()
   timestamp: number;

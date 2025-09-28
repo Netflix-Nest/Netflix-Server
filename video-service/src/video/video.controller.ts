@@ -9,12 +9,12 @@ export class VideoController {
   constructor(private readonly videoService: VideoService) {}
 
   @MessagePattern('create-video')
-  async create(@Payload() createVideoDto: CreateVideoDto) {
+  create(@Payload() createVideoDto: CreateVideoDto) {
     return this.videoService.create(createVideoDto);
   }
 
   @MessagePattern('find-videos')
-  async findAll(
+  findAll(
     @Payload()
     {
       currentPage,
@@ -29,13 +29,18 @@ export class VideoController {
     return this.videoService.findAll(currentPage, limit, qs);
   }
 
+  @MessagePattern('find-by-ids')
+  findByIds(@Payload() ids: number[]) {
+    return this.videoService.findByIds(ids);
+  }
+
   @MessagePattern('find-video')
-  async findOne(@Payload() id: number) {
+  findOne(@Payload() id: number) {
     return this.videoService.findOne(id);
   }
 
   @MessagePattern('update-video')
-  async update(
+  update(
     @Payload()
     { id, updateVideoDto }: { id: number; updateVideoDto: UpdateVideoDto },
   ) {
@@ -43,7 +48,7 @@ export class VideoController {
   }
 
   @MessagePattern('delete-video')
-  async delete(@Payload() id: number) {
+  delete(@Payload() id: number) {
     return this.videoService.delete(id);
   }
 }
