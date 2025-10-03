@@ -31,7 +31,7 @@ export class HistoryService {
     const history = await this.historyRepository.findOne({
       where: {
         userId: addHistoryDto.userId,
-        contentId: addHistoryDto.contentId,
+        videoId: addHistoryDto.videoId,
       },
     });
     if (!history) {

@@ -16,7 +16,7 @@ export class History {
   userId: number;
 
   @Column()
-  contentId: number;
+  videoId: number;
 
   @Column()
   watchedAt: Date;

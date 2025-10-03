@@ -76,14 +76,14 @@ export class SearchController {
     return lastValueFrom(this.searchClient.send("reindex", cleanBulkMovie));
   }
 
-  @Get("movies")
+  @Post("search-movies")
   @UseInterceptors(CacheInterceptor)
   search(@Body() q: SearchMoviesDto) {
     return lastValueFrom(this.searchClient.send("movies", q));
   }
 
-  @Get("suggest")
-  suggest(@Body() q: SuggestDto) {
-    return lastValueFrom(this.searchClient.send("suggest", q));
+  @Post("suggest")
+  suggest(@Body() sgt: SuggestDto) {
+    return lastValueFrom(this.searchClient.send("suggest", sgt));
   }
 }
