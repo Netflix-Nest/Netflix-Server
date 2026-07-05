@@ -13,7 +13,7 @@ VIDEO_SERVICE = video-service
 
 MIGRATE_RUN = npm run migration:run
 SCHEMA_DROP = npm run schema:drop
-DO_SOMETHING = npm install @netflix-clone/common
+DO_SOMETHING = rd /s /q dist
 # Drop
 drop-user:
 	cd $(USER_SERVICE) && $(SCHEMA_DROP)

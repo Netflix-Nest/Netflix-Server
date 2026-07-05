@@ -19,6 +19,7 @@ export class AuthController {
 
   @MessagePattern('get-account')
   getAccount(@Payload() user: IUserDecorator) {
+    console.log('receive get account req: ', user);
     return this.authService.getAccount(user);
   }
 

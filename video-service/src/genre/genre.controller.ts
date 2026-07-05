@@ -15,6 +15,7 @@ export class GenreController {
 
   @MessagePattern('find-all-genre')
   findAll(@Payload() data: { currentPage: number; limit: number; qs: string }) {
+    console.log('receive msg: ', data);
     const { currentPage, limit, qs } = data;
     return this.genreService.findAll(currentPage, limit, qs);
   }

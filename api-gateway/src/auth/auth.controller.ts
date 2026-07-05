@@ -28,7 +28,6 @@ export class AuthController {
 
 	@Get("health")
 	health() {
-		console.log("jlcvdliv");
 		console.log(
 			process.env.AUTH_SERVICE_HOST,
 			parseInt(process.env.AUTH_SERVICE_PORT!),
@@ -56,6 +55,7 @@ export class AuthController {
 
 	@Get("account")
 	async handleGetAccount(@User() user: IUserDecorator) {
+		console.log("send get account req: ", user);
 		return lastValueFrom(this.authClient.send("get-account", user));
 	}
 
